@@ -241,3 +241,65 @@ ffmpeg -i 双曲换元？欧拉公式！.mp4 -c copy 双曲换元？欧拉公式
 2. 图片路径`video-blogs\assets\251124\img.png`，引用`![](./assets/251124/img.png)`。有效，而且VSCode能显示图片。看打包产物，它只会打包到`dist\251124\assets\img-[hash].png`
 
 我们进一步探究“2”，把文件夹名从`assets`改成`fooBar`，并引用`![](./fooBar/251124/img.png)`。发现在开发和生产环境都有效，而且VSCode能显示图片。看打包产物，它仍然是被打包到`dist\251124\assets\img-[hash].png`
+
+## 静态资源再次踩坑记录
+
+最近我封装了`video-blogs\components\RotatingImage.vue`，并这样使用：`<RotatingImage src="./assets/260115/纳西妲-疑问-100x100.png" />`，发现GitHub Pages环境无法显示图片。如果改成`<RotatingImage src="./assets/纳西妲-疑问-100x100.png" />`这样使用，就变成本地环境无法显示图片。
+
+但`<img src="./assets/260115/纳西妲-疑问-100x100.png" />`这么使用，或者直接`![](./assets/260115/纳西妲-疑问-100x100.png)`，都能正常显示。这里我猜测是因为slidev在打包时对图片路径做了转换。
+
+问题抛给通义千问，试了它给的方案：
+
+1. 在组件里写`const nascitaImg = new URL('./assets/260115/纳西妲-疑问-100x100.png', import.meta.url).href`
+2. 文档里调用组件时改为`:src="new URL('./assets/260115/纳西妲-疑问-100x100.png', import.meta.url).href"`
+
+都没用。但后来我想到，可以传入图片**插槽**，然后组件给传入的图片加一些属性，这样图片就能正常享受slidev的打包处理了。提示词：
+
+> 大佬，请帮我把下面给你的`video-blogs\components\RotatingImage.vue`代码改成传入img元素作为插槽（示例：`<RotatingImage><img src="xxx"></RotatingImage>`）然后组件加入现有代码给img加上的属性
+
+最后得到的代码（`video-blogs\components\RotatingImage.vue`）：
+
+```vue
+<template>
+  <EnhancedSlot />
+</template>
+
+<script setup>
+import { useSlots, cloneVNode } from 'vue'
+
+const slots = useSlots()
+
+const EnhancedSlot = () => {
+  const slotContent = slots.default?.()
+  if (!slotContent || slotContent.length !== 1) {
+    console.warn('只能传入一个<img>标签！')
+    return slotContent
+  }
+
+  const vnode = slotContent[0]
+  if (vnode.type !== 'img') {
+    console.warn('只支持传入<img>标签！')
+    return vnode
+  }
+
+  return cloneVNode(vnode, {
+    class: [vnode.props?.class || '', 'rotating-image']
+  })
+}
+</script>
+
+<style scoped>
+.rotating-image {
+  animation: rotateLinear 6s linear infinite;
+}
+
+@keyframes rotateLinear {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
+```

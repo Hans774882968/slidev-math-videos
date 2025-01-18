@@ -1,31 +1,33 @@
 <template>
-  <!-- teleport 让 position: fixed 能够重新生效 -->
-  <teleport to="#slide-content">
-    <div class="rotating-image-container fixed top-0 right-0 p-6 rounded-full overflow-hidden select-none">
-      <img
-        :src="src"
-        :alt="alt"
-        class="w-full h-full object-cover"
-      >
-    </div>
-  </teleport>
+  <EnhancedSlot />
 </template>
 
 <script setup>
-defineProps({
-  src: {
-    type: String,
-    required: true
-  },
-  alt: {
-    type: String,
-    default: 'Rotating image'
+import { useSlots, cloneVNode } from 'vue'
+
+const slots = useSlots()
+
+const EnhancedSlot = () => {
+  const slotContent = slots.default?.()
+  if (!slotContent || slotContent.length !== 1) {
+    console.warn('只能传入一个<img>标签！')
+    return slotContent
   }
-})
+
+  const vnode = slotContent[0]
+  if (vnode.type !== 'img') {
+    console.warn('只支持传入<img>标签！')
+    return vnode
+  }
+
+  return cloneVNode(vnode, {
+    class: [vnode.props?.class || '', 'rotating-image']
+  })
+}
 </script>
 
 <style scoped>
-.rotating-image-container {
+.rotating-image {
   animation: rotateLinear 6s linear infinite;
 }
 
