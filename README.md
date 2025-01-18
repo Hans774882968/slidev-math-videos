@@ -241,3 +241,16 @@ ffmpeg -i 双曲换元？欧拉公式！.mp4 -c copy 双曲换元？欧拉公式
 2. 图片路径`video-blogs\assets\251124\img.png`，引用`![](./assets/251124/img.png)`。有效，而且VSCode能显示图片。看打包产物，它只会打包到`dist\251124\assets\img-[hash].png`
 
 我们进一步探究“2”，把文件夹名从`assets`改成`fooBar`，并引用`![](./fooBar/251124/img.png)`。发现在开发和生产环境都有效，而且VSCode能显示图片。看打包产物，它仍然是被打包到`dist\251124\assets\img-[hash].png`
+
+## 静态资源再次踩坑记录
+
+最近我封装了`video-blogs\components\RotatingImage.vue`，并这样使用：`<RotatingImage src="./assets/260115/纳西妲-疑问-100x100.png" />`，发现GitHub Pages环境无法显示图片。如果改成`<RotatingImage src="./assets/纳西妲-疑问-100x100.png" />`这样使用，就变成本地环境无法显示图片。
+
+但`<img src="./assets/260115/纳西妲-疑问-100x100.png" />`这么使用，或者直接`![](./assets/260115/纳西妲-疑问-100x100.png)`，都能正常显示。这里我猜测是因为slidev在打包时对图片路径做了转换。
+
+问题抛给通义千问，试了它给的方案
+
+1. 在组件里写`const nascitaImg = new URL('./assets/260115/纳西妲-疑问-100x100.png', import.meta.url).href`
+2. 文档里调用组件时改为`:src="new URL('./assets/260115/纳西妲-疑问-100x100.png', import.meta.url).href"`
+
+都没用。这个问题应该很难解决，决定放弃。

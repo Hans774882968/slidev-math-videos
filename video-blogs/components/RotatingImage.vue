@@ -1,14 +1,12 @@
 <template>
-  <!-- teleport 让 position: fixed 能够重新生效 -->
-  <teleport to="#slide-content">
-    <div class="rotating-image-container fixed top-0 right-0 p-6 rounded-full overflow-hidden select-none">
-      <img
-        :src="src"
-        :alt="alt"
-        class="w-full h-full object-cover"
-      >
-    </div>
-  </teleport>
+  <img
+    :src="src"
+    :alt="alt"
+    :class="[
+      'rotating-image',
+      imgClass,
+    ]"
+  >
 </template>
 
 <script setup>
@@ -20,12 +18,16 @@ defineProps({
   alt: {
     type: String,
     default: 'Rotating image'
-  }
+  },
+  imgClass: {
+    type: String,
+    default: ''
+  },
 })
 </script>
 
 <style scoped>
-.rotating-image-container {
+.rotating-image {
   animation: rotateLinear 6s linear infinite;
 }
 
