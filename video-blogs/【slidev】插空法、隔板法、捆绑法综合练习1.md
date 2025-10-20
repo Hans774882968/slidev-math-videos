@@ -1,0 +1,39 @@
+---
+theme: dracula
+mdc: true
+transition: slide-left
+tags:
+  - 隔板法
+  - 插空法
+  - 捆绑法
+---
+
+## 引言
+
+题源： https://www.bilibili.com/video/BV1TAW3zWEWV
+
+插空法：插空顺序可以自己选，但是不同选法的分析难度可能有差别。
+
+<script setup>
+import { onMounted } from 'vue'
+import { useNav } from '@slidev/client'
+
+const { next } = useNav();
+onMounted(() => setTimeout(next, 5000));
+</script>
+
+---
+
+## T1：12棵同样松树和6棵同样柏树种在道路两侧，每侧9棵，每侧柏树数量相同且不相邻，道路起点、终点两侧都必须种松树。求方案数
+
+注意到两侧松柏数量一样且完全独立，所以我们求出一侧的方案数是x，答案就是 $x^2$ 。减去4棵松树，还剩8棵，故只需要考虑一侧松柏数量分别为4、3。
+
+由插空法，要求柏树不相邻，就相当于在4棵松树的5个空里选3个空插入柏树，方案数 $x = C_{5}^3 = 10$ 。答案 $x^2 = 100$
+
+---
+
+测试1
+
+---
+
+测试2

@@ -1,0 +1,40 @@
+{
+  "name": "slidev-math-videos",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "preview": "bunx --bun vite preview",
+    "build": "bun run build:index && bun run build:slidev",
+    "build:index": "bunx --bun vite build",
+    "build:slidev": "bun run build:251020 && bun run build:251021",
+    "build:251020": "slidev build video-blogs/【slidev】插空法、隔板法、捆绑法综合练习1.md --base /slidev-math-videos/251020/ --out ../dist/251020",
+    "build:251021": "slidev build video-blogs/测试.md --base /slidev-math-videos/251021/ --out ../dist/251021",
+    "dev": "slidev --open -p 5225",
+    "dev:index": "bunx --bun vite",
+    "dev:251020": "slidev video-blogs/【slidev】插空法、隔板法、捆绑法综合练习1.md --base /251020/ --open -p 5225",
+    "export": "slidev export",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@slidev/cli": "^52.2.5",
+    "@slidev/theme-default": "latest",
+    "@slidev/theme-seriph": "latest",
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "slidev-theme-dracula": "^0.2.0",
+    "vite": "^7.1.11",
+    "vue": "^3.5.22",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.8.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "@vue/tsconfig": "^0.8.1",
+    "eslint": "^9.38.0",
+    "eslint-plugin-vue": "^10.5.1",
+    "globals": "^16.4.0",
+    "typescript": "^5.9.3",
+    "vue-eslint-parser": "^10.2.0"
+  }
+}
