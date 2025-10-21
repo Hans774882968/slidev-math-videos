@@ -6,6 +6,17 @@ import { getWebsiteBasePath } from './src/lib/routeUtils';
 
 export default defineConfig(() => {
   const basePath = getWebsiteBasePath();
+  const isGitHubPages = import.meta.env.VITE_DEPLOY_TARGET === 'github-pages';
+  const buildOptions = isGitHubPages ? {
+    outDir: 'dist',
+    emptyOutDir: false,
+    rollupOptions: {
+      input: {
+        main: 'index.html',
+        '404': '404.html',
+      },
+    },
+  } : {};
 
   console.log(`[smv] Base path: ${basePath}`);
 
@@ -15,10 +26,7 @@ export default defineConfig(() => {
       vue(),
       tailwindcss(),
     ],
-    build: {
-      outDir: 'dist',
-      emptyOutDir: false,
-    },
+    build: buildOptions,
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),

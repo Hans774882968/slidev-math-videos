@@ -9,7 +9,9 @@
         "@slidev/theme-seriph": "latest",
         "@tailwindcss/vite": "^4.1.14",
         "@vitejs/plugin-vue": "^6.0.1",
+        "clsx": "^2.1.1",
         "slidev-theme-dracula": "^0.2.0",
+        "tailwind-merge": "^3.3.1",
         "vite": "^7.1.11",
         "vue": "^3.5.22",
         "vue-router": "^4.6.3",
@@ -643,6 +645,8 @@
     "cliui": ["cliui@9.0.1", "https://registry.npmmirror.com/cliui/-/cliui-9.0.1.tgz", { "dependencies": { "string-width": "^7.2.0", "strip-ansi": "^7.1.0", "wrap-ansi": "^9.0.0" } }, "sha512-k7ndgKhwoQveBL+/1tqGJYNz097I7WOvwbmmU2AR5+magtbjPWQTS1C5vzGkBC8Ym8UWRzfKUzUUqFLypY4Q+w=="],
 
     "clone-regexp": ["clone-regexp@3.0.0", "https://registry.npmmirror.com/clone-regexp/-/clone-regexp-3.0.0.tgz", { "dependencies": { "is-regexp": "^3.0.0" } }, "sha512-ujdnoq2Kxb8s3ItNBtnYeXdm07FcU0u8ARAT1lQ2YdMwQC+cdiXX8KoqMVuglztILivceTtp4ivqGSmEmhBUJw=="],
+
+    "clsx": ["clsx@2.1.1", "https://registry.npmmirror.com/clsx/-/clsx-2.1.1.tgz", {}, "sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA=="],
 
     "codemirror-theme-vars": ["codemirror-theme-vars@0.1.2", "https://registry.npmmirror.com/codemirror-theme-vars/-/codemirror-theme-vars-0.1.2.tgz", {}, "sha512-WTau8X2q58b0SOAY9DO+iQVw8JKVEgyQIqArp2D732tcc+pobbMta3bnVMdQdmgwuvNrOFFr6HoxPRoQOgooFA=="],
 
@@ -1389,6 +1393,8 @@
     "super-regex": ["super-regex@0.2.0", "https://registry.npmmirror.com/super-regex/-/super-regex-0.2.0.tgz", { "dependencies": { "clone-regexp": "^3.0.0", "function-timeout": "^0.1.0", "time-span": "^5.1.0" } }, "sha512-WZzIx3rC1CvbMDloLsVw0lkZVKJWbrkJ0k1ghKFmcnPrW1+jWbgTkTEWVtD9lMdmI4jZEz40+naBxl1dCUhXXw=="],
 
     "supports-color": ["supports-color@7.2.0", "https://registry.npmmirror.com/supports-color/-/supports-color-7.2.0.tgz", { "dependencies": { "has-flag": "^4.0.0" } }, "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="],
+
+    "tailwind-merge": ["tailwind-merge@3.3.1", "https://registry.npmmirror.com/tailwind-merge/-/tailwind-merge-3.3.1.tgz", {}, "sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g=="],
 
     "tailwindcss": ["tailwindcss@4.1.14", "https://registry.npmmirror.com/tailwindcss/-/tailwindcss-4.1.14.tgz", {}, "sha512-b7pCxjGO98LnxVkKjaZSDeNuljC4ueKUddjENJOADtubtdo8llTaJy7HwBMeLNSSo2N5QIAgklslK1+Ir8r6CA=="],
 

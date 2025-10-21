@@ -41,6 +41,14 @@ kimi k2给我的办法是：
 "preview": "bunx --bun vite preview",
 ```
 
+### 回到首页按钮
+
+查看[官方文档](https://cn.sli.dev/features/global-layers)可知，我们在`custom-nav-controls.vue`中添加按钮就行。但官方文档没说实现同款按钮的最佳实践，我这里就说下。
+
+1. 它要和文档放在同一个目录下，即`video-blogs\custom-nav-controls.vue`
+2. 检查元素可知，包裹svg的盒子需要用类名`slidev-icon-btn`
+3. 查看[官方文档](https://cn.sli.dev/features/icons#%E5%9B%BE%E6%A0%87)可知，slidev支持很多图标库，比如我在代码中选择的是`carbon`图标集的`home`图标，就写成`carbon:home`。但检查元素发现，这个图标默认大小是`1.2em`，而slidev导航栏的其他图标大小是`1em`，需要手动调一下
+
 ## 配置用于打包首页的项目
 
 我们先用vite脚手架创建一个vue项目：
@@ -105,3 +113,20 @@ import vuePlugin from 'eslint-plugin-vue';
   }
 }
 ```
+
+## 部署到GitHub Pages
+
+还是参考我之前[博客的《【常规】部署到 GitHub Pages》](https://www.52pojie.cn/thread-2048343-1-1.html)一节来操作的。我之前的[tpm](https://github.com/Hans774882968/teaching-plan-analytic-geometry)和[wasm-re-hw](https://github.com/Hans774882968/wasm-re-hw)项目的workflow都比较特殊，需要一些定制，但这个项目的workflow没有任何特殊之处，可以算是最简单的前端项目部署模板了。[传送门](https://github.com/Hans774882968/slidev-math-videos/blob/main/.github/workflows/main.yml)
+
+注意到slidev会为每个PPT都生成一个`404.html`，但实测这个不会发挥作用。在没有给GitHub Pages配置自定义全局`404.html`的情况下，在浏览器地址栏输入各种URL，测试结果如下：
+
+- 访问`/slidev-math-videos`或`/slidev-math-videos/`，正常进入首页
+- 访问`/slidev-math-videos/251020`或`/slidev-math-videos/251020/`，可以自动重定向到`slidev-math-videos/251020/1`，即第一页PPT，符合预期
+- 访问`/slidev-math-videos/251020/1`，或者2、3等，都会返回GitHub Pages默认的404页面
+- 访问不存在的PPT，比如`slidev-math-videos/114514`或`slidev-math-videos/114514/`，也都返回GitHub Pages默认的404页面
+
+综上，我们只需要和其他前端项目一样，参考我上面的博客去配置`404.html`就行。
+
+> 在`404.html`写JS，转到首页，并带上一个query参数，让首页能够拿到目标网址
+
+但我发现，在本地`bun preview`时，直接在浏览器地址栏输入`/slidev-math-videos/251020/`，只能跳转到首页，而首页的打包产物无法处理这个路由。这个我认为无伤大雅，不理它了。
