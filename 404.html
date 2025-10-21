@@ -90,10 +90,6 @@
       const fullPath = window.location.pathname;
       let targetPath = fullPath;
 
-      if (fullPath.startsWith(BASE_PATH)) {
-        targetPath = fullPath.slice(BASE_PATH.length);
-      }
-
       if (!targetPath.startsWith('/')) {
         targetPath = '/' + targetPath;
       }
