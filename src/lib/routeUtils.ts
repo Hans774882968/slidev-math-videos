@@ -6,14 +6,50 @@ export function getWebsiteBasePath() {
   return basePath;
 }
 
+/**
+ * 从 redirectParam 中提取 pptPath 和 page，并构造重定向目标
+ * 这个项目和前两个部署到 GitHub Pages 的项目不一样，所以这里的实现会比较怪异
+ */
 export function redirectToDestination() {
   const urlParams = new URLSearchParams(window.location.search);
-  const redirectPath = urlParams.get('redirect');
-  if (!redirectPath) {
+  const redirectParam = urlParams.get('redirect');
+  if (!redirectParam) {
     return;
   }
+  const normalizedRedirectParam = redirectParam.startsWith('/') ? redirectParam : `/${redirectParam}`;
   // 移除重定向参数
-  const cleanPath = window.location.pathname + window.location.search.replace(/\?redirect=.*/, '');
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.searchParams.delete('redirect');
+  const cleanPath = cleanUrl.pathname + cleanUrl.search;
+
+  const isGitHubPages = import.meta.env.VITE_DEPLOY_TARGET === 'github-pages';
+
+  // 拆分路径段，过滤空字符串
+  const pathSegments = normalizedRedirectParam.split('/').filter(Boolean);
+
+  const pptIndex = isGitHubPages ? 1 : 0; // GitHub Pages 多一层 base path
+  if (pptIndex >= pathSegments.length) {
+    window.history.replaceState(null, '', cleanPath);
+    window.location.href = normalizedRedirectParam;
+    return;
+  }
+
+  const pptPath = pathSegments[pptIndex];
+  const destinationBasePart = isGitHubPages
+    ? `/${pathSegments[0]}/${pptPath}/`
+    : `/${pptPath}/`;
+
+  // 提取页码部分： normalizedRedirectParam 中 destinationBasePart 之后的内容
+  const pagePart = normalizedRedirectParam.replace(destinationBasePart, '');
+  const pageMatch = pagePart.match(/^(\d+)(?:\/.*)?$/); // 只取开头的数字
+  const page = pageMatch && pageMatch[1] ? parseInt(pageMatch[1], 10) : null;
+
+  // 构造目标 redirect URL（带 page query）
+  const targetUrl = new URL(destinationBasePart, window.location.origin);
+  if (page !== null && page > 0) {
+    targetUrl.searchParams.set('page', String(page));
+  }
+
   window.history.replaceState(null, '', cleanPath);
-  window.location.href = redirectPath;
+  window.location.href = targetUrl.toString();
 }

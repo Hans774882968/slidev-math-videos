@@ -8,32 +8,14 @@ tags:
   - 捆绑法
 ---
 
+<SlidevPageRedirector />
+<AutoSlide :timeList="[5, 8, 2.2]" />
+
 ## 引言
 
 题源： https://www.bilibili.com/video/BV1TAW3zWEWV
 
 插空法：插空顺序可以自己选，但是不同选法的分析难度可能有差别。
-
-<script setup>
-import { onMounted } from 'vue';
-import { useNav } from '@slidev/client';
-
-const timeList = [5, 8, 2.2];
-
-const { next } = useNav();
-
-function autoSlide(timeList, dep) {
-  if (dep >= timeList.length) {
-    return;
-  }
-  setTimeout(() => {
-    next();
-    autoSlide(timeList, dep + 1);
-  }, timeList[dep] * 1000);
-}
-
-onMounted(() => autoSlide(timeList, 0));
-</script>
 
 ---
 

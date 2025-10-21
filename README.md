@@ -130,3 +130,58 @@ import vuePlugin from 'eslint-plugin-vue';
 > 在`404.html`写JS，转到首页，并带上一个query参数，让首页能够拿到目标网址
 
 但我发现，在本地`bun preview`时，直接在浏览器地址栏输入`/slidev-math-videos/251020/`，只能跳转到首页，而首页的打包产物无法处理这个路由。这个我认为无伤大雅，不理它了。
+
+### 251021更新：`404.html`做跳转的标准方案需要魔改才适用于这个项目
+
+我发现按之前两个项目的标准跳转方案，我无法顺利到达对应的PPT页码，而且还会陷入`404.html` → 首页跳转的死循环。因此我需要在原来方案的基础上修改：
+
+1. `404.html`的跳转代码不变
+2. 首页仅负责跳转到对应的PPT，但要加入一个query参数`page=<str>`
+3. PPT页面拿到`page`参数，尝试解析为数字，如果成功，则跳转到对应页码；否则toast提示
+
+相关提示词：
+
+```markdown
+大佬，你是一名专家前端工程师，精通前端工程化。请叫我hans7。我有一个vite+vue3项目，用于实现首页。相关代码如下：
+
+`src\App.vue`：
+
+onMounted(redirectToDestination);
+
+`src\lib\routeUtils.ts`：
+
+export function redirectToDestination() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirectPath = urlParams.get('redirect');
+  if (!redirectPath) {
+    return;
+  }
+  // 移除重定向参数
+  const cleanPath = window.location.pathname + window.location.search.replace(/\?redirect=.*/, '');
+  window.history.replaceState(null, '', cleanPath);
+  window.location.href = redirectPath;
+}
+
+现在我希望把以上代码升级为：
+
+1. 首页判断`const isGitHubPages = import.meta.env.VITE_DEPLOY_TARGET === 'github-pages';`如果为true，则获取 cleanPath 的第2、3个斜杠之间的内容，否则取第1、2个斜杠之间的内容，记为 pptPath 。我们截取 cleanPath 中 pptPath 及之前的内容，作为以上代码 redirectPath ， pptPath 之后是斜杠，记斜杠下一个字符到结尾的内容，作为我们要跳转的PPT的页码，一般情况下这个页码是一个数字（检验页码的逻辑放到后一部分），把它放进 redirectPath 的 query 参数里，参数名为 page
+2. 在我的项目里，如果 redirectPath 合法，就一定是跳转到对应的PPT里。PPT是用 slidev 实现的，所以请你帮我实现一个vue组件，组件里读取url的上述 page 参数。如果页码不是一个正整数，就展示一个toast消息提示页码不合法。否则就跳转到对应的页码
+
+一些有用的信息：
+
+1. 这个项目的URL目前有：首页`/slidev-math-videos/`，slidev PPT：`/slidev-math-videos/251020/`，slidev PPT：`/slidev-math-videos/251021/`。有页码的例子：`/slidev-math-videos/251020/3`
+
+最佳实践：
+
+1. 遵循DRY原则，3次及以上重复出现的代码应抽象为函数、子组件等
+2. 使用early return、early break、early continue，减少代码嵌套层级
+```
+
+提示词写得很用心，但确实描述得挺模糊的，通义千问生成的代码基本上是胡说八道，最后改它代码的时间可能都够自己实现一遍了。PS：我告诉它它写的PPT翻页的代码不对，它再次思考的成果是：“然而，Slidev 暴露了全局的 nav 对象用于导航！✅ 正确方案：使用 Slidev 内置的 `nav.go()` API”额…实测正确的写法是`$nav.value.go(page + 1)`。我怀疑最近各大模型都降智了（可能是因为我用得多，杀熟），没以前那种良好的开发体验了。
+
+产出：
+
+1. 修改后的`src\lib\routeUtils.ts`的`redirectToDestination`方法
+2. `video-blogs\components\SlidevPageRedirector.vue`。注意，组件相对于PPT文档的路径必须是`components/xxx`
+
+因为GitHub Pages太过鸡肋，我们在此竟然设置了3层跳板…
