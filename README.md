@@ -114,6 +114,21 @@ import vuePlugin from 'eslint-plugin-vue';
 }
 ```
 
+### 配置动画库`@vueuse/motion`
+
+问LLM得到的回答并不靠谱。亲测发现，只需要先`bun add @vueuse/motion`，然后
+
+```ts
+import { MotionPlugin } from '@vueuse/motion';
+
+createApp(App)
+  .use(router)
+  .use(MotionPlugin)
+  .mount('#app');
+```
+
+就能用了。
+
 ## 部署到GitHub Pages
 
 还是参考我之前[博客的《【常规】部署到 GitHub Pages》](https://www.52pojie.cn/thread-2048343-1-1.html)一节来操作的。我之前的[tpm](https://github.com/Hans774882968/teaching-plan-analytic-geometry)和[wasm-re-hw](https://github.com/Hans774882968/wasm-re-hw)项目的workflow都比较特殊，需要一些定制，但这个项目的workflow没有任何特殊之处，可以算是最简单的前端项目部署模板了。[传送门](https://github.com/Hans774882968/slidev-math-videos/blob/main/.github/workflows/main.yml)
@@ -184,4 +199,9 @@ export function redirectToDestination() {
 1. 修改后的`src\lib\routeUtils.ts`的`redirectToDestination`方法
 2. `video-blogs\components\SlidevPageRedirector.vue`。注意，组件相对于PPT文档的路径必须是`components/xxx`
 
-因为GitHub Pages太过鸡肋，我们在此竟然设置了3层跳板…
+因为GitHub Pages太过鸡肋，我们在此竟然设置了3层跳板…流程如下：
+
+1. https://hans774882968.github.io/slidev-math-videos/251021/3 返回`404.html`
+2. https://hans774882968.github.io/slidev-math-videos/?redirect=%2Fslidev-math-videos%2F251021%2F3
+3. 请求进入 PPT 的第一页，但带有`page`参数 https://hans774882968.github.io/slidev-math-videos/251021/?page=3
+4. 进入正确的页码 https://hans774882968.github.io/slidev-math-videos/251021/3?page=3
