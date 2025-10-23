@@ -49,6 +49,13 @@ kimi k2给我的办法是：
 2. 检查元素可知，包裹svg的盒子需要用类名`slidev-icon-btn`
 3. 查看[官方文档](https://cn.sli.dev/features/icons#%E5%9B%BE%E6%A0%87)可知，slidev支持很多图标库，比如我在代码中选择的是`carbon`图标集的`home`图标，就写成`carbon:home`。但检查元素发现，这个图标默认大小是`1.2em`，而slidev导航栏的其他图标大小是`1em`，需要手动调一下
 
+### 实现 slidev PPT 自动翻页
+
+[相关组件：`video-blogs\components\AutoSlide.vue`](https://github.com/Hans774882968/slidev-math-videos/blob/main/video-blogs/components/AutoSlide.vue)。代码比较长，就不贴出来了。只简单说些注意点。
+
+1. 用`async/await`来实现阻塞，并且需要实现一个`sleep`函数
+2. 我这里用了递归来实现，因为挺符合直觉的。用二重循环实现也OK的
+
 ## 配置用于打包首页的项目
 
 我们先用vite脚手架创建一个vue项目：
@@ -205,3 +212,23 @@ export function redirectToDestination() {
 2. https://hans774882968.github.io/slidev-math-videos/?redirect=%2Fslidev-math-videos%2F251021%2F3
 3. 请求进入 PPT 的第一页，但带有`page`参数 https://hans774882968.github.io/slidev-math-videos/251021/?page=3
 4. 进入正确的页码 https://hans774882968.github.io/slidev-math-videos/251021/3?page=3
+
+## 我如何用`slidev`制作PPT类数学视频
+
+个人的方案是：
+
+1. 写好文案和PPT
+2. `edge-tts`生成AI旁白，获得音频和字幕文件
+3. 根据字幕文件确定slidev PPT自动播放的时间间隔，一般每个PPT的停留时间会多给2s，而一开始的PPT会多给十几秒，因为我们点击开始录屏是需要时间的
+4. 用slidev提供的录屏功能录屏。实测拿到的mp4文件没有时长信息，需要用`ffmpeg`处理一下，并且分辨率是1920*968、30帧。这里也可以考虑用OBS录屏，但OBS录屏用起来有点难受
+5. 用`kdenlive`剪辑
+
+### Chrome原生“分享标签页”录屏所得mp4没有时长信息
+
+根据kimi k2的说法，执行下面的命令就能加上
+
+```powershell
+ffmpeg -i 双曲换元？欧拉公式！.mp4 -c copy 双曲换元？欧拉公式！-o.mp4
+```
+
+亲测可行

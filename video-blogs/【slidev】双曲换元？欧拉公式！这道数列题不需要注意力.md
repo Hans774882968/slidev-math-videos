@@ -9,6 +9,7 @@ tags:
 ---
 
 <SlidevPageRedirector />
+<AutoSlide :timeList="[[42, 26], [12, 14], 20, 14]" />
 
 ## 双曲换元？欧拉公式！这道数列题不需要注意力
 
