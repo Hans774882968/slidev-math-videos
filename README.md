@@ -31,7 +31,7 @@ kimi k2给我的办法是：
 "build": "bun run build:index && bun run build:slidev",
 "build:index": "bunx --bun vite build",
 "build:slidev": "bun run build:251020 && bun run build:251021",
-"build:251020": "slidev build video-blogs/【slidev】插空法、隔板法、捆绑法综合练习1.md --base /slidev-math-videos/251020/ --out ../dist/251020",
+"build:251020": "slidev build video-blogs/【slidev】排列组合：插空法、隔板法、捆绑法综合练习1.md --base /slidev-math-videos/251020/ --out ../dist/251020",
 "build:251021": "slidev build video-blogs/测试.md --base /slidev-math-videos/251021/ --out ../dist/251021",
 ```
 
