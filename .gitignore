@@ -7,6 +7,6 @@ dist
 components.d.ts
 
 # custom
-media/*.mp3
-media/*.mp4
-media/*.png
+media/**/*.mp3
+media/**/*.mp4
+media/**/*.png

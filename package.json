@@ -15,7 +15,8 @@
     "dev:251020": "slidev video-blogs/【slidev】排列组合：插空法、隔板法、捆绑法综合练习1.md --base /251020/ --open -p 5225",
     "dev:251022": "slidev video-blogs/【slidev】双曲换元？欧拉公式！这道数列题不需要注意力.md --base /251022/ --open -p 5225",
     "export": "slidev export",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "subtitle": "bun scripts/fix_subtitle.ts"
   },
   "dependencies": {
     "@slidev/cli": "^52.2.5",
