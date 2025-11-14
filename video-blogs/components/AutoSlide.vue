@@ -6,8 +6,13 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  debug: {
+    type: Boolean,
+    default: false,
+  }
 });
 const timeList = props.timeList;
+const dbg = props.debug;
 
 function sleep(ms) {
   return new Promise((resolve) => {
@@ -17,17 +22,20 @@ function sleep(ms) {
 
 /**
  * 自动调用 $nav.value.next
- * @param timeList 每次点击前的等待时长
+ * @param clickTimeList 每次点击前的等待时长
  * @param clkCount 点击了几次
  */
-async function autoClick(timeList, clkCount) {
-  if (clkCount >= timeList.length) {
+async function autoClick(clickTimeList, clkCount) {
+  if (clkCount >= clickTimeList.length) {
     return;
   }
 
-  await sleep(timeList[clkCount] * 1000);
+  await sleep(clickTimeList[clkCount] * 1000);
+  if (dbg) {
+    console.log(`第${clkCount + 1}次点击，等待时长`, clickTimeList[clkCount], clickTimeList, clkCount);
+  }
   $nav.value.next();
-  autoClick(timeList, clkCount + 1);
+  autoClick(clickTimeList, clkCount + 1);
 }
 
 /**
@@ -45,15 +53,20 @@ async function autoSlide(timeList, page) {
     // 宏任务是一瞬间推进去的，所以需要手动加上时间。试过让LLM实现，它实现不出来
     if (typeof turnWaitTime === 'number' && !isNaN(turnWaitTime)) {
       await sleep(turnWaitTime * 1000);
+      if (dbg) {
+        console.log('翻到页码', page + 1, '等待时长', turnWaitTime, timeList, page - 1, turnWaitTime, clickWaitTime);
+      }
       $nav.value.go(page + 1);
       await autoClick(clickWaitTime, 0);
       await autoSlide(timeList, page + 1);
     }
-    autoClick(clickWaitTime, 0);
     return;
   }
 
   await sleep(timeList[page - 1] * 1000);
+  if (dbg) {
+    console.log('翻到页码', page + 1, '等待时长', timeList[page - 1]);
+  }
   $nav.value.go(page + 1);
   autoSlide(timeList, page + 1);
 }
