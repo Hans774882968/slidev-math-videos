@@ -10,7 +10,7 @@ tags:
 ---
 
 <SlidevPageRedirector />
-<AutoSlide :timeList="[[52, 7], 12, 31, 26, 42]" :debug="true" />
+<AutoSlide :timeList="[[45, 7], 12, 34, 26, 52]" />
 
 ## 《高中数学竞赛培优教程》好题：函数性质+组合数定义
 
@@ -56,7 +56,7 @@ $$
 
 ---
 
-## 题解
+## 法1：我的做法
 
 下面记目标函数为g。看到目标函数里有 $\frac{1}{x}$ ，我们自然会想把 $\frac{1}{x},\ x<0$ 代入约束方程试试：
 
@@ -64,41 +64,43 @@ $$
 f(\frac{\frac{1}{x}}{\frac{1}{x}-1})=f(\frac{1}{1-x})=\frac{1}{x}f(\frac{1}{x})
 $$
 
-然后f是奇函数，所以我们会想把上面的x换成-x试试：
+然后f是奇函数，所以我们会想把上面的x换成 $u=-x>0$ 试试：
 
 $$
--\frac{1}{x}f(-\frac{1}{x})=(-1)^2\frac{1}{x}f(\frac{1}{x})=f(\frac{1}{1+x})
+\frac{1}{u}f(\frac{1}{u})=(-1)^2\frac{1}{x}f(\frac{1}{x})=f(\frac{1}{1-x})=f(\frac{1}{1+u})
 $$
 
-所以
+所以我们拿到了一个**递推式**
 
 <div class="font-bold border border-white px-2 py-1 rounded-lg">
 $$
-\frac{1}{x}f(\frac{1}{x})=f(\frac{1}{1-x})=f(\frac{1}{1+x}),\ x<0
+\frac{1}{u+1}=\frac{1}{u}f(\frac{1}{u}),\ f(1)=1,\ u>0
 $$
 </div>
 
 ---
 
-## 题解续
+## 法2：参考答案
 
-这里 $x<0$ ，但我们**希望x是正数**，所以把上式的x换成 $u=-x>0$ ：
+这里补充说明参考答案的做法，让它对注意力涣散人群更友好~
 
-<div class="font-bold border border-white px-2 py-1 rounded-lg">
+目标函数是 $\frac{1}{N^+}$ 的形式，但约束方程只对负数成立，所以我们设 $k>0,\ -\frac{1}{k}<0$ ，就能代入约束方程了：
+
 $$
-\frac{1}{u}f\left( \frac{1}{u} \right)=\frac{1}{x}f(\frac{1}{x})=f(\frac{1}{1-x})=f(\frac{1}{1+(-x)})=f(\frac{1}{1+u})
+f(\frac{-\frac{1}{k}}{-\frac{1}{k}-1})=f(\frac{1}{1+k})=-\frac{1}{k}f(-\frac{1}{k})=\frac{1}{k}f(\frac{1}{k})
 $$
-</div>
 
-我们拿到了一个**递推式**！所以不难得到 $f\left( \frac{1}{x} \right)=\frac{1}{(x-1)!},\ x\geq1$ 。于是目标函数
+同样得到了法1的递推式
+
+---
+
+## 题解剩余部分
+
+**累乘**，不难得到 $f\left( \frac{1}{x} \right)=\frac{1}{(x-1)!},\ x\geq1$ 。于是目标函数
 
 $$
 g=\sum_{i=1}^{50} f\left( \frac{1}{i} \right)f\left( \frac{1}{101-i} \right)=\sum_{i=0}^{49} \frac{1}{i!(99-i)!}
 $$
-
----
-
-## 题解续
 
 联想到组合数的定义式 $C_{n}^m=\frac{n!}{m!(n-m)!}$ ，于是
 
@@ -106,13 +108,7 @@ $$
 g=\frac{1}{99!}\sum_{i=0}^{49} C_{99}^i
 $$
 
-又由二项式定理
-
-$$
-\sum_{i=0}^{99} C_{99}^i = 2^{99}
-$$
-
-和 $C_{99}^i=C_{99}^{99-i}$ ，得
+又由**二项式定理** $\sum_{i=0}^{99} C_{99}^i = 2^{99}$ 和 $C_{99}^i=C_{99}^{99-i}$ ，得
 
 $$
 \sum_{i=0}^{49} C_{99}^i=\frac{\sum_{i=0}^{99} C_{99}^i}{2}=2^{98} \Rightarrow g=\frac{2^{98}}{99!}
