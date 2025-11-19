@@ -43,3 +43,5 @@ slidev PPT 传送门： https://hans774882968.github.io/slidev-math-videos/25111
 - 一般般
 - 踮踮脚能够到
 - 踮脚也够不着
+
+评分弹幕 02:35 不需要任何注意力

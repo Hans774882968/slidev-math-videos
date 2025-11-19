@@ -10,6 +10,7 @@ tags:
 ---
 
 <SlidevPageRedirector />
+<MovingWatermark />
 <AutoSlide :timeList="[50, 73, 57, 36, 13, 40, 22, 38, 30, 25, 30, 35, 53]" />
 
 ## 排列组合：插空法、隔板法、捆绑法综合练习1（一题多解、量大管饱）

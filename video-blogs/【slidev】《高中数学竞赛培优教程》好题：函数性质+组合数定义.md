@@ -10,6 +10,7 @@ tags:
 ---
 
 <SlidevPageRedirector />
+<MovingWatermark />
 <AutoSlide :timeList="[[45, 7], 12, 34, 26, 52]" />
 
 ## 《高中数学竞赛培优教程》好题：函数性质+组合数定义
