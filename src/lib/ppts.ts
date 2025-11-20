@@ -3,7 +3,7 @@ export const ppts = [
   { id: '251021', title: '测试', date: '2025-10-21' },
   { id: '251022', title: '【slidev】双曲换元？欧拉公式！这道数列题不需要注意力', date: '2025-10-22' },
   { id: '251114', title: '【slidev】《高中数学竞赛培优教程》好题：函数性质+组合数定义', date: '2025-11-14' },
-  { id: '251117', title: '【slidev】f(f(n))=3n，超越原题，求通项公式，保姆级教程！', date: '2025-11-17' },
+  { id: '251117', title: '【slidev】f(f(n))=3n，求这道优雅数列题的通项公式，保姆级教程！', date: '2025-11-17' },
 ];
 
 export function hasPpt(id: string) {
