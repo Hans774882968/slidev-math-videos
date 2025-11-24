@@ -232,3 +232,12 @@ ffmpeg -i 双曲换元？欧拉公式！.mp4 -c copy 双曲换元？欧拉公式
 ```
 
 亲测可行
+
+## 静态资源踩坑记录
+
+搜索引擎、官方文档都没有找到怎样有效地引用图片等静态资源。亲测以下方案有效：
+
+1. 图片路径`video-blogs\public\251124\img.png`，引用`![](/public/251124/img.png)`或`![](./public/251124/img.png)`。这两个引用的效果一样，但后者能让VSCode显示图片，前者不能。看打包产物，它会同时被打包到`dist\251124\251124\img.png`和`dist\251124\assets\img-[hash].png`
+2. 图片路径`video-blogs\assets\251124\img.png`，引用`![](./assets/251124/img.png)`。有效，而且VSCode能显示图片。看打包产物，它只会打包到`dist\251124\assets\img-[hash].png`
+
+我们进一步探究“2”，把文件夹名从`assets`改成`fooBar`，并引用`![](./fooBar/251124/img.png)`。发现在开发和生产环境都有效，而且VSCode能显示图片。看打包产物，它仍然是被打包到`dist\251124\assets\img-[hash].png`
