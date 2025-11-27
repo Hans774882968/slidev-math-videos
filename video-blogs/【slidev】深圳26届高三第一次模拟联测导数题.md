@@ -95,7 +95,9 @@ $$
 ::right::
 
 <div class="flex justify-center h-full pt-4">
-  <img src="./assets/251126/241126-1-f&apos;图像.png" class="w-80 h-80" alt="241126-1-f'图像.png">
+  <!-- 这里产生了类似于最基础的SQL注入的效果，单引号闭合，导致代码无法被解释执行
+  import _imports_0 from './assets/251126/241126-1-f'图像.png' -->
+  <img src="./assets/251126/241126-1-f导数图像.png" class="w-80 h-80" alt="241126-1-f导数图像.png">
 </div>
 
 ---
