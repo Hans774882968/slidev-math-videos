@@ -10,6 +10,10 @@ tags:
   - 裂项相消
 ---
 
+<SlidevPageRedirector />
+<MovingWatermark />
+<AutoSlide :timeList="[12, 27.5, 27.5, 40.5, 16, 42, 26, 37.5, 44, 16, 29, 64, 26.5, 51.5]" />
+
 ## 大题造火箭！长郡二十校26届高三12月联考三角导数压轴
 
 题源：长郡二十校联盟2026届高三12月联考第19题
@@ -85,7 +89,7 @@ $$
 \end{cases}
 $$
 
-思想：先把sin和cos换成e的指数形式，然后利用等比数列求和公式，最后在合适时机把e的指数形式还原回sin和cos
+公式推导思路：先把sin、cos换成e的指数形式，然后利用等比数列求和公式，最后在合适时机把e的指数形式还原回sin、cos
 
 ---
 
@@ -118,7 +122,7 @@ $e^{ia_{1}}$ 可以直接用欧拉公式还原成sin和cos。但 $\frac{e^{ind}-
 
 ## 求 $s=\sum_{i=1}^{n} \sin(a_{1}+(i-1)d)$ 续：求 $e^{iX}-1$
 
-我们回望 $\sin x=\frac{e^{ix}-e^{-ix}}{2i}$ 这个式子，发现分子分母同乘 $e^{ix}$ ，就能发现 $e^{i(2x)}-1$ 这种形式。所以 $e^{iX}-1$ 可以变成 $2ie^{i\frac{X}{2}}\frac{e^{i\frac{X}{2}}-e^{i\frac{-X}{2}}}{2i}$ ，这样就能弄出sin了： **$2ie^{i\frac{X}{2}}\sin \frac{X}{2}$** 。分别代入 $X=nd,\ d,\ -nd,\ -d$ 得：
+我们回望 $\sin x=\frac{e^{ix}-e^{-ix}}{2i}$ 这个式子，发现分子分母同乘 $e^{ix}$ ，就能发现 $e^{i(2x)}-1$ 这种形式。所以把 $e^{iX}-1$ 变成 $2ie^{i\frac{X}{2}}\frac{e^{i\frac{X}{2}}-e^{i\frac{-X}{2}}}{2i}$ ，这样就能弄出sin了： **$2ie^{i\frac{X}{2}}\sin \frac{X}{2}$** 。分别代入 $X=nd,\ d,\ -nd,\ -d$ 得：
 
 $$
 s=\frac{1}{2i}(e^{ia_{1}}\frac{e^{i\frac{nd}{2}}\sin \frac{nd}{2}}{e^{i\frac{d}{2}}\sin \frac{d}{2}}-e^{-ia_{1}}\frac{e^{i\frac{-nd}{2}}\sin \frac{-nd}{2}}{e^{i\frac{-d}{2}}\sin \frac{-d}{2}})
@@ -236,7 +240,7 @@ $$
 
 为什么选择除以2u？因为我们发现除以2u后，cos里和cos外各出现了一个 $t=b_{1}+u(2u-1)$ 。再设 $v=\frac{\sin 2u^2}{2u\sin u}$ ，于是这个式子可以写成 $t+v\cos t=\frac{\pi}{2}$
 
-$|v|=|\frac{\sin 2u^2}{2u\sin u}|<|\frac{1}{2u\sin u}|$ ，估算 $u\ mod\ \pi=0.4479 \pi$ ，故 $\sin u$ 比较接近1，而u是一千多，所以**v非常接近0**。设 $g(t)=t+v\cos t$ ，则 $g'(t)=1-v\sin t$ 。因为v很接近0，所以 $v\sin t$ 肯定比1小，所以g在R上单增。又g的值域也为R，所以上面式子只有一个解。瞪眼法容易得到 $t=\frac{\pi}{2}$ 。
+$|v|=|\frac{\sin 2u^2}{2u\sin u}|<|\frac{1}{2u\sin u}|$ ，估算 $u\ mod\ \pi=0.4479 \pi$ ，故 $\sin u$ 比较接近1，而u是一千多，所以**v非常接近0**。设 $g(t)=t+v\cos t$ ，则 $g'(t)=1-v\sin t$ 。因为v很接近0，所以 $v\sin t$ 肯定比1小，所以g在R上单增。又g的值域也为R，所以g的零点唯一。瞪眼法容易得到 $t=\frac{\pi}{2}$ 。
 
 所以 $\sum_{k=1}^{2u} \cos(b_{1}+2u(k-1))=\frac{\sin 2u^2}{\sin u}\cos t=0$ ， $T_{2u}=T_{2026}=1013\pi$
 
@@ -287,7 +291,7 @@ $$
 
 ### 回顾与发现
 
-法2和法1设的g是同一个函数，这说明法1的 $\frac{\sin 2u^2}{2u\sin u}$ 还原为法2的cos求和，估值难度反而下降了
+**法2设的Y和法1设的v是同一个东西**，这说明如果能想到将法1的 $\frac{\sin 2u^2}{2u\sin u}$ 重新拆分为法2的cos求和，就能避免不太优雅地去估值 $\sin u$ 。拆分方法： $\sin 2u^2 = 2\sin u^2\cos u^2$ ，公差为2u，项数和首项为u
 
 ---
 layout: center
