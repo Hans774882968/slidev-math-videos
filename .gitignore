@@ -8,5 +8,6 @@ components.d.ts
 
 # custom
 media/**/*.mp3
+media/**/*.wav
 media/**/*.mp4
 media/**/*.png
