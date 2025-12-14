@@ -10,6 +10,10 @@ tags:
   - 周期数列
 ---
 
+<SlidevPageRedirector />
+<MovingWatermark />
+<AutoSlide :timeList="[20, 16, 63.5, 46, 32.5, 62, 47.5, 72.5, 38.5]" />
+
 ## 湖南师大附中26届高三第4次月考数论题和一道类似的竞赛题串讲
 
 月考数论题题源： [湖南师大附中26届高三第4次月考第18题第三问](https://www.douyin.com/note/7578539711850054577)
