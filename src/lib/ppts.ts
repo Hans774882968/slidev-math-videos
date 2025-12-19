@@ -10,6 +10,7 @@ export const ppts = [
   { id: '251204', title: '【slidev】大题造火箭！长郡二十校26届高三12月联考三角导数压轴', date: '2025-12-04' },
   { id: '251209', title: '【slidev】纳西妲讲解湖南师大附中26届高三第4次月考数论题和一道类似的竞赛题~', date: '2025-12-09' },
   { id: '251210', title: '【slidev】纳西妲遇到两道涉及数论的数列题，哥哥姐姐们可以帮帮她吗', date: '2025-12-10' },
+  { id: '251219', title: '【slidev】如何用edge-tts为manim动画添加旁白', date: '2025-12-19' },
 ];
 
 export function hasPpt(id: string) {
