@@ -10,14 +10,21 @@ edge-tts --voice zh-CN-XiaoxiaoNeural --rate=+20% --file docs\如何用edge-tts�
 
 ## B站发布：标题、标签、简介…
 
-标题：《》
+标题：《【技术分享】如何用听感更顺耳的edge-tts为manim动画添加旁白》
 
-标签： 宝藏知识UP跃迁计划, slidev, 经验分享
+标签： 宝藏知识UP跃迁计划, slidev, 技术分享, 经验分享, manim, Python, TTS, edge-tts, kdenlive, 开源
 
 ```
-
+最近有小伙伴问我怎么用edge-tts为manim动画添加旁白。我想可能会有其他小伙伴也受够了某些常用剪辑软件的默认旁白
+想试试听起来更顺耳的edge-tts，所以我临时加更了这期视频，跟小伙伴们分享我个人的经验~
+到目前为止我制作的所有视频所采用的解决方案都比较“程序员”。没有技术背景的小伙伴感觉这样的解决方案选型怎么样呢？
+本期视频主要内容（省流）：
+1. edge-tts的安装、使用和踩坑经验分享
+2. 如何用edge-tts为manim动画添加旁白
+3. edge-tts生成的字幕文件有莫名其妙的空隙，怎么办？
+4. 我的纯前端开源项目的预告
 slidev PPT 传送门： https://hans774882968.github.io/slidev-math-videos/251219
-文字稿： https://github.com/Hans774882968/slidev-math-videos/blob/main/video-blogs/
+文字稿： https://github.com/Hans774882968/slidev-math-videos/blob/main/video-blogs/%E3%80%90slidev%E3%80%91%E5%A6%82%E4%BD%95%E7%94%A8edge-tts%E4%B8%BAmanim%E5%8A%A8%E7%94%BB%E6%B7%BB%E5%8A%A0%E6%97%81%E7%99%BD.md
 GPT-SoVITS开发者：@花儿不哭
 模型训练者：@红血球AE3803 & @白菜工厂1145号员工
 推理特化包适配 & 在线推理：@AI-Hobbyist
@@ -26,25 +33,28 @@ GPT-SoVITS开发者：@花儿不哭
 章节：
 
 ```
-00:00 题干
-00:44 
-05:24 后记
+00:00 引言
+00:18 edge-tts安装、踩坑经验
+01:09 edge-tts的使用
+02:03 edge-tts和manim动画配合
+02:57 字幕文件有预期外空隙咋办
+03:25 我的纯前端开源项目预告
 ```
 
-互动引导加在末尾
+互动引导加在03:25
 
-投票弹幕：00:25
+投票弹幕：02:05
 
-你觉得这两题难度如何
+你觉得这套方案如何
 
-- 太水了
+- 不得行
 - 一般般
-- 踮踮脚能够到
-- 踮脚也够不着
+- 还可以
+- 我有其他想法
 
 评分弹幕
 
-- 00:40 纳西妲卡哇伊
+- 03:40 纳西妲卡哇伊
 
 封面：
 
@@ -52,4 +62,3 @@ GPT-SoVITS开发者：@花儿不哭
 magick 251219-封面.png -resize 960x1280! 251219-封面-4x3.png
 magick 251219-封面.png -resize 1440x1080! 251219-封面-3x4.png
 ```
-

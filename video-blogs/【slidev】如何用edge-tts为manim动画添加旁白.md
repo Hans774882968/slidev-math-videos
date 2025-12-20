@@ -7,6 +7,7 @@ class: text-center
 
 <SlidevPageRedirector />
 <MovingWatermark />
+<AutoSlide :timeList="[23, 52, 54, 56]" />
 
 ## 如何用 edge-tts 为 manim 动画添加旁白
 
