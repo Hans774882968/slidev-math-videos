@@ -11,6 +11,7 @@ export const ppts = [
   { id: '251209', title: '【slidev】纳西妲讲解湖南师大附中26届高三第4次月考数论题和一道类似的竞赛题~', date: '2025-12-09' },
   { id: '251210', title: '【slidev】纳西妲遇到两道涉及数论的数列题，哥哥姐姐们可以帮帮她吗', date: '2025-12-10' },
   { id: '251219', title: '【slidev】如何用edge-tts为manim动画添加旁白', date: '2025-12-19' },
+  { id: '251222', title: '【slidev】26考研数学数一第21题和25年数三第21题串讲', date: '2025-12-22' },
 ];
 
 export function hasPpt(id: string) {
