@@ -12,6 +12,7 @@ export const ppts = [
   { id: '251210', title: '【slidev】纳西妲遇到两道涉及数论的数列题，哥哥姐姐们可以帮帮她吗', date: '2025-12-10' },
   { id: '251219', title: '【slidev】【技术分享】如何用听感更顺耳的edge-tts为manim动画添加旁白', date: '2025-12-19' },
   { id: '251222', title: '【slidev】两道基础而不失小清新的考研线代真题串讲-26年数一第21题和25年数三第21题', date: '2025-12-22' },
+  { id: '251226', title: '【slidev】26成都一诊组合数学压轴-一起揭晓这道经典好题的概率论背景~', date: '2025-12-26' },
 ];
 
 export function hasPpt(id: string) {
