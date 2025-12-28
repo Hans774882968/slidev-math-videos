@@ -14,6 +14,7 @@ tags:
 
 <SlidevPageRedirector />
 <MovingWatermark />
+<AutoSlide :timeList="[0, 26, 46, 41, 62, 80.5, 48, 23.5, 27, 36.5, 42.5, 31, 21, 32.5]" />
 
 留空
 
