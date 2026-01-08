@@ -48,7 +48,7 @@ const staggerDelay = 100;
             v-motion
             :href="`${basePath}${p.id}/`"
             :class="cn(
-              'block p-6 rounded-lg shadow',
+              'block p-6 space-y-2 rounded-lg shadow',
               'bg-(--current-line)',
               'border border-(--purple)/20',
               'transition-all duration-300',
@@ -64,11 +64,17 @@ const staggerDelay = 100;
               }
             }"
           >
-            <h2 class="text-xl font-bold mb-2">
+            <h2 class="text-xl font-bold">
               {{ p.title }}
             </h2>
             <p class="text-(--comment)">
               {{ p.date }}
+            </p>
+            <p
+              v-if="p.intro"
+              class="text-(--foreground)"
+            >
+              {{ p.intro }}
             </p>
           </a>
         </div>

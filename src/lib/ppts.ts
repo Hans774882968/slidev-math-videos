@@ -1,4 +1,11 @@
-export const ppts = [
+interface Ppt {
+  id: string;
+  title: string;
+  date: string;
+  intro?: string;
+}
+
+export const ppts: Array<Ppt> = [
   { id: '251020', title: '【slidev】排列组合：插空法、隔板法、捆绑法综合练习1', date: '2025-10-20' },
   { id: '251021', title: '测试', date: '2025-10-21' },
   { id: '251022', title: '【slidev】双曲换元？欧拉公式！这道数列题不需要注意力', date: '2025-10-22' },
@@ -14,7 +21,7 @@ export const ppts = [
   { id: '251222', title: '【slidev】两道基础而不失小清新的考研线代真题串讲-26年数一第21题和25年数三第21题', date: '2025-12-22' },
   { id: '251226', title: '【slidev】26成都一诊组合数学压轴-一起揭晓这道经典好题的概率论背景~', date: '2025-12-26' },
   { id: '251230', title: '【slidev】2023四省联考经典好题T16：布尔代数+高斯消元', date: '2025-12-30' },
-  { id: '260105', title: '【slidev】【邪修】一起用CTF Crypto技能包破解这道高中钓鱼题', date: '2026-01-05' },
+  { id: '260105', title: '【slidev】【邪修】一起用CTF Crypto技能包破解这道高中钓鱼题', date: '2026-01-05', intro: '博客版传送门： https://www.52pojie.cn/thread-2085192-1-1.html' },
 ];
 
 export function hasPpt(id: string) {
