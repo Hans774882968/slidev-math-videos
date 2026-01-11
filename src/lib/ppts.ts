@@ -22,6 +22,8 @@ export const ppts: Array<Ppt> = [
   { id: '251226', title: '【slidev】26成都一诊组合数学压轴-一起揭晓这道经典好题的概率论背景~', date: '2025-12-26' },
   { id: '251230', title: '【slidev】2023四省联考经典好题T16：布尔代数+高斯消元', date: '2025-12-30' },
   { id: '260105', title: '【slidev】【邪修】一起用CTF Crypto技能包破解这道高中钓鱼题', date: '2026-01-05', intro: '博客版传送门： https://www.52pojie.cn/thread-2085192-1-1.html' },
+  { id: '260111_t', title: '【slidev】模板', date: '2026-01-11', intro: '数学题解模板' },
+  { id: '260111', title: '【slidev】锐评锐评锐评锐评前后端技术栈技术含量从夯到拉从夯到拉从夯到拉从夯到拉', date: '2026-01-11' },
 ];
 
 export function hasPpt(id: string) {
