@@ -1,0 +1,25 @@
+{
+  "srt_file": "media\\260109\\rank_list_recursive-讲解文字稿.srt",
+  "replacements": [
+    [
+      "汉斯",
+      "Hans"
+    ],
+    [
+      "Image M object",
+      "ImageMobject"
+    ],
+    [
+      "SVG M object",
+      "SVGMobject"
+    ],
+    [
+      "M object",
+      "Mobject"
+    ],
+    [
+      "V Group",
+      "VGroup"
+    ]
+  ]
+}
