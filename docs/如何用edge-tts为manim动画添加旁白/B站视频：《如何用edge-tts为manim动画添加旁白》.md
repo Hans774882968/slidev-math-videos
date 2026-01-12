@@ -74,3 +74,23 @@ GPT-SoVITS开发者：@花儿不哭
 magick 251219-封面.png -resize 960x1280! 251219-封面-4x3.png
 magick 251219-封面.png -resize 1440x1080! 251219-封面-3x4.png
 ```
+
+## 抖音
+
+标题：《如何用听感更顺耳的edge-tts为manim动画添加旁白》
+
+话题： 技术分享, Python, manim, TTS, 开源项目
+
+简介diff：无
+
+章节diff：无
+
+## 小红书
+
+标题：《用听感更顺耳的edge-tts为manim动画加旁白》（20字真难）
+
+标签： 技术分享, 经验分享, python, manim, TTS, 开源项目, slidev
+
+简介只保留链接以上部分
+
+章节diff：无
