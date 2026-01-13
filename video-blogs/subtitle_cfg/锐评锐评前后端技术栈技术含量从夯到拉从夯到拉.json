@@ -1,5 +1,5 @@
 {
-  "srt_file": "media\\260109\\rank_list_recursive-讲解文字稿.srt",
+  "srt_file": "media\\260109\\讲解文字稿.srt",
   "replacements": [
     [
       "汉斯",
@@ -20,6 +20,34 @@
     [
       "V Group",
       "VGroup"
+    ],
+    [
+      "lag ratio",
+      "lag_ratio"
+    ],
+    [
+      "“拉完了",
+      "“拉完了”"
+    ],
+    [
+      "draw rank list bg",
+      "draw_rank_list_bg"
+    ],
+    [
+      "bg insert into rank",
+      "bg_insert_into_rank"
+    ],
+    [
+      "to shrink",
+      "to_shrink"
+    ],
+    [
+      "next bg",
+      "next_bg"
+    ],
+    [
+      "label index",
+      "label_index"
     ]
   ]
 }

@@ -6,7 +6,7 @@ transition: slide-left
 
 <SlidevPageRedirector />
 <MovingWatermark />
-<!-- <AutoSlide :timeList="[0, 0]" /> -->
+<AutoSlide :timeList="[0, 75, 58, 84.5, 47, 50, 57, 16]" />
 
 留空
 
@@ -86,7 +86,7 @@ class RankListDemo(Scene):
 <div class="flex gap-4">
 <div>
 
-图标初始布局代码示例：
+图标群初始布局代码示例：
 
 ```python
 initial_height_large = 1.5 * self.RANK_LIST_BG_CFG['row_height']
@@ -105,7 +105,7 @@ vue_svg_mo.next_to(vite_png_mo, RIGHT)
 </div>
 <div>
 
-多个图标一起入场：
+多个图标排队入场：
 
 ```python
 self.play(
@@ -147,27 +147,35 @@ self.play(
 frontend_svg_la = VGroup(angular_svg_mo, redux_svg_mo) # 预先打包，为后续对当前背景进行排名做准备
 ```
 
-1. `bg5`是当前处于画面最上层的背景，`bg5.label_rect_list[4]`表示把当前图标排到“拉完了”
+1. `bg5`是当前处于**画面最上层**的背景，`bg5.label_rect_list[4]`表示把当前图标排到“拉完了”
 2. `img_final_height`是一行矩形的高度
 3. `frontend_svg_la`预先打包，为后续对当前背景进行排名做准备
+4. Q：怎么没和前面一样用`LaggedStart`实现排队入场？A：不排第一的元素的目标位置都不好确定
 
 ---
 
-## manim的`z-index`
-
-本期视频需要准备5个背景：`bg1, bg2, bg3, bg4, bg5 = self.draw_rank_list_bg(), self.draw_rank_list_bg(), self.draw_rank_list_bg(), self.draw_rank_list_bg(), self.draw_rank_list_bg()`
+## manim的层级机制
 
 ```python
 bg1 = self.draw_rank_list_bg()
 bg2 = self.draw_rank_list_bg()
 ```
 
-请问`bg1`和`bg2`谁在上面？答案：`bg2`的`z-index`更大，所以它在上面。 WIP
+请问`bg1`和`bg2`谁在上面？
 
-彩蛋：我之前写代码时，让。但效果看着是完全没问题的。原因如下：
+manim layers: https://docs.devtaoism.com/docs/html/contents/_4_layers.html
 
-1. 5层背景长相完全一样
-2. manim有能力自动把下面背景的层级提升上来
+答案：根据官方文档，`Mobject`的默认`z-index`都为0。`z-index`不同时，按`z-index`排；`z-index`相同时，后调用`self.add / self.play`的在上面（和CSS`z-index`类似）。
+
+彩蛋：我之前写代码时，用的是错误的`bg1`而非`bg5`，但效果看着完全没问题。原因如下：
+
+1. 在执行缩小动画时，原本被上层背景完全覆盖的背景突然被manim拉上来了
+2. 5层背景长相完全一样
+
+这就导致缩小动画的突变过程看着就像我们期望的渐变过程。写代码探究这个现象：
+
+- [有突变过程的代码传送门](https://github.com/Hans774882968/manim-hw/blob/main/rank_list_recursive/bg_overlap.py)
+- [无突变过程的代码传送门](https://github.com/Hans774882968/manim-hw/blob/main/rank_list_recursive/bg_overlap_correct.py)
 
 ---
 
@@ -186,8 +194,35 @@ def bg_insert_into_rank(self, to_shrink: Group, next_bg: RankListBg,
     )
 
 to_shrink5 = Group(bg5.rank_list_rows, frontend_svg_npc, frontend_svg_la, bun_svg_mo, wasm_svg_mo, backend_svg_hang, pandas_svg_mo)
-self.bg_insert_into_rank(to_shrink5, bg4, 0, img_final_height, pre_wait=2)
+self.bg_insert_into_rank(to_shrink5, bg4, 0, img_final_height, pre_wait=2) # 本期视频评为夯
 ```
+
+需要缩小的元素：当前背景、一切在当前背景上面的元素
+
+用递归写法囊括一切在当前背景上面的元素：
+
+```python
+to_shrink4 = Group(bg4.rank_list_rows, to_shrink5)
+to_shrink3 = Group(bg3.rank_list_rows, to_shrink4)
+npc_hang_video = self.draw_label_rect_list(['NPC', '夯', '原视频']) # 普通的矩形元素，不是重点
+to_shrink2 = Group(bg2.rank_list_rows, npc_hang_video, to_shrink3)
+self.bg_insert_into_rank(to_shrink2, bg1, 0, img_final_height, pre_wait=3, move_run_time=1.5)
+```
+
+---
+
+### 附录
+
+- 完整代码传送门： https://github.com/Hans774882968/manim-hw/blob/main/rank_list_recursive/rank_list_recursive.py
+- [有突变过程的代码传送门](https://github.com/Hans774882968/manim-hw/blob/main/rank_list_recursive/bg_overlap.py)
+- [无突变过程的代码传送门](https://github.com/Hans774882968/manim-hw/blob/main/rank_list_recursive/bg_overlap_correct.py)
+
+### takeaways
+
+1. “锐评**锐评某某从夯到拉**从夯到拉”语句的递归结构
+2. 开源项目devicon轻松获取各技术栈图标资源
+3. `LaggedStart`实现多个元素排队入场
+4. manim的层级机制：`z-index`相同时，谁在画面最上层？
 
 ---
 layout: center
