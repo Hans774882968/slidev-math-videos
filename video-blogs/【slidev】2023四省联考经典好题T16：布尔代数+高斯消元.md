@@ -8,7 +8,7 @@ tags:
 ---
 
 <SlidevPageRedirector />
-<MovingWatermark />
+<MovingWatermark colorCls="text-emerald-600" :opacity="1" />
 
 留空
 
@@ -26,6 +26,8 @@ tags:
 | $(2,\ 0)$ | $(2,\ 1)$ | $(2,\ 2)$ |
 </div>
 
+<div class="p-2 flex justify-between items-center">
+<div class="flex-1">
 $$
 \textcolor{orange}{
 \boldsymbol{
@@ -38,6 +40,12 @@ $$
 }
 }
 $$
+</div>
+<!-- 上面的 3x3 table 宽大约 264px -->
+<div class="w-66 flex justify-center">
+<LightsOut />
+</div>
+</div>
 
 <div class="h-30 flex justify-center items-center text-[44px] text-orange">
 OIER/ACMER会感到十分亲切的经典好题~
@@ -469,6 +477,27 @@ if __name__ == "__main__":
     print('-' * 30)
     gauss()
 ```
+
+---
+
+## 小游戏：所见即所得
+
+<div class="flex justify-between">
+<div>
+3x3：
+<LightsOut cellSize="w-10 h-10 sm:w-13 sm:h-13" />
+</div>
+<div>
+4x4：
+<LightsOut :size="4" />
+</div>
+<div>
+5x5：
+<LightsOut :size="5" />
+</div>
+</div>
+
+欢迎来玩： https://hans774882968.github.io/slidev-math-videos/251230/15
 
 ---
 layout: center

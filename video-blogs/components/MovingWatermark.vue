@@ -6,12 +6,15 @@
     >
       <p
         ref="textRef"
-        class="absolute text-gray-300 select-none !m-0 truncate"
+        :class="[
+          'absolute select-none !m-0 truncate',
+          colorCls,
+        ]"
         :style="{
           left: `${position.x}px`,
           top: `${position.y}px`,
           fontSize: '20px',
-          opacity: 0.3,
+          opacity,
           userSelect: 'none',
           pointerEvents: 'none'
         }"
@@ -26,6 +29,14 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 
 const props = defineProps({
+  colorCls: {
+    type: String,
+    default: 'text-gray-300'
+  },
+  opacity: {
+    type: Number,
+    default: 0.3
+  },
   text: {
     type: String,
     default: 'Hans码数理哲'
