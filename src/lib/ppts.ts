@@ -24,6 +24,7 @@ export const ppts: Array<Ppt> = [
   { id: '260105', title: '【slidev】【邪修】一起用CTF Crypto技能包破解这道高中钓鱼题', date: '2026-01-05', intro: '博客版传送门： https://www.52pojie.cn/thread-2085192-1-1.html' },
   { id: '260109', title: '【slidev】锐评锐评锐评锐评前后端技术栈技术含量从夯到拉从夯到拉从夯到拉从夯到拉', date: '2026-01-09' },
   { id: '260111_t', title: '【slidev】模板', date: '2026-01-11', intro: '数学题解模板' },
+  { id: '260115', title: '【slidev】够赞旋转1分钟', date: '2026-01-15' },
 ];
 
 export function hasPpt(id: string) {

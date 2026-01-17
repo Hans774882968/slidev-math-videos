@@ -1,7 +1,8 @@
 <template>
+  <!-- teleport 让 position: fixed 能够重新生效 -->
   <teleport to="#slide-content">
-    <div 
-      ref="containerRef" 
+    <div
+      ref="containerRef"
       class="fixed inset-0 pointer-events-none overflow-hidden z-50"
     >
       <p
