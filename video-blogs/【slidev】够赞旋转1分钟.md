@@ -6,7 +6,7 @@ transition: slide-left
 
 <SlidevPageRedirector />
 <MovingWatermark />
-<!-- <AutoSlide :timeList="[0, 0]" /> -->
+<AutoSlide :timeList="[0, 66, 10, 10, 24, 16, 27, 16, 29, 18, 5.5, 20, 36.5]" />
 
 留空
 
@@ -40,6 +40,7 @@ layout: two-cols
 1. `.add_updater`传入的**回调函数**类型：`(mob: Mobject, dt)`。`dt`是两次更新动画的时间差
 2. `mob.rotate`实现一次旋转。旋转角度`new_speed * dt`，旋转中心`mob.get_center()`，旋转轴为**Z轴**
 3. `time_tracker_2d = ValueTracker(0)`累加，记录动画进行的总时间
+4. 加速公式： $v_1=v_0+a*dt$
 
 ::right::
 
@@ -227,7 +228,7 @@ class Rotate3dDemo(ThreeDScene):
 
 ---
 
-## 题外话：DeepSeek生成的“更有戏剧性”的效果
+## 题外话：DeepSeek想要生成的“更有戏剧性”的效果
 
 ```python
 def update_rotation_3d(mob, dt):
@@ -283,6 +284,15 @@ def update_clock(mob: Mobject, dt):
     mob.become(new_time_text)
 time_text.add_updater(update_clock)
 ```
+
+---
+
+## 附录：完整代码
+
+1. 继承`Scene`版（视频P2）： https://github.com/Hans774882968/manim-hw/blob/main/rotate_img_with_acceleration/rotate_img_with_acceleration.py
+2. 继承`ThreeDScene`版（视频P1）： https://github.com/Hans774882968/manim-hw/blob/main/rotate_img_with_acceleration/rotate_3d_demo.py
+3. DeepSeek想要实现的“更有戏剧性”的效果。我修好它的代码后也不过是普通的3D旋转： https://github.com/Hans774882968/manim-hw/blob/main/rotate_img_with_acceleration/rotate_3d_become_demo.py
+4. 使用`Rotating`类实现（效果不好，仅供参考）： https://github.com/Hans774882968/manim-hw/blob/main/rotate_img_with_acceleration/rotating_demo.py
 
 ---
 

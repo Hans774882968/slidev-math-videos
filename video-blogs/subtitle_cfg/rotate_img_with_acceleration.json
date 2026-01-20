@@ -1,0 +1,29 @@
+{
+  "srt_file": "media\\260115\\rotate_img_with_acceleration-文字稿.srt",
+  "replacements": [
+    [
+      "汉斯",
+      "Hans"
+    ],
+    [
+      "add updater",
+      "add_updater"
+    ],
+    [
+      "sine",
+      "sin"
+    ],
+    [
+      "为什么会有这种差别",
+      "为什么会有这种差别（挖坑*1"
+    ],
+    [
+      "单独拆一篇博客出来",
+      "单独拆一篇博客出来（挖坑*2"
+    ],
+    [
+      "谢谢观看",
+      "谢谢观看~"
+    ]
+  ]
+}
