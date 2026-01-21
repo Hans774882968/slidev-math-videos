@@ -1,0 +1,69 @@
+{
+  "srt_file": "media\\260120\\文字稿2.srt",
+  "replacements": [
+    [
+      "汉斯",
+      "Hans"
+    ],
+    [
+      "cosine",
+      "cos"
+    ],
+    [
+      "sine",
+      "sin"
+    ],
+    [
+      "跑路",
+      "跑路~"
+    ],
+    [
+      "i，j",
+      "(i, j)"
+    ],
+    [
+      "2，1，3，1，3，2",
+      "(2, 1), (3, 1), (3, 2)"
+    ],
+    [
+      "x i乘x j",
+      "x_i*x_j"
+    ],
+    [
+      "x1加到xn",
+      "x_1+x_2+...+x_n"
+    ],
+    [
+      "y1加到yn",
+      "y_1+y_2+...+y_n"
+    ],
+    [
+      "2π比n",
+      "2π/n"
+    ],
+    [
+      "x i小于y i小于λ i",
+      "x_i < y_i < λ_i"
+    ],
+    [
+      "remaining var",
+      "rv"
+    ],
+    [
+      "current solution",
+      "current_sol"
+    ],
+    [
+      "lambda n-1",
+      "λ[n-1]"
+    ],
+    [
+      "g sub",
+      "g_sub = g.subs(current_sol)"
+    ],
+    [
+      "谢谢观看",
+      "谢谢观看~"
+    ]
+  ]
+}
