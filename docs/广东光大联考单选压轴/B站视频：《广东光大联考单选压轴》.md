@@ -36,7 +36,10 @@ slidev PPT 传送门： https://hans774882968.github.io/slidev-math-videos/26012
 
 互动引导加在末尾
 
-关联视频： 03:32
+关联视频：
+
+- 02:55 长郡“大题造火箭”三角压轴
+- 03:32 SageMath破解高中钓鱼题
 
 投票弹幕：00:20
 

@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>因数函数可视化 - 积性函数探索</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto+Mono:wght@300;400;500&display=swap');
+
+    body {
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: #e0e0ff;
+      font-family: 'Roboto Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .tech-container {
+      border: 1px solid rgba(100, 150, 255, 0.3);
+      border-radius: 12px;
+      background: rgba(15, 15, 35, 0.7);
+      box-shadow: 0 0 20px rgba(0, 100, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .glow-text {
+      text-shadow: 0 0 10px #4facfe, 0 0 20px #4facfe, 0 0 30px #4facfe;
+    }
+
+    .matrix-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.15;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(64, 156, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(106, 27, 154, 0.1) 0%, transparent 20%);
+    }
+
+    .loading-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 400px;
+      margin-top: 1rem;
+    }
+
+    .info-card {
+      background: rgba(20, 20, 40, 0.6);
+      border-left: 3px solid #4facfe;
+    }
+
+    .highlight {
+      color: #4facfe;
+      font-weight: 500;
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(79, 172, 254, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 10px rgba(79, 172, 254, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(79, 172, 254, 0);
+      }
+    }
+
+    .animate-entry {
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+    const LIM = 1919810;
+
+    // 计算因数个数的高效算法（利用积性性质）
+    const computeDivisorCounts = (n) => {
+      const divisorCounts = new Array(n + 1).fill(1);
+      const primes = [];
+      const isPrime = new Array(n + 1).fill(true);
+      isPrime[0] = isPrime[1] = false;
+
+      // 线性筛法
+      for (let i = 2; i <= n; i++) {
+        if (isPrime[i]) {
+          primes.push(i);
+          divisorCounts[i] = 2; // 质数有两个因数：1和自身
+        }
+
+        for (let j = 0; j < primes.length && i * primes[j] <= n; j++) {
+          isPrime[i * primes[j]] = false;
+
+          if (i % primes[j] === 0) {
+            // i 包含 primes[j] 这个因子
+            let p = primes[j];
+            let exp = 0;
+            let temp = i;
+            while (temp % p === 0) {
+              exp++;
+              temp /= p;
+            }
+            // divisorCounts[i * p] = divisorCounts[temp] * (exp + 2)
+            divisorCounts[i * primes[j]] = divisorCounts[temp] * (exp + 2);
+            break;
+          } else {
+            // i 和 primes[j] 互质，利用积性性质
+            divisorCounts[i * primes[j]] = divisorCounts[i] * divisorCounts[primes[j]];
+          }
+        }
+      }
+
+      return divisorCounts;
+    };
+
+    // 计算前缀最大值
+    const computePrefixMax = (arr) => {
+      const prefixMax = new Array(arr.length);
+      let currentMax = 0;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] > currentMax) {
+          currentMax = arr[i];
+        }
+        prefixMax[i] = currentMax;
+      }
+      return prefixMax;
+    };
+
+    const App = () => {
+      const [loading, setLoading] = useState(true);
+      const [progress, setProgress] = useState(0);
+      const [maxValue, setMaxValue] = useState(0);
+      const [maxAt, setMaxAt] = useState(0);
+
+      const chartRef = useRef(null);
+      const chartInstance = useRef(null);
+
+      const macroChartRef = useRef(null);
+      const macroChartInstance = useRef(null);
+
+      const [mx, setMx] = useState(0);
+      const [d, setD] = useState(0);
+
+      // 格式: [数量级上限, 最大因数个数, 取得该个数的最小值]
+      const MACRO_DATA = [
+        [10, 4, 6], [100, 12, 60], [1000, 32, 840], [10000, 64, 9240],
+        [100000, 128, 83160], [1000000, 240, 720720], [10000000, 448, 8648640],
+        [100000000, 768, 91891800], [1000000000, 1344, 931170240],
+        [10000000000, 2304, 6983776800], [100000000000, 4032, 97772875200],
+        [1000000000000, 6720, 963761198400], [10000000000000, 10752, 9316358251200],
+        [100000000000000, 17280, 97821761637600], [1000000000000000, 26880, 866421317361600],
+        [10000000000000000, 41472, 9097423832296800]
+      ];
+
+      // “取得该个数的最小值”存储为字符串以避免精度丢失
+      const LARGER_RANGE_MACRO_DATA = [
+        [10, 4, "6"], [100, 12, "60"], [1000, 32, "840"], [10000, 64, "9240"], [100000, 128, "83160"], [1000000, 240, "720720"], [10000000, 448, "8648640"], [100000000, 768, "91891800"], [1000000000, 1344, "931170240"], [10000000000, 2304, "6983776800"], [100000000000, 4032, "97772875200"], [1000000000000, 6720, "963761198400"], [10000000000000, 10752, "9316358251200"], [100000000000000, 17280, "97821761637600"], [1000000000000000, 26880, "866421317361600"], [10000000000000000, 41472, "9097423832296800"], [100000000000000000, 64512, "74801040398884800"], [1000000000000000000, 103680, "897612484786617600"], [10000000000000000000, 161280, "9200527969062830400"], [100000000000000000000, 245760, "92005279690628304000"], [1000000000000000000000, 368640, "989056756674254268000"], [10000000000000000000000, 552960, "9297133512737990119200"], [100000000000000000000000, 860160, "92971335127379901192000"], [1000000000000000000000000, 1290240, "985496152350226952635200"], [10000000000000000000000000, 1966080, "9854961523502269526352000"], [100000000000000000000000000, 2764800, "98549615235022695263520000"], [1000000000000000000000000000, 4128768, "872164094829950853082152000"], [10000000000000000000000000000, 6193152, "9593805043129459383903672000"], [100000000000000000000000000000, 8957952, "99775572448546377592598188800"], [1000000000000000000000000000000, 13271040, "950542574818669103079134726400"], [10000000000000000000000000000000, 19660800, "9505425748186691030791347264000"], [100000000000000000000000000000000, 28311552, "78419762422540201004028614928000"], [1000000000000000000000000000000000, 41287680, "927967188666725711881005276648000"], [10000000000000000000000000000000000, 59719680, "9650858762133947403562454877139200"], [100000000000000000000000000000000000, 88473600, "96508587621339474035624548771392000"], [1000000000000000000000000000000000000, 127401984, "812899257272051723607760622343648000"], [10000000000000000000000000000000000000, 181665792, "9754791087264620683293127468123776000"], [100000000000000000000000000000000000000, 264241152, "96328561986738129247519633747722288000"], [1000000000000000000000000000000000000000, 382205952, "834847537218397120145170159146926496000"], [10000000000000000000000000000000000000000, 530841600, "8883634049888071919493477334512166560000"], [100000000000000000000000000000000000000000, 778567680, "92389794118835947962732164278926532224000"], [1000000000000000000000000000000000000000000, 1132462080, "948772116528046081001903379325899388608000"], [10000000000000000000000000000000000000000000, 1585446912, "9250528136148449289768557948427519038928000"], [100000000000000000000000000000000000000000000, 2264924160, "99700136578488842345283346777496594086224000"], [1000000000000000000000000000000000000000000000, 3185049600, "997001365784888423452833467774965940862240000"]
+      ];
+
+      useEffect(() => {
+        // 模拟计算过程
+        const calculateData = () => {
+          setProgress(10);
+          const divisorCounts = computeDivisorCounts(LIM);
+          setProgress(40);
+          const prefixMax = computePrefixMax(divisorCounts);
+          setProgress(70);
+
+          let maxVal = 0;
+          let maxIndex = 0;
+          for (let i = 1; i <= LIM; i++) {
+            if (prefixMax[i] > maxVal) {
+              maxVal = prefixMax[i];
+              maxIndex = i;
+            }
+          }
+
+          setMaxValue(maxVal);
+          setMaxAt(maxIndex);
+          setD(divisorCounts);
+          setMx(prefixMax);
+          setProgress(90);
+        };
+
+        // 延迟启动以显示加载状态
+        const timer = setTimeout(calculateData, 800);
+        return () => clearTimeout(timer);
+      }, []);
+
+      useEffect(() => {
+        if (!mx || mx.length === 0) return;
+        // 准备图表数据（采样以提高性能）
+        const sampleRate = Math.ceil(LIM / 1000);
+        const sampledData = [];
+        for (let i = 1; i <= LIM; i += sampleRate) {
+          sampledData.push({
+            x: i,
+            y: mx[i]
+          });
+        }
+
+        if (chartInstance.current) {
+          chartInstance.current.destroy();
+        }
+
+        const ctx = chartRef.current && chartRef.current.getContext('2d');
+        chartInstance.current = new Chart(ctx, {
+          type: 'line',
+          data: {
+            datasets: [{
+              label: '因数个数前缀max',
+              data: sampledData,
+              borderColor: '#4facfe',
+              backgroundColor: 'rgba(79, 172, 254, 0.1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: '#e0e0ff',
+                  font: {
+                    family: "'Roboto Mono', monospace"
+                  }
+                }
+              },
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+                backgroundColor: 'rgba(15, 15, 35, 0.9)',
+                titleColor: '#4facfe',
+                bodyColor: '#e0e0ff',
+                borderColor: '#4facfe',
+                borderWidth: 1,
+                padding: 10,
+                callbacks: {
+                  label: function (context) {
+                    return `前缀最大值: ${context.parsed.y}`;
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                type: 'linear',
+                position: 'bottom',
+                title: {
+                  display: true,
+                  text: '数字 n',
+                  color: '#a0a0ff'
+                },
+                grid: {
+                  color: 'rgba(100, 100, 200, 0.1)'
+                },
+                ticks: {
+                  color: '#a0a0ff'
+                }
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: '因数个数',
+                  color: '#a0a0ff'
+                },
+                grid: {
+                  color: 'rgba(100, 100, 200, 0.1)'
+                },
+                ticks: {
+                  color: '#a0a0ff'
+                }
+              }
+            },
+            interaction: {
+              mode: 'nearest',
+              axis: 'x',
+              intersect: false
+            },
+            animation: {
+              duration: 2000,
+              easing: 'easeOutQuart'
+            }
+          }
+        });
+
+        setProgress(100);
+        setLoading(false);
+      }, [d, mx, maxValue, maxAt, progress, loading]);
+
+      useEffect(() => {
+        if (macroChartInstance.current) {
+          macroChartInstance.current.destroy();
+        }
+
+        const ctx = macroChartRef.current && macroChartRef.current.getContext('2d');
+
+        const chartData = MACRO_DATA.map(item => ({
+          x: item[0],
+          y: item[1],
+        }));
+
+        macroChartInstance.current = new Chart(ctx, {
+          type: 'line',
+          data: {
+            datasets: [{
+              label: '最大因数个数',
+              data: chartData,
+              borderColor: '#00f2fe', // 青色，与主图表区分
+              backgroundColor: 'rgba(0, 242, 254, 0.1)',
+              borderWidth: 2,
+              pointBackgroundColor: '#0f0c29',
+              pointBorderColor: '#00f2fe',
+              pointHoverRadius: 6,
+              fill: true,
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: '#e0e0ff',
+                  font: { family: "'Roboto Mono', monospace" }
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(15, 15, 35, 0.9)',
+                titleColor: '#00f2fe',
+                bodyColor: '#e0e0ff',
+                borderColor: '#00f2fe',
+                borderWidth: 1,
+                padding: 10,
+                callbacks: {
+                  title: (context) => {
+                    const index = context[0].dataIndex;
+                    return `范围上限: 10^${index + 1}`;
+                  },
+                  label: (context) => {
+                    const index = context.dataIndex;
+                    const data = MACRO_DATA[index];
+                    return [
+                      `最大因数个数: ${data[1]}`,
+                      `取得该值的最小数: ${data[2]}`
+                    ];
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                type: 'logarithmic', // 使用对数坐标
+                title: { display: true, text: '数量级上限', color: '#a0a0ff' },
+                grid: { color: 'rgba(100, 100, 200, 0.1)' },
+                ticks: {
+                  color: '#a0a0ff',
+                  callback: function (value, index, values) {
+                    // 只显示 10 的幂次
+                    if (Math.log10(value) % 1 === 0) {
+                      return `10^${Math.log10(value)}`;
+                    }
+                  }
+                }
+              },
+              y: {
+                title: { display: true, text: '因数个数', color: '#a0a0ff' },
+                grid: { color: 'rgba(100, 100, 200, 0.1)' },
+                ticks: { color: '#a0a0ff' }
+              }
+            },
+            animation: {
+              duration: 2000,
+              easing: 'easeOutQuart'
+            }
+          }
+        });
+
+        return () => {
+          if (macroChartInstance.current) {
+            macroChartInstance.current.destroy();
+          }
+        };
+      }, []);
+
+      const largerRangeMacroChartRef = useRef(null);
+      const largerRangeMacroChartInstance = useRef(null);
+
+      useEffect(() => {
+        if (largerRangeMacroChartInstance.current) {
+          largerRangeMacroChartInstance.current.destroy();
+        }
+
+        const ctx = largerRangeMacroChartRef.current && largerRangeMacroChartRef.current.getContext('2d');
+
+        const chartData = LARGER_RANGE_MACRO_DATA.map((item, index) => ({
+          x: index + 1,
+          y: item[1]
+        }));
+
+        largerRangeMacroChartInstance.current = new Chart(ctx, {
+          type: 'line',
+          data: {
+            datasets: [{
+              label: '最大因数个数 (极宏观)',
+              data: chartData,
+              borderColor: '#e0aaff',
+              backgroundColor: 'rgba(224, 170, 255, 0.1)',
+              borderWidth: 2,
+              pointBackgroundColor: '#0f0c29',
+              pointBorderColor: '#e0aaff',
+              pointHoverRadius: 6,
+              fill: true,
+              tension: 0.1
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: {
+                  color: '#e0e0ff',
+                  font: { family: "'Roboto Mono', monospace" }
+                }
+              },
+              tooltip: {
+                backgroundColor: 'rgba(15, 15, 35, 0.9)',
+                titleColor: '#e0aaff',
+                bodyColor: '#e0e0ff',
+                borderColor: '#e0aaff',
+                borderWidth: 1,
+                padding: 10,
+                callbacks: {
+                  title: (context) => {
+                    return `范围上限: 10^${context[0].parsed.x}`;
+                  },
+                  label: (context) => {
+                    const index = context.dataIndex;
+                    const data = LARGER_RANGE_MACRO_DATA[index];
+                    return [
+                      `最大因数个数: ${data[1]}`,
+                      `取得该值的最小数: ${data[2]}`
+                    ];
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                type: 'linear',
+                title: { display: true, text: '数量级上限 (指数)', color: '#a0a0ff' },
+                grid: { color: 'rgba(100, 100, 200, 0.1)' },
+                ticks: {
+                  color: '#a0a0ff',
+                  callback: function (value, index, values) {
+                    return `10^${value}`;
+                  }
+                }
+              },
+              y: {
+                title: { display: true, text: '因数个数', color: '#a0a0ff' },
+                grid: { color: 'rgba(100, 100, 200, 0.1)' },
+                ticks: { color: '#a0a0ff' }
+              }
+            },
+            animation: {
+              duration: 2000,
+              easing: 'easeOutQuart'
+            }
+          }
+        });
+
+        return () => {
+          if (largerRangeMacroChartInstance.current) {
+            largerRangeMacroChartInstance.current.destroy();
+          }
+        };
+      }, []);
+
+      return (
+        <div className="min-h-screen p-6">
+          <div className="matrix-bg"></div>
+
+          <div className="max-w-7xl mx-auto">
+            <header className="mb-6">
+              <h1 className="text-4xl md:text-5xl text-center font-bold mb-4 glow-text">
+                因数函数可视化
+              </h1>
+              <ol className="text-lg text-blue-200 max-w-2xl mx-auto list-decimal">
+                <li>探索积性函数的数学之美：1 到 1919810 的因数个数及其前缀最大值</li>
+                <li>最大因数个数增长趋势图</li>
+              </ol>
+            </header>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              <div className="lg:col-span-2 tech-container p-6 animate-entry" style={{ animationDelay: '0ms' }}>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-bold flex items-center">
+                    <i className="fas fa-chart-line mr-2 text-blue-400"></i>
+                    小范围的前缀最大值曲线
+                  </h2>
+                  <span className="text-sm bg-blue-900/30 px-3 py-1 rounded-full">
+                    采样率: 1/1920
+                  </span>
+                </div>
+
+                {loading ? (
+                  <div className="flex flex-col items-center justify-center h-80">
+                    <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mb-6"></div>
+                    <p className="text-lg mb-4">正在计算因数函数...</p>
+                    <div className="w-full max-w-md bg-gray-800 rounded-full h-2.5">
+                      <div
+                        className="loading-bar h-2.5 rounded-full"
+                        style={{ width: `${progress}%` }}
+                      ></div>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-400">{Math.round(progress)}% 完成</p>
+                  </div>
+                ) : (
+                  <div className="chart-container">
+                    <canvas ref={chartRef}></canvas>
+                  </div>
+                )}
+              </div>
+
+              <div className="tech-container p-6 animate-entry" style={{ animationDelay: '0.2s' }}>
+                <h2 className="text-xl font-bold mb-4 flex items-center">
+                  <i className="fas fa-info-circle mr-2 text-purple-400"></i>
+                  关于因数函数
+                </h2>
+
+                <div className="info-card p-4 mb-4">
+                  <p className="text-sm">
+                    因数函数 d(n) 是数论中的基本积性函数，揭示了整数结构的深层规律
+                  </p>
+                </div>
+
+                <div className="info-card p-4 mb-4">
+                  <h3 className="font-bold text-blue-300 mb-2">积性函数性质</h3>
+                  <p className="text-sm">
+                    因数函数 d(n) 是一个<strong className="highlight">积性函数</strong>，即当 gcd(a,b)=1 时：
+                    <br />
+                    <span className="highlight">d(a×b) = d(a) × d(b)</span>
+                  </p>
+                </div>
+
+                <div className="info-card p-4 mb-4">
+                  <h3 className="font-bold text-green-300 mb-2">计算优化</h3>
+                  <p className="text-sm">
+                    利用积性性质和线性筛法，我们可以在 O(n) 时间内计算出 1 到 n 的所有因数个数。
+                  </p>
+                </div>
+
+                <div className="info-card p-4">
+                  <h3 className="font-bold text-yellow-300 mb-2">关键结果</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>最大因数个数:</span>
+                      <span className="highlight">{maxValue}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>首次出现位置:</span>
+                      <span className="highlight">{maxAt}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>数据范围:</span>
+                      <span className="highlight">1 - 1,919,810</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.4s' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold flex items-center">
+                  <i className="fas fa-chart-area mr-2 text-cyan-400"></i>
+                  最大因数个数趋势 (10¹ - 10¹⁶)
+                </h2>
+                <span className="text-sm bg-cyan-900/30 px-3 py-1 rounded-full text-cyan-200">
+                  宏观统计
+                </span>
+              </div>
+              <div className="chart-container" style={{ height: '350px' }}>
+                <canvas ref={macroChartRef}></canvas>
+              </div>
+            </div>
+
+            <div className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.55s' }}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold flex items-center">
+                  <i className="fas fa-chart-line mr-2 text-purple-400"></i>
+                  极宏观统计 (10¹ - 10⁴⁵)
+                </h2>
+                <span className="text-sm bg-purple-900/30 px-3 py-1 rounded-full text-purple-200">
+                  超大范围
+                </span>
+              </div>
+              <div className="chart-container" style={{ height: '350px' }}>
+                <canvas ref={largerRangeMacroChartRef}></canvas>
+              </div>
+            </div>
+
+            <div className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.7s' }}>
+              <h2 className="text-xl font-bold mb-4 flex items-center">
+                <i className="fas fa-calculator mr-2 text-cyan-400"></i>
+                数学原理
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-bold text-blue-300 mb-2">因数个数公式</h3>
+                  <p className="text-sm mb-3">
+                    对于正整数 n，其质因数分解为：
+                    <br />
+                    <span className="highlight">n = p₁^a₁ × p₂^a₂ × ... × pₖ^aₖ</span>
+                  </p>
+                  <p className="text-sm">
+                    则因数个数为：
+                    <br />
+                    <span className="highlight">d(n) = (a₁+1) × (a₂+1) × ... × (aₖ+1)</span>
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-bold text-purple-300 mb-2">积性函数证明</h3>
+                  <p className="text-sm">
+                    若 gcd(a,b)=1，则 a 和 b 无公共质因数。设：
+                    <br />
+                    a = p₁^a₁ × ... × pₘ^aₘ
+                    <br />
+                    b = q₁^b₁ × ... × qₙ^bₙ
+                    <br />
+                    则 a×b = p₁^a₁ × ... × pₘ^aₘ × q₁^b₁ × ... × qₙ^bₙ
+                    <br />
+                    因此 d(a×b) = d(a) × d(b)
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <footer className="mt-4 text-center text-sm text-gray-400">
+              <p>© 2026 数学可视化实验室 | 为 hans7 特别制作</p>
+            </footer>
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>
