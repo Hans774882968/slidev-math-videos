@@ -110,6 +110,11 @@
         transform: translateY(0);
       }
     }
+
+    /* LLM 是对的。支持在不刷新情况下的平滑滚动 */
+    html {
+      scroll-behavior: smooth;
+    }
   </style>
 </head>
 
@@ -120,7 +125,38 @@
     const { useState, useEffect, useRef } = React;
     const LIM = 1919810;
 
-    // 计算因数个数的高效算法（利用积性性质）
+    const prime_list = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151];
+
+    class PrimeInfo {
+      constructor(bigIntVal) {
+        this.original = bigIntVal;
+        this.exponents = [];
+        let temp = bigIntVal;
+        for (let p of prime_list) {
+          let count = 0;
+          const bigP = BigInt(p);
+          while (temp % bigP === 0n) {
+            count++;
+            temp /= bigP;
+          }
+          this.exponents.push(count);
+        }
+      }
+
+      toString() {
+        const parts = [];
+        for (let i = 0; i < this.exponents.length; i++) {
+          if (this.exponents[i] > 0) {
+            const p = prime_list[i];
+            const e = this.exponents[i];
+            parts.push(e === 1 ? `${p}` : `${p}^${e}`);
+          }
+        }
+        return parts.join('*');
+      }
+    }
+
+    // 计算因数个数的线性筛，利用积性性质
     const computeDivisorCounts = (n) => {
       const divisorCounts = new Array(n + 1).fill(1);
       const primes = [];
@@ -186,6 +222,20 @@
 
       const [mx, setMx] = useState(0);
       const [d, setD] = useState(0);
+
+      // 锚点定位
+      useEffect(() => {
+        const hash = window.location.hash.replace('#', '');
+        if (hash) {
+          // 延迟执行以确保DOM渲染完毕
+          setTimeout(() => {
+            const element = document.getElementById(hash);
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
+        }
+      }, []);
 
       // 格式: [数量级上限, 最大因数个数, 取得该个数的最小值]
       const MACRO_DATA = [
@@ -345,6 +395,11 @@
 
         const ctx = macroChartRef.current && macroChartRef.current.getContext('2d');
 
+        const refData = MACRO_DATA.map(item => ({
+          x: item[0],
+          y: Math.pow(item[0], 0.25)
+        }));
+
         const chartData = MACRO_DATA.map(item => ({
           x: item[0],
           y: item[1],
@@ -353,18 +408,31 @@
         macroChartInstance.current = new Chart(ctx, {
           type: 'line',
           data: {
-            datasets: [{
-              label: '最大因数个数',
-              data: chartData,
-              borderColor: '#00f2fe', // 青色，与主图表区分
-              backgroundColor: 'rgba(0, 242, 254, 0.1)',
-              borderWidth: 2,
-              pointBackgroundColor: '#0f0c29',
-              pointBorderColor: '#00f2fe',
-              pointHoverRadius: 6,
-              fill: true,
-              tension: 0.1
-            }]
+            datasets: [
+              {
+                label: '最大因数个数',
+                data: chartData,
+                borderColor: '#00f2fe', // 青色，与主图表区分
+                backgroundColor: 'rgba(0, 242, 254, 0.1)',
+                borderWidth: 2,
+                pointBackgroundColor: '#0f0c29',
+                pointBorderColor: '#00f2fe',
+                pointHoverRadius: 6,
+                fill: true,
+                tension: 0.1
+              },
+              {
+                label: '参考值: 10^{n/4}',
+                data: refData,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                pointRadius: 3,
+                pointBackgroundColor: 'rgba(255, 255, 255, 0.4)',
+                fill: false,
+                tension: 0.1
+              }
+            ]
           },
           options: {
             responsive: true,
@@ -391,9 +459,27 @@
                   label: (context) => {
                     const index = context.dataIndex;
                     const data = MACRO_DATA[index];
+
+                    if (context.datasetIndex === 1) {
+                      const n = index + 1;
+                      const val = Math.pow(10, n / 4);
+                      const label = (n % 4 === 0) ? val : val.toFixed(4);
+                      return `参考值: ${label}`;
+                    }
+
+                    const valStr = String(data[2]);
+                    let primeFactorStr = "";
+                    try {
+                      const pInfo = new PrimeInfo(BigInt(valStr));
+                      primeFactorStr = pInfo.toString();
+                    } catch (e) {
+                      primeFactorStr = "计算中...";
+                    }
+
                     return [
                       `最大因数个数: ${data[1]}`,
-                      `取得该值的最小数: ${data[2]}`
+                      `取得该值的最小数: ${valStr}`,
+                      `最小值的质因数分解: ${primeFactorStr}`
                     ];
                   }
                 }
@@ -415,6 +501,7 @@
                 }
               },
               y: {
+                type: 'logarithmic',
                 title: { display: true, text: '因数个数', color: '#a0a0ff' },
                 grid: { color: 'rgba(100, 100, 200, 0.1)' },
                 ticks: { color: '#a0a0ff' }
@@ -444,6 +531,11 @@
 
         const ctx = largerRangeMacroChartRef.current && largerRangeMacroChartRef.current.getContext('2d');
 
+        const refData = LARGER_RANGE_MACRO_DATA.map((_, i) => ({
+          x: i + 1,
+          y: Math.pow(10, (i + 1) / 4)
+        }));
+
         const chartData = LARGER_RANGE_MACRO_DATA.map((item, index) => ({
           x: index + 1,
           y: item[1]
@@ -452,18 +544,31 @@
         largerRangeMacroChartInstance.current = new Chart(ctx, {
           type: 'line',
           data: {
-            datasets: [{
-              label: '最大因数个数 (极宏观)',
-              data: chartData,
-              borderColor: '#e0aaff',
-              backgroundColor: 'rgba(224, 170, 255, 0.1)',
-              borderWidth: 2,
-              pointBackgroundColor: '#0f0c29',
-              pointBorderColor: '#e0aaff',
-              pointHoverRadius: 6,
-              fill: true,
-              tension: 0.1
-            }]
+            datasets: [
+              {
+                label: '最大因数个数',
+                data: chartData,
+                borderColor: '#e0aaff',
+                backgroundColor: 'rgba(224, 170, 255, 0.1)',
+                borderWidth: 2,
+                pointBackgroundColor: '#0f0c29',
+                pointBorderColor: '#e0aaff',
+                pointHoverRadius: 6,
+                fill: true,
+                tension: 0.1
+              },
+              {
+                label: '参考值: 10^{n/4}',
+                data: refData,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                pointRadius: 3,
+                pointBackgroundColor: 'rgba(255, 255, 255, 0.4)',
+                fill: false,
+                tension: 0.1
+              }
+            ]
           },
           options: {
             responsive: true,
@@ -489,9 +594,27 @@
                   label: (context) => {
                     const index = context.dataIndex;
                     const data = LARGER_RANGE_MACRO_DATA[index];
+
+                    if (context.datasetIndex === 1) {
+                      const n = index + 1;
+                      const val = Math.pow(10, n / 4);
+                      const label = (n % 4 === 0) ? val : val.toFixed(4);
+                      return `参考值: ${label}`;
+                    }
+
+                    const valStr = data[2];
+                    let primeFactorStr = "";
+                    try {
+                      const pInfo = new PrimeInfo(BigInt(valStr));
+                      primeFactorStr = pInfo.toString();
+                    } catch (e) {
+                      primeFactorStr = "计算中...";
+                    }
+
                     return [
                       `最大因数个数: ${data[1]}`,
-                      `取得该值的最小数: ${data[2]}`
+                      `取得该值的最小数: ${valStr}`,
+                      `最小值的质因数分解: ${primeFactorStr}`
                     ];
                   }
                 }
@@ -500,7 +623,7 @@
             scales: {
               x: {
                 type: 'linear',
-                title: { display: true, text: '数量级上限 (指数)', color: '#a0a0ff' },
+                title: { display: true, text: '数量级上限', color: '#a0a0ff' },
                 grid: { color: 'rgba(100, 100, 200, 0.1)' },
                 ticks: {
                   color: '#a0a0ff',
@@ -510,6 +633,7 @@
                 }
               },
               y: {
+                type: 'logarithmic',
                 title: { display: true, text: '因数个数', color: '#a0a0ff' },
                 grid: { color: 'rgba(100, 100, 200, 0.1)' },
                 ticks: { color: '#a0a0ff' }
@@ -545,15 +669,20 @@
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
-              <div className="lg:col-span-2 tech-container p-6 animate-entry" style={{ animationDelay: '0ms' }}>
+              <div id="section-prefix-max" className="lg:col-span-2 tech-container p-6 animate-entry" style={{ animationDelay: '0ms' }}>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold flex items-center">
                     <i className="fas fa-chart-line mr-2 text-blue-400"></i>
-                    小范围的前缀最大值曲线
+                    因数个数前缀最大值曲线
                   </h2>
-                  <span className="text-sm bg-blue-900/30 px-3 py-1 rounded-full">
-                    采样率: 1/1920
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm bg-blue-900/30 px-3 py-1 rounded-full">
+                      小范围
+                    </span>
+                    <span className="text-sm bg-blue-900/30 px-3 py-1 rounded-full">
+                      采样率: 1/1920
+                    </span>
+                  </div>
                 </div>
 
                 {loading ? (
@@ -623,11 +752,11 @@
               </div>
             </div>
 
-            <div className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.4s' }}>
+            <div id="section-macro-trend" className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.4s' }}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold flex items-center">
                   <i className="fas fa-chart-area mr-2 text-cyan-400"></i>
-                  最大因数个数趋势 (10¹ - 10¹⁶)
+                  最大因数个数增长趋势图 (10¹ - 10¹⁶)
                 </h2>
                 <span className="text-sm bg-cyan-900/30 px-3 py-1 rounded-full text-cyan-200">
                   宏观统计
@@ -638,11 +767,11 @@
               </div>
             </div>
 
-            <div className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.55s' }}>
+            <div id="section-large-macro" className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.55s' }}>
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold flex items-center">
                   <i className="fas fa-chart-line mr-2 text-purple-400"></i>
-                  极宏观统计 (10¹ - 10⁴⁵)
+                  最大因数个数增长趋势图-极宏观统计 (10¹ - 10⁴⁵)
                 </h2>
                 <span className="text-sm bg-purple-900/30 px-3 py-1 rounded-full text-purple-200">
                   超大范围
@@ -653,7 +782,7 @@
               </div>
             </div>
 
-            <div className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.7s' }}>
+            <div id="section-math-principles" className="tech-container p-6 mt-4 animate-entry" style={{ animationDelay: '0.7s' }}>
               <h2 className="text-xl font-bold mb-4 flex items-center">
                 <i className="fas fa-calculator mr-2 text-cyan-400"></i>
                 数学原理
