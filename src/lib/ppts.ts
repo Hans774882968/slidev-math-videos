@@ -26,6 +26,7 @@ export const ppts: Array<Ppt> = [
   { id: '260111_t', title: '【slidev】模板', date: '2026-01-11', intro: '数学题解模板' },
   { id: '260115', title: '【slidev】够赞旋转1分钟', date: '2026-01-15' },
   { id: '260120', title: '【slidev】全网都只提到这题的两种解法？这里有解法3！广东光大联考单选压轴深度解析~', date: '2026-01-20', intro: '解法3：拉格朗日乘数法+Grobner基' },
+  { id: '260126', title: '【slidev】再次回头看2021北大强基三元对称式的题', date: '2026-01-26', intro: '解法2：Grobner基' },
 ];
 
 export function hasPpt(id: string) {
