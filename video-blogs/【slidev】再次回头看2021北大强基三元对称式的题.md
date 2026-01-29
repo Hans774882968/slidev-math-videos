@@ -46,7 +46,7 @@ Grobner基，启动！
 
 ---
 
-## 主包，我没有数竞背景，不会三元对称式可以做这题吗？
+## 主包，我没有数竞背景，不会三元对称式，可以做这题吗？
 
 可以的！
 
@@ -76,8 +76,8 @@ print(c_poly)  # c^2 * (c^3 - 3*c^2 + 3)
 
 $$
 \begin{cases}
-a = c^4 - 3*c^3 + c^2 + c \\
-b = -c^3 + 2*c^2 + c \\
+a = c^4 - 3c^3 + c^2 + c \\
+b = -c^3 + 2c^2 + c \\
 c^5 - 3*c^4 + 3*c^2 = c^2 * (c^3 - 3*c^2 + 3) = 0
 \end{cases}
 $$
@@ -95,11 +95,11 @@ print(wanted)  # c^4 - 4*c^3 + 3*c^2 + 3*c
 
 ## 原题已变为初中常规题
 
-已知 $c^3 - 3c^2 + 3 = 0$ ，求 $c^4 - 4c^3 + 3c^2 + 3*c$
+已知 $c^3 - 3c^2 + 3 = 0$ ，求 $c^4 - 4c^3 + 3c^2 + 3c$
 
 这类题的**通解方法**：转为**降幂式** $c^3=3c^2-3$ ，然后按**幂降序**依次消去 $c^4,\ c^3,\ c^2,\ c$ ，最后得到常数
 
-可我懒得动笔！幸好，在SageMath里，不需要手算。直接进行多项式取模就能拿到结果：
+可我不想动笔！幸好，在SageMath里，直接进行多项式取模就能拿到结果：
 
 ```python
 f = c ^ 3 - 3 * c ^ 2 + 3
@@ -137,19 +137,19 @@ $$
 
 再把 $a = b(1 - c)$ 代入 (6)： $a = \frac{c(1 - c)}{1 + c - c^2} \quad (7)$
 
-现在a和b都是关于c的函数了，所以 $a+b+c$ 也是关于c的函数
+现在a和b都是关于c的函数了，所以 $a+b+c$ 也是关于c的分式函数
 
-但注意：我们还有一条约束方程 $a = ab + c$ 没用到，要用它导出只关于c的方程，才能求出 $a+b+c$ 。
+但注意：我们还有一条约束方程 $a = ab + c$ 没用到，要用它求出只关于c的**约束**，才能求出 $a+b+c$ 。
 
 ---
 
-将 (6)(7) 代入 $a = ab + c$ ：
+将 (6)(7) （`a = f(c), b = g(c)`）代入 $a = ab + c$ ：
 
 $$
 a = \frac{c(1 - c)}{D} = ab + c = \frac{c^2(1 - c)}{D^2} + c
 $$
 
-其中 $D = 1 + c - c^2$ 。两边乘以 $D^2$（假设 $D \ne 0$），这下就都是关于c的式子了！
+其中 $D = 1 + c - c^2$ 。两边乘以 $D^2$（前面已经证明 $D \ne 0$），这下就都是关于c的式子了！
 
 $$
 c(1 - c) D = c^2(1 - c) + c D^2
@@ -174,12 +174,12 @@ print(res)  # c**2*(-c**3 + 3*c**2 - 3)
 
 ## 已经变为初中常规题
 
-现在我们要求 $a + b + c = \frac{c + c(1-c)}{D} + c$ ，降幂式 $c^3 = 3c^2 - 3$
+现在我们要求 $a + b + c = \frac{c + c(1-c)}{D} + c$ ，降幂式 $c^3 = 3c^2 - 3,\ D = 1 + c - c^2$
 
 通分：
 
 $$
-\frac{c + c(1-c)}{D} + c = \frac{3c-c^3}{D}
+\frac{c + c(1-c)}{D} + c = \frac{2c-c^2 + cD}{D} = \frac{3c-c^3}{D}
 $$
 
 降幂：
@@ -188,7 +188,42 @@ $$
 \frac{3c-c^3}{D} = \frac{3c - (3c^2 - 3)}{D} = \frac{3 + 3c - 3c^2}{1 + c - c^2} = 3
 $$
 
+<div class="pt-4 h-30 flex items-center text-7xl text-orange">
 做完！
+</div>
+
+---
+
+## Grobner基给的是多项式，爆算法拿到分式函数，不一样啊？
+
+Grobner基：
+
+$$
+\begin{cases}
+a = c^4 - 3c^3 + c^2 + c \\
+b = -c^3 + 2c^2 + c
+\end{cases}
+$$
+
+爆算：
+
+$$
+\begin{cases}
+a = \frac{c(1 - c)}{1 + c - c^2} \\
+b = \frac{c}{1 + c - c^2}
+\end{cases}
+$$
+
+实际上，我们有：
+
+$$
+\begin{cases}
+\frac{c(1 - c)}{1 + c - c^2} \equiv c^4 - 3c^3 + c^2 + c \pmod{c^3 - 3c^2 + 3} \\
+\frac{c}{1 + c - c^2} \equiv -c^3 + 2c^2 + c \pmod{c^3 - 3c^2 + 3}
+\end{cases}
+$$
+
+不需要了解抽象代数，把分母乘过去，进行**多项式除法**就能验证~
 
 ---
 
@@ -198,7 +233,7 @@ $$
 
 > 大佬，你是一名数学科研工作者，精通代数几何。我有下面的数学竞赛题：a=ab+c，b=bc+a，c=ca+b，且a、b、c是不全相等的实数，求`a+b+c`。我写了如下sage代码：<代码略>。发现Grobner基成功消元：`[a - c^4 + 3*c^3 - c^2 - c, b + c^3 - 2*c^2 - c, c^5 - 3*c^4 + 3*c^2]`。这里最后一个元素可以因式分解`c^2 * (c^3 - 3*c^2 + 3)`。于是我们得到用于降次的式子：`c^3=3c^2-3`，以及`a+b+c=c^4 - 4*c^3 + 3*c^2 + 3*c`。请帮我补全用`c^3=3c^2-3`对`c^4 - 4*c^3 + 3*c^2 + 3*c`进行降次的代码
 
-第一次尝试得到一大堆不知所云的代码，跑不起来。第二次尝试得到下面的用商环求解的代码，仍然得不到想要的结果。
+第一次尝试得到一大堆不知所云的代码，跑不起来。第二次尝试得到下面的用**商环**求解的代码，仍然得不到想要的结果。
 
 ```python
 S = R.quotient(f, 'cbar')  # 商环 Q[c] / (c^3 - 3c^2 + 3)
@@ -211,6 +246,36 @@ print("Reduced expression in quotient ring:", expr_reduced.lift())  # lift 回�
 后来发现，只需要进行**多项式取模**就能完成**降幂**过程了
 
 ---
+
+## 附录：上一页提到的商环求解代码应该怎么写
+
+提示词：
+
+> 大佬，这个式子 $\frac{c}{1 + c - c^2} \equiv -c^3 + 2c^2 + c \pmod{c^3 - 3c^2 + 3}$ 里的除法是逆元的含义吗？这是抽象代数的内容吗？模 $c^3 - 3c^2 + 3$ 下哪些元素是有逆元的
+
+> 大佬，sage代码里环R上的 $c^4 - 3c^3 + c^2 + c$ 怎么快速转为商环K的cbar的式子
+
+看LLM输出，顺利学会第二种写法：
+
+```python
+R.<c> = PolynomialRing(QQ)
+f = c ^ 3 - 3 * c ^ 2 + 3
+K = R.quotient(f, 'cbar')  # 商环 Q[c] / (c^3 - 3c^2 + 3)
+wanted = K(c ^ 4 - 4 * c ^ 3 + 3 * c ^ 2 + 3 * c)  # 映射到商环就自动做好了取模操作
+print(wanted)  # 3
+```
+
+快速验证 $\frac{c(1 - c)}{1 + c - c^2} \equiv c^4 - 3c^3 + c^2 + c \pmod{c^3 - 3c^2 + 3}$ ：
+
+```python
+cbar = K.gen()
+denom = 1 + cbar - cbar ^ 2
+inv_denom = denom.inverse()
+lhs2 = K(c * (1 - c)) * inv_denom
+rhs2 = K(c ^ 4 - 3 * c ^ 3 + c ^ 2 + c)
+```
+
+---
 layout: center
 class: text-center
 ---
@@ -219,6 +284,6 @@ class: text-center
 
 <span class="text-orange font-bold">为做题人的精神自留地添砖加瓦</span>
 
-<span class="text-pink font-bold border border-pink px-2 py-1 rounded-lg">喜欢本期视频的话，别忘了点赞、收藏喔</span>
+<span class="text-pink font-bold border border-pink px-2 py-1 rounded-lg">喜欢本期视频的话，别忘了点赞、收藏、关注喔</span>
 
 谢谢观看~

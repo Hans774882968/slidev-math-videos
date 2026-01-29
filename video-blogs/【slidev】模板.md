@@ -31,6 +31,6 @@ class: text-center
 
 <span class="text-orange font-bold">为做题人的精神自留地添砖加瓦</span>
 
-<span class="text-pink font-bold border border-pink px-2 py-1 rounded-lg">喜欢本期视频的话，别忘了点赞、收藏喔</span>
+<span class="text-pink font-bold border border-pink px-2 py-1 rounded-lg">喜欢本期视频的话，别忘了点赞、收藏、关注喔</span>
 
 谢谢观看~
