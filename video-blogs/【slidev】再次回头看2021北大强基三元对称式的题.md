@@ -9,7 +9,7 @@ tags:
 
 <SlidevPageRedirector />
 <MovingWatermark />
-<!-- <AutoSlide :timeList="[0, 0]" /> -->
+<AutoSlide :timeList="[0, 28, 41, 22, 50, 45, 17, 12.5, 24.5, 17.5, 36]" />
 
 留空
 
