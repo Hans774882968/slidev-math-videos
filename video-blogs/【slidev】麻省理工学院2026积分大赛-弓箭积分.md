@@ -17,7 +17,7 @@ tags:
 ---
 
 $$
-\int_{\int_{\int_{\int_{0}^{1} x dx}^{1} x dx}^{1} x dx}^{\int_{0}^{\int_{0}^{\int_{0}^{1} x dx} x dx} x dx} x dx
+\int_{\int_{\int_{\int_{0}^{1} x^m dx}^{1} x^m dx}^{1} x^m dx}^{\int_{0}^{\int_{0}^{\int_{0}^{1} x^m dx} x^m dx} x^m dx} x^m dx
 $$
 
 1. **数学建模思维**：积分上限和下限各抽象出一个**递推数列** $U(m,n),\ L(m,n)$
@@ -280,7 +280,7 @@ $$
 
 **线性收敛**（《数值分析第2版》P32定义1.5）：令 $e_{i}$ 为迭代过程中第i步的**误差**（本期视频的例子是 $|L(m,i)-x^*|$ ），若 $\lim_{ i \to \infty } \frac{e_{i+1}}{e_{i}} = S < 1$ ，我们就说这个迭代是线性收敛的，收敛速度为S。
 
-套用该定理：该迭代线性收敛，速度 $S=|g'(x^*)|=(x^*)^{m}$ 。比如 $m=1$ 时对应方程 $x^2+x-1=0$ ， $S = \sqrt{ 2 }-1$ ； $m=2$ 时对应方程 $x^3+3x-1=0$ ， $S=(\sqrt[3]{\frac{1 + \sqrt{5}}{2}} + \sqrt[3]{\frac{1 - \sqrt{5}}{2}})^2$
+套用该定理：该迭代线性收敛，速度 $S=|g'(x^*)|=(x^*)^{m}$ 。比如 $m=1$ 时对应方程 $x^2+2x-1=0$ ， $S = \sqrt{ 2 }-1$ ； $m=2$ 时对应方程 $x^3+3x-1=0$ ， $S=(\sqrt[3]{\frac{1 + \sqrt{5}}{2}} + \sqrt[3]{\frac{1 - \sqrt{5}}{2}})^2$
 
 ---
 
@@ -343,3 +343,16 @@ $$
 2. 用6种不同的颜色循环标识数列构成的点，即数列第i项的颜色是`color_list[(i - 1) % 6]`。并选择第7种颜色来标出方程 $x=g(x)$ 的唯一实根
 
 请遵循最小改动原则，不修改与本次需求无关的代码
+
+---
+layout: center
+class: text-center
+---
+
+# 后记
+
+<span class="text-orange font-bold">为做题人的精神自留地添砖加瓦</span>
+
+<span class="text-pink font-bold border border-pink px-2 py-1 rounded-lg">喜欢本期视频的话，别忘了点赞、收藏、关注喔</span>
+
+谢谢观看~
