@@ -1,0 +1,18 @@
+import{_ as c}from"./slidev/CodeBlockWrapper.vue_vue_type_script_setup_true_lang-C1OaOvCM.js";import{b as d,o as u,w as l,e as i,m as t,g as s,ad as a,v as k,x as g,T as p}from"./modules/vue-CXAuJzLm.js";import{I as m}from"./slidev/default-CZQcEguX.js";import{u as h,f as F}from"./slidev/context-BmmxyHuS.js";import"./modules/unplugin-icons-CnmUr4G-.js";import"./index-BUWST-pZ.js";import"./modules/shiki-Bicuv6ez.js";const H={__name:"【slidev】只属于2026的数学题.md__slidev_13",setup(f){const{$clicksContext:r,$frontmatter:o}=h();return r.setup(),(_,n)=>{const e=c;return u(),d(m,k(g(p(F)(p(o),12))),{default:l(()=>[i(e,t({},{title:"",ranges:[]}),{default:l(()=>[...n[0]||(n[0]=[s("pre",{class:"shiki shiki-themes dracula dracula slidev-code",style:{"--shiki-dark":"#F8F8F2","--shiki-light":"#F8F8F2","--shiki-dark-bg":"#282A36","--shiki-light-bg":"#282A36"}},[s("code",{class:"language-text"},[s("span",{class:"line"},[s("span",null,"大佬，我通过Python写dfs求出了10到`1e45`范围内的最大因数个数的列表：<省略>。3个元素分别表示数量级、最大因数个数、取得最大因数个数的最小值。")]),a(`
+`),s("span",{class:"line"},[s("span")]),a(`
+`),s("span",{class:"line"},[s("span",null,"请帮我修改我下面给你的HTML代码，新增一个折线图，展示这个列表。注意：")]),a(`
+`),s("span",{class:"line"},[s("span")]),a(`
+`),s("span",{class:"line"},[s("span",null,"1. 数量级10的幂不要直接展示，而是展示为`10^x`的形式；取得最大因数个数的最小值用字符串来展示。这样就不需要使用`BigInt`了")]),a(`
+`),s("span",{class:"line"},[s("span",null,"2. 当前代码已经包含一个`1e16`范围内的折线图。不要修改它的代码，但可以参考它的代码和文案")]),a(`
+`),s("span",{class:"line"},[s("span",null,"3. 请遵循最小改动原则，不改动与本次需求无关的代码。请输出完整HTML文件")])])],-1)])]),_:1},16),i(e,t({},{title:"",ranges:[]}),{default:l(()=>[...n[1]||(n[1]=[s("pre",{class:"shiki shiki-themes dracula dracula slidev-code",style:{"--shiki-dark":"#F8F8F2","--shiki-light":"#F8F8F2","--shiki-dark-bg":"#282A36","--shiki-light-bg":"#282A36"}},[s("code",{class:"language-text"},[s("span",{class:"line"},[s("span",null,"大佬，现在我下面给你的HTML代码已经有：10到`1e16`范围内的最大因数个数的折线图和10到`1e45`范围内的最大因数个数的折线图。我希望你帮我做以下改动：")]),a(`
+`),s("span",{class:"line"},[s("span")]),a(`
+`),s("span",{class:"line"},[s("span",null,"1. 给这两个已有折线图多绘制一个`10^{n/4}`的折线图作为参考，其中`n`表示数量级。这里直接展示浮点数即可")]),a(`
+`),s("span",{class:"line"},[s("span",null,"2. 在这两个图的“取得最大因数个数的最小值”的下面新增一栏“最小值的质因数分解”，字符串格式为`2^3*3^2*5*7^3^13^2`。这里11不是素因子，所以不出现。5的幂是1，所以没展示`5^1`而是简写了。已知素因子都在`prime_list = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151]`范围内，写代码时直接用这个素数表就行。这里希望新增一个类`PrimeInfo`，其`toString()`就输出上述质因数分解的字符串；此外还要存一个数组，比如`[3, 2, 1, 3, 0, 2]`就表示`2^3*3^2*5*7^3^13^2`。")]),a(`
+`),s("span",{class:"line"},[s("span")]),a(`
+`),s("span",{class:"line"},[s("span",null,"请遵循最小改动原则，不改动与本次需求无关的代码。请输出完整HTML文件")])])],-1)])]),_:1},16),i(e,t({},{title:"",ranges:[]}),{default:l(()=>[...n[2]||(n[2]=[s("pre",{class:"shiki shiki-themes dracula dracula slidev-code",style:{"--shiki-dark":"#F8F8F2","--shiki-light":"#F8F8F2","--shiki-dark-bg":"#282A36","--shiki-light-bg":"#282A36"}},[s("code",{class:"language-text"},[s("span",{class:"line"},[s("span",null,"大佬，你的改动很成功。但我发现参考线和具体点的差距太大，所以我希望你帮我修改下面我给你的代码：")]),a(`
+`),s("span",{class:"line"},[s("span")]),a(`
+`),s("span",{class:"line"},[s("span",null,"1. 把两个折线图的y轴都改为对数坐标轴，x轴不变")]),a(`
+`),s("span",{class:"line"},[s("span",null,"2. 参考线的具体点也展示出来。并且如果数量级是4的倍数，那么`10^{n/4}`直接展示为一个整数，不是4的倍数则展示为浮点数")]),a(`
+`),s("span",{class:"line"},[s("span",null,"3. 请帮我支持锚点定位：JS读取URL Hash，能够平滑滚动到“因数个数前缀最大值曲线”“最大因数个数增长趋势图”“最大因数个数增长趋势图-极宏观统计”“数学原理”")]),a(`
+`),s("span",{class:"line"},[s("span")]),a(`
+`),s("span",{class:"line"},[s("span",null,"请遵循最小改动原则，不改动与本次需求无关的代码。请输出完整HTML文件")])])],-1)])]),_:1},16)]),_:1},16)}}};export{H as default};
