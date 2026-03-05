@@ -31,7 +31,8 @@ export const ppts: Array<Ppt> = [
   { id: '260204', title: '【slidev】麻省理工学院2026积分大赛-弓箭积分', date: '2026-02-04' },
   { id: '260206', title: '【slidev】复合根式化简第2期-Grobner基，启动', date: '2026-02-06', intro: 'WIP' },
   { id: '260213', title: '【slidev】复合根式化简第1期-复习初中知识', date: '2026-02-13', intro: 'WIP' },
-  { id: '260215', title: '【slidev】只属于2026的数学题', date: '2026-02-15', intro: 'WIP' },
+  { id: '260215', title: '【slidev】只属于2026的数学题', date: '2026-02-15' },
+  { id: '260305', title: '【slidev】欧拉分解公式竟能用单位根完全展开！', date: '2026-03-05' },
 ];
 
 export function hasPpt(id: string) {
