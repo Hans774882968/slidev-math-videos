@@ -38,6 +38,81 @@ $$
 
 这里 $\mathbf{u}_2 = \frac{\mathbf{v}_2 + \mathbf{v}_4}{2}$
 
+## 新增评论2
+
+### $n=2$ 导出的恒等式
+
+$det\begin{pmatrix} a & b \\ b & a \end{pmatrix} = a^2-b^2 = (a+b)(a+wb)=(a+b)(a-b)$
+
+### $n=4$ 导出的恒等式
+
+必不可能手算的！给通义千问的提示词：
+
+```
+大佬，你是一名数学科研工作者，精通代数方向。我们知道矩阵
+a b c
+c a b
+b c a
+的行列式可以导出欧拉分解公式在复数域下的完全分解：a^3+b^3+c^3-3abc=(a+b+c)(a+wb+w^2c)(a+w^2b+wc)。现在请帮我根据4阶循环矩阵导出一个恒等式
+```
+
+```
+大佬，请展示一下det(C4)的具体计算过程
+```
+
+于是拿到代码：
+
+```python
+import sympy as sp
+
+a, b, c, d = sp.symbols('a b c d')
+
+C4 = sp.Matrix([
+    [a, b, c, d],
+    [d, a, b, c],
+    [c, d, a, b],
+    [b, c, d, a]
+])
+
+det_C4 = C4.det()
+print('行列式的展开形式：')
+sp.pprint(det_C4)
+print('\n' + '=' * 60 + '\n')
+
+factored = sp.factor(det_C4)
+print('因式分解形式：')
+sp.pprint(factored)
+print('\n' + '=' * 60 + '\n')
+
+print(sp.latex(det_C4))
+print(sp.latex(factored))
+```
+
+等式的左边（按字典序排列）：
+
+$a^{4} - 4 a^{2} b d - 2 a^{2} c^{2} + 4 a b^{2} c + 4 a c d^{2} - b^{4} + 2 b^{2} d^{2} - 4 b c^{2} d + c^{4} - d^{4}$
+
+在实数域上的因式分解：
+
+$$
+\begin{align}
+\left(a - b + c - d\right) \left(a + b + c + d\right) \left(a^{2} - 2 a c + b^{2} - 2 b d + c^{2} + d^{2}\right) \\
+= (a+b+c+d)(a-b+c-d)((a-c)^2+(b-d)^2)
+\end{align}
+$$
+
+等式的右边（在复数域上的完全分解，其中 $w=i$ ）：
+
+$$
+\begin{aligned}
+(a+b+c+d)(a+wb+w^2c+w^3d)(a+w^2b+w^4c+w^6d)(a+w^3b+w^6c+w^9d) \\
+= (a+b+c+d)(a+wb+w^2c+w^3d)(a+w^2b+c+w^2d)(a+w^3b+w^2c+wd) \\
+= (a+b+c+d)(a+ib-c-id)(a-b+c-d)(a-ib-c+id)
+\end{aligned}
+$$
+
+其中 $a+ib-c-id,\ a-ib-c+id$ 是共轭复数
+
 ## 曾有发表想法但砍掉的评论
 
 本来想让LLM写mermaid代码画个这期视频的证明思路的算法流程图，但懒得了~
