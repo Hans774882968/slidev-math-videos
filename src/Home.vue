@@ -50,7 +50,7 @@ const staggerDelay = 100;
             :class="cn(
               'block p-6 space-y-2 rounded-lg shadow',
               'bg-(--current-line)',
-              'border border-(--purple)/20',
+              'border border-(--purple)/60',
               'transition-all duration-300',
               'hover:border-(--purple) hover:shadow-xl hover:shadow-[hsl(265,89%,78%,0.2)] hover:-translate-y-1'
             )"

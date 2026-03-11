@@ -33,6 +33,7 @@ export const ppts: Array<Ppt> = [
   { id: '260213', title: '【slidev】复合根式化简第1期-复习初中知识', date: '2026-02-13', intro: 'WIP' },
   { id: '260215', title: '【slidev】只属于2026的数学题', date: '2026-02-15' },
   { id: '260305', title: '【slidev】欧拉分解公式竟能用单位根完全展开！', date: '2026-03-05' },
+  { id: '260309', title: '【slidev】突然发现学RSA是入门数论的好办法', date: '2026-03-09' },
 ];
 
 export function hasPpt(id: string) {
