@@ -1,0 +1,1 @@
+import{b as s}from"./two-cols.vue_vue_type_script_setup_true_lang-BxYyhg4i.js";var t,e=(t=class{constructor(i){this.init=i,this.records=this.init()}reset(){this.records=this.init()}},s(t,"ImperativeState"),t);export{e as I};
