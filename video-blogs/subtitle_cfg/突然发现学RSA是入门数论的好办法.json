@@ -10,6 +10,14 @@
       "pow_mod"
     ],
     [
+      "gcd ext",
+      "gcdext"
+    ],
+    [
+      "q inv",
+      "q_(inv)"
+    ],
+    [
       "a的b次方",
       "a^b"
     ],

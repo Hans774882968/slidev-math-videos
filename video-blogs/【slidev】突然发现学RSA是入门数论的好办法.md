@@ -9,7 +9,7 @@ tags:
 
 <SlidevPageRedirector />
 <MovingWatermark />
-<!-- <AutoSlide :timeList="[0, 0]" /> -->
+<AutoSlide :timeList="[0, 42, 31.5, 14, 11, 38.5, 44.5, 51, 62, 32.5, 19, 36, 10.5, 56, 39.5, 12.5, 62.5, 7.5, 9.5]" />
 
 留空
 
@@ -67,7 +67,7 @@ For more info，可查询CTF Wiki或OI Wiki
 
 ## 扩展欧几里得算法（同样简单眼熟即可）
 
-解不定方程 $ax+by=gcd(a,b)$ 的算法：**扩展欧几里得算法**。对**辗转相除法**进行升级得来。
+解不定方程 **$ax+by=gcd(a,b)$** 的算法：**扩展欧几里得算法**。对**辗转相除法**进行升级得来。
 
 **辗转相除法**的代码：
 
@@ -142,7 +142,7 @@ from libnum import n2s, s2n
 
 ---
 
-## RSA介绍
+## RSA加密算法介绍
 
 RSA 加密算法是一种**非对称加密算法**（有**公钥**和**私钥**）。在公开密钥加密和电子商业中， RSA 被广泛使用
 
@@ -238,7 +238,11 @@ $$
 这时m必然是p或q的倍数。不失一般性，假设 $m=xp,\ 1 \leq x \leq q-1$ 。由**费马小定理**： $m^{q-1} \equiv 1\ (mod\ q)$ 。又由 $\phi(N)=(p-1)(q-1)$ ，我们得到
 
 $$
+\textcolor{orange}{
+\boldsymbol{
 m^{k\phi(N)+1}=m*(m^{(q-1)})^{k(p-1)} \equiv m\ (mod\ q)
+}
+}
 $$
 
 不妨设 $m^{k\phi(N)+1} = m+u_{0}q$ 。因为 $m^{k\phi(N)+1}$ 是m的倍数，且m和q互质，所以 $u_{0}$ 是m的倍数，不妨设为 $m^{k\phi(N)+1} = m+umq$ 。把 $umq$ 里的m换成 $xp$ 得 **$m^{k\phi(N)+1} = m+ux(pq)=m+uxN$** 。证毕！
@@ -249,7 +253,9 @@ $$
 
 题意：给了RSA的`p, q, e, c`，让你解出明文`m`
 
-1. 可以用这题检验你对RSA的加解密过程的核心公式是否已经理解
+思路： $p, q \rightarrow n = pq,\ phi(n)=(p-1)(q-1) \rightarrow d \rightarrow m = c^d\ mod\ n$
+
+1. 可以用这题检验你对RSA加解密过程的核心公式是否已经理解
 2. 检验`gmpy2`是否安装成功
 3. `invert(a,m)`求a在模m意义下的逆元，`powmod(a,b,m)`求`a ** b % m`
 
@@ -351,10 +357,14 @@ print(n2s(int(m)).decode('utf-8'))
 目标：求 $m \equiv c^d\ (mod\ n)$ 。设m模p、q分别为 $m_{p},\ m_{q}$ ，则由**费马小定理**：
 
 $$
+\textcolor{orange}{
+\boldsymbol{
 \begin{cases}
 m_{p} \equiv c^d \equiv c^{d\ mod\ (p-1)} \equiv c^{d_{p}}\ (mod\ p) \\
 m_{q} \equiv c^d \equiv c^{d\ mod\ (q-1)} \equiv c^{d_{q}}\ (mod\ q)
 \end{cases}
+}
+}
 $$
 
 p、q互素，所以我们只需要解下面的**线性同余方程组**就能拿到m：
@@ -396,7 +406,7 @@ $$
 
 其中 $p_{inv}$ 表示p在模q意义下的逆元。于是 $m=m_{p}+(((m_{q}-m_{p})*p_{inv})\ mod\ q)*p$
 
-注：如果把方程1和2互换，则m变为 $m=x_{1}+x_{2}q$ ，最后求出的表达式相应变为 $m=m_{q}+(((m_{p}-m_{q})*q_{inv})\ mod\ p)*q$ （后面代码实际用的公式），其中 $q_{inv}$ 表示q在模p意义下的逆元
+注：如果方程1和2互换，则m变为 $m=x_{1}+x_{2}q$ ，最后求出的表达式相应变为 $m=m_{q}+(((m_{p}-m_{q})*q_{inv})\ mod\ p)*q$ （后面代码实际用的公式），其中 $q_{inv}$ 表示q在模p意义下的逆元
 
 ---
 layout: two-cols
@@ -464,7 +474,7 @@ print(f'解密出的字符串：{n2s(int(m_dec_crt)).decode("utf-8")}')
 
 ## buu RSA3-RSA的共模攻击模板
 
-题意：假设两个用户加密同一条消息m，使用了不同的公钥`e1, e2`，但模数n相同，得到密文`c1, c2`。求m（**共模攻击**模板题）
+题意：假设两个用户加密同一条消息m，使用了不同的公钥`e1, e2`，但模数n相同且已知，得到密文`c1, c2`。求m（**共模攻击**模板题）
 
 $$
 \begin{cases}
