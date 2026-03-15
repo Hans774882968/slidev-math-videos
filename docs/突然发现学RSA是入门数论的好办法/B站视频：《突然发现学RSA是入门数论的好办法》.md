@@ -4,6 +4,12 @@
 edge-tts --voice zh-CN-XiaoxiaoNeural --rate=+30% --file 'docs\突然发现学RSA是入门数论的好办法\文字稿1.md' --write-media media\260309\文字稿1.mp3 --write-subtitles media\260309\文字稿1.srt
 ```
 
+## 新增评论：提供RSA流程图、RSA+CRT流程图、辅助代码
+
+在B站发的是：这里分别是RSA流程图，d_p、d_q加速RSA解密流程图，d_p、d_q加速RSA解密的演示脚本~
+
+后面改成：这里分别是RSA流程图，d_p、d_q加速RSA解密流程图，d_p、d_q加速RSA解密的演示代码~
+
 ## B站发布：标题、标签、简介…
 
 标题：《【CTF Crypto】突然发现，学RSA是入门数论的好办法~》
@@ -45,7 +51,7 @@ slidev PPT 传送门： https://hans774882968.github.io/slidev-math-videos/26030
 
 评分弹幕：
 
-- 03:20 流程图清晰吗
+- 03:20 这张流程图怎么样
 
 封面：
 
@@ -53,3 +59,29 @@ slidev PPT 传送门： https://hans774882968.github.io/slidev-math-videos/26030
 magick 260309-封面.png -resize 960x1280! 260309-封面-4x3.png
 magick 260309-封面.png -resize 1440x1080! 260309-封面-3x4.png
 ```
+
+## 抖音
+
+标题：《【CTF Crypto】突然发现学RSA是入门数论的好办法~》（30字真难）
+
+话题： CTF, 密码学, 中国剩余定理, 裴蜀定理, RSA
+
+简介只保留链接以上部分
+
+章节diff：
+
+- 00:40 数论知识&代码环境配置
+
+## 小红书
+
+标题：《【CTF】突然发现学RSA是入门数论的好办法~》（20字真难）
+
+标签： 学渣逆袭, 高中生必看, CTF, 密码学, Python, 中国剩余定理, 欧拉定理, 裴蜀定理, RSA
+
+简介只保留链接以上部分
+
+章节diff：
+
+- 00:40 数论知识&代码运行环境配置
+- 06:03 RSA1-Garner公式
+- 07:44 buuRSA3-共模攻击模板
