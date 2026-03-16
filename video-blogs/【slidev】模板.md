@@ -2,6 +2,7 @@
 theme: dracula
 mdc: true
 transition: slide-left
+lineNumbers: true
 tags:
   - 数学模板
 ---
