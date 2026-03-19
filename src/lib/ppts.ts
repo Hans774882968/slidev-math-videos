@@ -35,6 +35,7 @@ export const ppts: Array<Ppt> = [
   { id: '260305', title: '【slidev】欧拉分解公式竟能用单位根完全展开！', date: '2026-03-05' },
   { id: '260309', title: '【slidev】突然发现学RSA是入门数论的好办法', date: '2026-03-09' },
   { id: '260316', title: '【slidev】武汉二调组合数学压轴一题三解', date: '2026-03-16' },
+  { id: '260319_t', title: '【slidev】封面风格260319', date: '2026-03-19', intro: '第一次尝试新的视频封面风格' },
 ];
 
 export function hasPpt(id: string) {
