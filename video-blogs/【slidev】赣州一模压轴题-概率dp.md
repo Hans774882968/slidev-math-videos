@@ -13,7 +13,7 @@ tags:
 
 <SlidevPageRedirector />
 <MovingWatermark colorCls="text-white" :opacity="0.8" />
-<!-- <AutoSlide :timeList="[0, 0]" /> -->
+<AutoSlide :timeList="[0, 22 + 6, 21, 61, 44, 34, 51, 23, 14, 30.5, 29, 17, 38, 37, 59, 7.5]" />
 
 <div class="bg-gradient-to-br from-[#719cd4] to-[#5984bf] w-full flex flex-col items-center justify-center p-4">
   <h1 class="title-stroke !text-[#3468ab] !mb-1 font-black tracking-tighter text-center">
@@ -391,21 +391,21 @@ $$
 dp[m,n]=\sum_{k=\lceil m/2 \rceil}^{m} dp[k,n-1] \cdot C(k, m-k) \cdot \left(\frac{1}{3}\right)^{m-k} \cdot \left(\frac{2}{3}\right)^{2k-m}
 $$
 
-其他项都好说，但怎么求这个 $dp[k,n-1]$ 呢？我们知道 $dp[k,n-1]$ 是关于 $x'=(\frac{2}{3})^{n-1}$ 的多项式，那 $x'$ 和x有什么关系呢？显然是 $x'=\frac{3}{2}x$ 。又因为 $dp[m,n]=\sum_{i=0}^{m} c[m,i]x^i$ 里n从未单独出现，只蕴含在x里，所以如果记 $f(x)=dp[m,n]$ ，那么 $dp[m,n-1]=f(\frac{3}{2}x)$
+我们知道 $dp[k,n-1]$ 是关于 $x'=(\frac{2}{3})^{n-1}$ 的多项式，那 $x'$ 和x有什么关系呢？显然是 $x'=\frac{3}{2}x$ 。又因为 $dp[m,n]=\sum_{i=0}^{m} c[m,i]x^i$ 里n从未单独出现，只蕴含在x里，所以如果记 $f(x)=dp[m,n]$ ，那么 $dp[m,n-1]=f(\frac{3}{2}x)$
 
-回到 $c[m,i]$ ，我们从上面的分析得到： $dp[k,n-1]$ 对 $c[m,i]$ 的贡献就是 $c[k,i] \cdot (\frac{3}{2})^i$ ，即：
+所以 $dp[k,n-1]$ 对 $c[m,i]$ 的贡献就是 $c[k,i] \cdot (\frac{3}{2})^i$ ，即：
 
 $$
 c[m,i]=\sum_{k=\lceil m/2 \rceil}^{m} (c[k,i] \cdot (\frac{3}{2})^i) \cdot C(k, m-k) \cdot \left(\frac{1}{3}\right)^{m-k} \cdot \left(\frac{2}{3}\right)^{2k-m}
 $$
 
-但当 $k=m$ 时，我们发现这里出现了**自我指涉**：为了求 $c[m,i]$ ，需要先知道 $c[m,i]$
+但当 $k=m$ 时，我们发现这里出现了**自引用**：为了求 $c[m,i]$ ，需要先知道 $c[m,i]$
 
 ---
 
 ## 概率dp求多项式系数（续2）
 
-别担心！在**概率dp**里这很常见。出现自我指涉的情况，说明需要**解方程**。假设 $k<m$ 对 $c[m,i]$ 的总贡献已经求出是 $T$ ，把递推式里 $k=m$ 的情况单独拿出来：
+别担心！在**概率dp**里这很常见。出现**自引用**的情况，说明需要**解方程**。假设 $k<m$ 对 $c[m,i]$ 的总贡献已经求出是 $T$ ，把递推式里 $k=m$ 的情况单独拿出来：
 
 $$
 c[m,i]=T+c[m,i] \cdot (\frac{3}{2})^i (\frac{2}{3})^{m} \implies c[m,i]=\frac{T}{1-(\frac{2}{3})^{m-i}}
@@ -418,7 +418,7 @@ $dp[m,n]$ 的常数项为0，所以 $x=1$ （即 $n=1$ ）时 $dp[m,n]=0$ ，又
 ### 思考
 
 1. 设 $x=(\frac{2}{3})^n$ ，证明 $dp[m,n]$ 是关于x的多项式
-2. 如何证明 $c[m,0]=0$ ？提示：递推式
+2. 如何证明 $c[m,0]=0$ ？
 
 ---
 
