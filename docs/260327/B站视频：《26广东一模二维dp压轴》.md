@@ -1,0 +1,49 @@
+## 旁白
+
+```powershell
+edge-tts --voice zh-CN-XiaoxiaoNeural --rate=+30% --file 'docs\260327\文字稿1.md' --write-media media\260327\文字稿1.mp3 --write-subtitles media\260327\文字稿1.srt
+```
+
+## B站发布：标题、标签、简介…
+
+标题：《深挖26年广东一模压轴：动态规划、一题两解，并扩展讲解洛谷P1350！oier最喜欢的一集~》
+
+标签： 宝藏知识UP跃迁计划, 学渣逆袭, 高中生必看, 广东一模, 组合数学, 分类讨论, 递推式, 二维dp, 信息学竞赛
+
+```
+最近广东一模的压轴题竟然考二维dp，考的还是oier耳熟能详的国际象棋棋盘放“车”的模型！又是OIER最喜欢的一集，一起来领略动态规划和组合数学的魅力！
+slidev PPT 传送门： https://hans774882968.github.io/slidev-math-videos/260327
+文字稿： https://github.com/Hans774882968/slidev-math-videos/blob/main/video-blogs/%E3%80%90slidev%E3%80%9126%E5%B9%BF%E4%B8%9C%E4%B8%80%E6%A8%A1%E4%BA%8C%E7%BB%B4dp%E5%8E%8B%E8%BD%B4.md
+```
+
+章节：
+
+```
+00:00 引言&题干
+00:22 第一问讲解-送分
+00:41 第二问讲解-不用递推式
+01:39 第三问-概率dp求递推式
+02:52 求递推数列通项-法1
+07:33 后记
+```
+
+互动引导加在末尾
+
+投票弹幕：00:10
+
+你觉得这题难度如何
+
+- 太水了
+- 一般般
+- 踮踮脚能够到
+- 踮脚也够不着
+
+评分弹幕：
+
+- 06:01 给我的讲解打打分
+
+封面：
+
+```powershell
+magick 260327-封面-3x4.png -resize 960x1280! 260327-封面-4x3.png
+```

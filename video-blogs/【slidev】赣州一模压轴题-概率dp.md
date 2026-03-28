@@ -12,7 +12,7 @@ tags:
 ---
 
 <SlidevPageRedirector />
-<MovingWatermark colorCls="text-white" :opacity="0.8" />
+<MovingWatermark />
 <AutoSlide :timeList="[0, 22 + 6, 21, 61, 44, 34, 51, 23, 14, 30.5, 29, 17, 38, 37, 59, 7.5]" />
 
 <div class="bg-gradient-to-br from-[#719cd4] to-[#5984bf] w-full flex flex-col items-center justify-center p-4">

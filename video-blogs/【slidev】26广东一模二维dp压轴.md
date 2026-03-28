@@ -12,7 +12,63 @@ tags:
 <MovingWatermark />
 <!-- <AutoSlide :timeList="[0, 0]" /> -->
 
-留空
+<div class="bg-gradient-to-br from-[#719cd4] to-[#5984bf] absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4">
+  <h1 class="title-stroke !text-[#3468ab] !mb-1 font-black tracking-tighter text-center">
+    2026广东一模dp压轴
+  </h1>
+
+  <div class="flex flex-col justify-center items-center gap-3">
+    <h2 class="flex justify-center items-center font-black text-center !text-[#4a81c8] !text-4xl md:!text-5xl">
+      <span class="subtitle-stroke">竟然是</span>
+      <div class="mx-6 bg-white px-4 py-1.5 rounded-xl">
+        <span class="!text-5xl md:!text-[52px] text-[#4a81c8]">洛谷P1350</span>
+      </div>
+      <span class="subtitle-stroke">的子问题！</span>
+    </h2>
+  </div>
+
+  <p class="text-white text-2xl md:text-3xl text-center">
+    原题一题两解 + 我自编一题 + 洛谷P1350一题两解
+  </p>
+
+  <div class="border-4 border-white bg-gradient-to-br from-[#719cd4] to-[#5984bf] px-4 rounded-2xl shadow-lg flex items-center justify-center text-lg md:text-xl text-white font-serif">
+
+$$
+\boldsymbol{
+\begin{cases}
+A_n(m) = A_{n-1}(m) + (2n-m)A_{n-1}(m-1) \\
+dp[i,j]=dp[i-1,j]+(n-j+1)dp[i-1,j-1]
+\end{cases}
+}
+$$
+  </div>
+
+  <p class="text-white text-2xl md:text-3xl mt-6 text-center">
+    OIER/ACMER 狂喜题~
+  </p>
+</div>
+
+<style>
+@font-face {
+  font-family: 'jing-nan-bo-bo-hei-bold';
+  src: url('/fonts/jing-nan-bo-bo-hei-bold.ttf') format('truetype');
+}
+.title-stroke {
+  -webkit-text-stroke: 10px white;
+  paint-order: stroke fill;
+}
+
+.subtitle-stroke {
+  -webkit-text-stroke: 8px white;
+  paint-order: stroke fill;
+}
+
+@media (max-width: 768px) {
+  .subtitle-stroke {
+    -webkit-text-stroke: 6px white;
+  }
+}
+</style>
 
 ---
 
@@ -28,7 +84,7 @@ tags:
 
 - **(ii)** 若乙社区将选出的 $m$ 个男生和 $m$ 个女生按男、女搭配随机组队，求组队结果满足参赛要求的概率。
 
-<div class="h-30 flex justify-center items-center text-5xl text-orange">
+<div class="h-26 flex justify-center items-center text-5xl text-orange">
 洛谷P1350是它的升级版~
 </div>
 
@@ -91,6 +147,10 @@ $A_{n-1}(m)$ 表示少了男生 $b_{n}$ 和女生 $g_{n}$ ，但还是有m队。
 > [!note] 想法
 > 先试试直接用组合意义写出**通项公式**。碰壁了就考虑**子问题**的性质，先求递推式再求通项！
 
+<div class="flex justify-center">
+<img src="./assets/260327/想法1.png" class="w-160" />
+</div>
+
 考虑枚举被选中的女生编号 $g_{i_{1}},\ g_{i_{2}},\ \dots,\ g_{i_{m}}$ （共 $C_{n}^m$ 种情况）。不失一般性，约定 $1 \leq g_{i_{1}} < g_{i_{2}} < \dots < g_{i_{m}} \leq n$ 。考虑第k个被选中的女生 $g_{i_{k}}$ ，则她能选择的男生个数为 $(2i_{k}-1)-(k-1)=2i_{k}-k$ 。于是
 
 $$
@@ -108,9 +168,17 @@ $$
 1.  $g_{n}$ 不参赛。 $B_{n-1}(m)$
 2.  $g_{n}$ 参赛。首先其他3n-3人组成m-1队 $B_{n-1}(m-1)$ 。 $g_{n}$ 不能拆散组好的队伍，所以需要在没被选中的 $(2n-1)-(m-1)=2n-m$ 个男生中选一个组队。总方案数 $(2n-m)B_{n-1}(m-1)$
 
-综上，得到递推式 $B_n(m) = B_{n-1}(m) + (2n-m)B_{n-1}(m-1)$
+综上，得到递推式
 
-诶，这个递推式刚好和A一样！ $A_n(m) = A_{n-1}(m) + (2n-m)A_{n-1}(m-1)$
+$$
+B_n(m) = B_{n-1}(m) + (2n-m)B_{n-1}(m-1)
+$$
+
+诶，这个递推式刚好和A一样！
+
+$$
+A_n(m) = A_{n-1}(m) + (2n-m)A_{n-1}(m-1)
+$$
 
 ---
 
@@ -152,9 +220,9 @@ $$
 1. T(n,k) is the number of increasing subsequences of length n-k over all permutations of `[n]`
 2. T(n,k) is also the number of ways to place k nonattacking rooks on an n X n chessboard
 
-1：选择n-k个数的方案数是 $C_{n}^{n-k}$ ，为n-k个数选n-k个位置的方案数是 $C_{n}^{n-k}$ 。剩下k个数可以任意排，方案数 $k!$
+1：选择n-k个数的方案数 $C_{n}^{n-k}$ ，为n-k个数选n-k个位置的方案数 $C_{n}^{n-k}$ 。剩下k个数可以任意排，方案数 $k!$
 
-2：引入**模型1**：把m个车放到 $n \times n$ 的棋盘上，要求**任意两个车不能在同一行，也不能在同一列**，求方案数
+2：引入**模型1**：把m个车放到 $n \times n$ 的棋盘上，要求**任意两个车不能在同一行，也不能在同一列**，求方案数。不难发现，前面第二问等价于模型1：有车的行可以认为是被选中的男生，有车的列可以认为是被选中的女生。
 
 ### 视角1：通项公式
 
@@ -165,12 +233,31 @@ $$
 
 ---
 
-## 视角2：动态规划
+## 视角2：前面第二问的递推式 $A_n(m) = A_{n-1}(m) + (2n-m)A_{n-1}(m-1)$
+
+设`dp[i,j]`表示在`i*i`的棋盘上放j个车的方案数。
+
+1. 边界条件：答案为`dp[n,m]`，`dp[i,0]=1`
+2. 模仿前面第二问的法2来**分类讨论**：
+	1. `dp[i-1,j]`表示j个车都放在`(i-1)*(i-1)`的棋盘上
+	2. 第i行放一个车，但第i列不放车（对应前面 $b_{i}$ 参赛 $g_{i}$ 不参赛），则 $(i,i)$ 位置不能放车。方案数 $((i-1)-(j-1))dp[i-1,j-1]=(i-j)dp[i-1,j-1]$
+	3. 第i列放一个车，但第i行不放车。同上，方案数 $(i-j)dp[i-1,j-1]$
+	4. 第i行第i列都放车。类似地，拆散组队的操作，对应这里的挪之前放好的棋子的动作。假设被挪动的棋子是 $(x,y)\ (1 \leq x,y \leq i-1)$ ，则 $g_{i}$ 和 $b_{x}$ 组队， $b_{i}$ 和 $g_{y}$ 组队，对应第j个棋子被放到位置 $(i,y)$ ，被挪动的棋子被放到 $(x,i)$ 。挪棋子的方案数j-1，加上第j个棋子就放在位置 $(i,i)$ 的1个方案，这种情况的总方案数 $jdp[i-1,j-1]$
+
+综上，成功得到和第二问一样的递推式
+
+$$
+dp[i,j]=dp[i-1,j]+(2i-j)dp[i-1,j-1]
+$$
+
+---
+
+## 视角3：另一种动态规划
 
 设`dp[i,j]`表示棋盘前`i`行上放j个车的方案数，则：
 
-1. 边界条件：答案`dp[n,m]`，`dp[i,0]=1`
-2. 仍然先进行翻译：
+1. 边界条件：答案为`dp[n,m]`，`dp[i,0]=1`
+2. 仍然按第j个车放的位置**分类讨论**：
 	1. `dp[i-1,j]`表示j个车都放在前`i-1`行，第i行没有车
 	2. `dp[i-1,j-1]`表示第j个车要放在第i行。第i行有n个格子，但已经有`j-1`个被占用，所以有`n-j+1`个格子可选
 
@@ -180,30 +267,25 @@ $$
 dp[i,j]=dp[i-1,j]+(n-j+1)dp[i-1,j-1]
 $$
 
-## 思考
-
-设`dp[i,j]`表示在`i*i`的棋盘上放j个车的方案数，则`dp[i-1,j]`表示在`(i-1)*(i-1)`的棋盘上放j个车的方案数。这样能做吗？
-
 ---
 
 ## 前面第三问等价于特定形状的棋盘放车的方案数
 
-有了前面的经验，我们不难发现，前面的第三问等价于这个问题：有以下形状的棋盘
+类似地，前面的第三问等价于这个问题：有以下形状的棋盘
 
 ```
 x       1列
 xxx     3列
-xxxxx   5列
 ...
 xxxxxxx 2n-1列
 ```
 
-把m个车放到上面的棋盘上，要求**任意两个车不能在同一行，也不能在同一列**，求方案数。
+把m个车放到这个棋盘上，要求**任意两个车不能在同一行，也不能在同一列**，求方案数。
 
-如法炮制，设`dp[i,j]`表示棋盘前`i`行上放j个车的方案数，则：
+模仿刚刚说的视角3，设`dp[i,j]`表示棋盘前`i`行上放j个车的方案数，则：
 
 1. `dp[i-1,j]`表示j个车都放在前`i-1`行，第i行没有车
-2. `dp[i-1,j-1]`表示第j个车要放在第i行。第i行有 $2i-1$ 个格子，但已经有`j-1`个被占用，所以有 $2i-j$ 个格子可选
+2. `dp[i-1,j-1]`表示第j个车要放在第i行。第i行有 $2i-1$ 个格子，但已经有`j-1`个被占用，所以有 $(2i-1)-(j-1)=2i-j$ 个格子可选
 
 所以状态转移方程：
 
@@ -215,7 +297,7 @@ $$
 
 ## 扩展2：我自编的一道水题
 
-我们发现上面的dp对于任意形状的棋盘都适用。所以来试试下面这题：棋盘有2n行，第2k+1、2k+2行（k从0到n-1）的格子数是3k+2。试求放m个车的方案数
+我们发现视角3介绍的dp对于任意形状的棋盘都适用。所以不妨来做做下面这题：棋盘有2n行，第2k+1、2k+2行（k从0到n-1）的格子数是3k+2。试求放m个车的方案数
 
 ```python {*}{maxHeight:'386px'}
 def compute_dp(n, m_max=None):
@@ -227,9 +309,7 @@ def compute_dp(n, m_max=None):
     rows = 2 * n
     if m_max is None:
         m_max = rows
-
     dp = [[0] * (m_max + 1) for _ in range(rows + 1)]
-
     for i in range(rows + 1):
         dp[i][0] = 1
 
@@ -248,41 +328,133 @@ def compute_dp(n, m_max=None):
                 dp[i][j] = dp[i - 1][j] + (width_i - j + 1) * dp[i - 1][j - 1]
             else:
                 dp[i][j] = dp[i - 1][j]
-
     return dp
 ```
 
 ---
 
-## 扩展3：洛谷P1350
+## 扩展3：洛谷P1350-题干
 
-有这样一个网格棋盘，$a,b,c,d$ 表示了对应边长度，也就是对应格子数
+<div class="flex items-center">
+
+有这样一个网格棋盘，$a,b,c,d$ 表示对应边长度，也就是对应的格子数：
+
+<div class="bg-white">
+<img src="./assets/260327/洛谷1350-1.png" class="w-75" />
+</div>
+</div>
+
+<div class="flex items-center">
 
 当 $a=b=c=d=2$ 时，对应这样一个棋盘：
 
+<div class="bg-white">
+<img src="./assets/260327/洛谷1350-2.png" class="w-75" />
+</div>
+</div>
+
 要在这个棋盘上放 $k$ 个相互不攻击的车，也就是这 $k$ 个车没有两个车在同一行，也没有两个车在同一列，问有多少种方案。
 
-输入五个非负整数，分别代表 $a,b,c,d$ 和 $k$ 。保证 $0\leq a,b,c,d,k\leq 10^3$，且至少有一种可行方案。输出一行一个整数代表答案 $\bmod$ $10^5+3$ 后的结果
+输入：五个非负整数，分别代表 $a,b,c,d$ 和 $k$ 。保证 $0\leq a,b,c,d,k\leq 10^3$，且至少有一种可行方案。答案要 $\bmod$ $10^5+3$
 
 ---
 
-## 扩展3：洛谷P1350-题解
+## 扩展3：洛谷P1350-法1：扩展模型1求通项公式
 
 首先，我们把模型1扩展到`n*m`棋盘的情况（**模型2**）：把k个车放到 $n \times m$ 的棋盘上，要求**任意两个车不能在同一行，也不能在同一列**，求方案数
 
-同理，方案数是 $C_{n}^k \cdot C_{m}^k \cdot k!$
+同模型1，方案数是 $C_{n}^k \cdot C_{m}^k \cdot k!$ 。 $C_{n}^k \cdot C_{m}^k$ 表示把问题转化为求k个车放到 $k \times k$ 的棋盘上的方案数
 
-由模型2：
+<div class="flex items-center">
+
+回顾棋盘形状：
+
+<div class="bg-white">
+<img src="./assets/260327/洛谷1350-1.png" class="w-75" />
+</div>
+</div>
+
+棋盘可以看成由两个矩形组成，所以我们有两个想法：
+
+1. 先在`c*d`的矩形上放车，再在`a*(b+d)`的矩形上放车
+2. 先在`a*b`的矩形上放车，再在`(a+c)*d`的矩形上放车
+
+---
+
+## 洛谷P1350-法1
+
+1，设在`c*d`的矩形上放了i个车（ $0 \leq i \leq k$ ）。因为`a*(b+d)`的矩形有i行被占用了，所以相当于矩形变成了`a*(b+d-i)`。套模型2的公式得总方案数：
 
 $$
 \sum_{i=0}^{k} C_{c}^iC_{d}^ii! \cdot C_{a}^{k-i}C_{b+d-i}^{k-i}(k-i)!
 $$
+
+2，设在`a*b`的矩形上放了i个车（ $0 \leq i \leq k$ ）。因为`(a+c)*d`的矩形有i列被占用了，所以相当于矩形变成了`(a+c-i)*d`。套模型2的公式得总方案数：
 
 $$
 \sum_{i=0}^{k} C_{a}^iC_{b}^ii! \cdot C_{d}^{k-i}C_{a+c-i}^{k-i}(k-i)!
 $$
 
 ---
+
+## 洛谷P1350-法1-代码
+
+```python {*}{maxHeight:'422px'}
+MOD = 100003
+MAX_N = 2005
+
+C = [[0] * MAX_N for _ in range(MAX_N)]
+fact = [1] * MAX_N
+
+
+def precompute():
+    for i in range(MAX_N):
+        C[i][0] = 1
+        for j in range(1, i + 1):
+            C[i][j] = (C[i - 1][j - 1] + C[i - 1][j]) % MOD
+    for i in range(1, MAX_N):
+        fact[i] = (fact[i - 1] * i) % MOD
+
+
+def solve_expr1(a, b, c, d, k):
+    """
+    计算表达式 1:
+    sum_{i=0}^{k} C(c, i) * C(d, i) * i! * C(a, k-i) * C(b+d-i, k-i) * (k-i)!
+    """
+    ans = 0
+    for i in range(k + 1):
+        term = C[c][i] * C[d][i] % MOD * fact[i] % MOD * C[a][k - i] % MOD
+        n2 = b + d - i
+        m2 = k - i
+        if n2 >= 0:
+            term = (term * C[n2][m2]) % MOD
+        else:
+            term = 0
+        term = (term * fact[k - i]) % MOD
+        ans = (ans + term) % MOD
+    return ans
+
+
+if __name__ == "__main__":
+    precompute()
+    a, b, c, d, k = list(map(int, input().split()))
+    ans = solve_expr1(a, b, c, d, k)
+    print(ans)
+```
+
+---
+
+## 洛谷P1350-法2-动态规划
+
+前面介绍的视角3的dp适用于任何形状的棋盘，那自然也适用于这题。设`dp[i,j]`表示棋盘前`i`行上放j个车的方案数，则：
+
+$$
+dp[i,j]=dp[i-1,j]+K \cdot dp[i-1,j-1]
+$$
+
+其中K是一个跟行号有关的函数 $K(i)$ ：`K(i)=(a - j + 1) if i <= b else (a + c - j + 1)`
+
+另外，简单约束下枚举放置的车的数目j的范围：`j_lim = min(k, a) if i <= b else min(k, a + c)`
 
 ```python
 MOD = 100003

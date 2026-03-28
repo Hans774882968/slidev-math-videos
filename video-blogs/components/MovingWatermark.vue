@@ -32,11 +32,11 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 const props = defineProps({
   colorCls: {
     type: String,
-    default: 'text-gray-300'
+    default: 'text-white'
   },
   opacity: {
     type: Number,
-    default: 0.3
+    default: 0.8
   },
   text: {
     type: String,
