@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>从两个记忆小窍门聊起</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    :root {
+      --bg-start: #C8E6C9;
+      --bg-end: #dcf1dd;
+      --card-bg: #e6f6eb;
+      --accent: #2d644b;
+      --title-dark: #1f2937;
+      --text-gray: #4b5563;
+      --border: #d1d5db;
+      --scroll-track: #f1f1f1;
+      --scroll-thumb: #86efac;
+      --scroll-hover: #4ade80;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans SC', sans-serif;
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--scroll-track);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--scroll-thumb);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--scroll-hover);
+    }
+
+    @keyframes slideUpFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(100vh);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUpFadeInTitle {
+      from {
+        opacity: 0;
+        transform: translate(-50%, 100vh);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    @keyframes slideUpFadeOut {
+      from {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      to {
+        opacity: 0;
+        transform: translateY(-100vh);
+      }
+    }
+
+    @keyframes slideUpFadeOutTitle {
+      from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+
+      to {
+        opacity: 0;
+        transform: translate(-50%, -100vh);
+      }
+    }
+
+    @keyframes titleToCorner {
+      from {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      to {
+        top: 40px;
+        left: 40px;
+        transform: translate(0, 0);
+      }
+    }
+
+    .animate-slide-up-in {
+      animation: slideUpFadeIn 300ms ease-out forwards;
+    }
+
+    .animate-slide-up-in-title {
+      animation: slideUpFadeInTitle 300ms ease-out forwards;
+    }
+
+    .animate-slide-up-out {
+      animation: slideUpFadeOut 300ms ease-out forwards;
+    }
+
+    .animate-slide-up-out-title {
+      animation: slideUpFadeOutTitle 300ms ease-out forwards;
+    }
+
+    .title-to-corner {
+      animation: titleToCorner 300ms ease-out forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    .nav-btn {
+      transition: all 200ms ease;
+      box-shadow: 0 4px 12px rgba(45, 100, 75, 0.3);
+    }
+
+    .nav-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(45, 100, 75, 0.4);
+    }
+
+    .nav-btn:active {
+      transform: scale(0.95);
+    }
+
+    .ppt-card {
+      transition: transform 200ms ease, box-shadow 200ms ease;
+    }
+
+    .ppt-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(45, 100, 75, 0.15);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useCallback, useRef } = React;
+    // 页面数据配置
+    const pageData = {
+      1: {
+        title: "《从两个记忆小窍门聊起：代码与生命哲学视角》",
+        steps: []
+      },
+      2: {
+        title: "《窍门1：动用自己的一切知识，自行为没意义的文本赋予意义，以降低记忆的难度》",
+        steps: [
+          {
+            subtitle: "《举个栗子》",
+            cards: [
+              { id: '2.1', emoji: "🚗", title: "车牌号粤BNH372", content: "NH3是氨气，72是一个很好的合数，B暂时没联想到其他东西，就单独记。" }
+            ]
+          },
+          {
+            subtitle: "《为什么这个方法有效？》",
+            cards: [
+              { id: '2.2', emoji: "🔍", title: "视角1：把大问题拆分成多个小问题，逐个击破", content: "1. 它是人做成大事的必经之路，我们却往往不够重视它\n2. 拆分方式多种多样\n3. 对于无法快速解决的小问题，回退为默认策略：死记硬背" },
+              { id: '2.3', emoji: "🧠", title: "视角2：人脑天生是一个模式识别机器", content: "把无意识的“后台程序”提升到意识层面" }
+            ]
+          },
+          {
+            subtitle: "《为什么故事的文本量更大，却更好记？》",
+            cards: [
+              { id: '2.4', emoji: "📖", title: "故事和人的生命体验有关联", content: "举例：如果你喜欢化学，就会觉得NH3特别容易记" },
+              { id: '2.5', emoji: "💭", title: "人类的一个根本冲动", content: "我们无法忍受无意义，于是不断创造出意义" }
+            ]
+          }
+        ]
+      },
+      3: {
+        title: "《窍门2，背课文时顺便数下句子个数，有利于自己不背漏》",
+        steps: [
+          {
+            subtitle: "《举个栗子》",
+            cards: [
+              { id: '3.1', emoji: "🏛️", title: "岳阳楼记", content: "岳阳楼记第一段有9个意群。背的时候顺便心里默数，就能方便地感知到自己很可能没背错。" }
+            ]
+          },
+          {
+            subtitle: "《为什么这个方法有效？》",
+            cards: [
+              { id: '3.2', emoji: "💻", title: "视角1：计算机中的“校验和”", content: "在原始数据之外附加一个摘要，用于验证数据的完整性" },
+              { id: '3.3', emoji: "🎯", title: "元记忆", content: "对自己记忆过程的认知和监控\n通俗来说，就是你对你自己的记忆知道些什么，以及你如何管理自己的记忆" }
+            ]
+          }
+        ]
+      },
+      4: {
+        title: "《为做题人的精神自留地添砖加瓦》",
+        steps: [
+          {
+            subtitle: "《喜欢本期视频的话，别忘了点赞、收藏、关注喔》",
+            cards: []
+          }
+        ]
+      }
+    };
+    // 卡片组件
+    function Card({ emoji, title, content, delay = 0, isExiting }) {
+      // 动态生成样式，处理入场延迟
+      const style = {
+        backgroundColor: '#e6f6eb',
+        borderRadius: '12px',
+        border: '1px solid #d1d5db',
+        overflow: 'hidden',
+        marginBottom: '16px',
+        position: 'relative',
+        width: 'calc(50% - 10px)', // 每行两张卡片
+        minWidth: '280px',
+        animationDelay: isExiting ? '0ms' : `${delay}ms`, // 出场动画无延迟
+      };
+      return (
+        <div
+          className={`ppt-card ${isExiting ? 'animate-slide-up-out' : 'animate-slide-up-in'}`}
+          style={style}
+        >
+          <div style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: '4px',
+            backgroundColor: '#2d644b'
+          }} />
+          <div style={{ padding: '20px 20px 20px 24px' }}>
+            <h3 style={{
+              color: '#1f2937',
+              fontWeight: 600,
+              fontSize: '18px',
+              marginBottom: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              <span style={{ fontSize: '20px' }}>{emoji}</span>
+              <span>{title}</span>
+            </h3>
+            <p style={{
+              color: '#4b5563',
+              fontWeight: 300,
+              fontSize: '15px',
+              lineHeight: 1.7,
+              margin: 0,
+              whiteSpace: 'pre-line'
+            }}>
+              {content}
+            </p>
+          </div>
+        </div>
+      );
+    }
+    function NavButton({ direction, onClick, disabled }) {
+      const isDown = direction === 'down';
+      return (
+        <button
+          onClick={onClick}
+          disabled={disabled}
+          className="nav-btn"
+          style={{
+            width: '52px',
+            height: '52px',
+            borderRadius: '50%',
+            backgroundColor: disabled ? '#d1d5db' : '#2d644b',
+            border: 'none',
+            cursor: disabled ? 'not-allowed' : 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: isDown ? 0 : '12px',
+            opacity: disabled ? 0.5 : 1
+          }}
+          aria-label={isDown ? '下一页' : '上一页'}
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {isDown ? (
+              <path d="M7 10l5 5 5-5" />
+            ) : (
+              <path d="M17 14l-5-5-5 5" />
+            )}
+          </svg>
+        </button>
+      );
+    }
+
+    function Subtitle({ children, visible, isExiting }) {
+      if (!visible && !isExiting) return null;
+      return (
+        <h2
+          className={isExiting ? 'animate-slide-up-out' : 'animate-slide-up-in'}
+          style={{
+            color: '#4b5563',
+            fontFamily: "'Noto Serif SC', serif",
+            fontWeight: 500,
+            fontSize: '22px',
+            marginBottom: '24px',
+            width: '100%'
+          }}
+        >
+          {children}
+        </h2>
+      );
+    }
+    // 主PPT组件
+    function PPTPresentation() {
+      const [currentPage, setCurrentPage] = useState(1);
+      const [currentStep, setCurrentStep] = useState(0);
+      const [isAnimating, setIsAnimating] = useState(false);
+      const [titleInCorner, setTitleInCorner] = useState(false);
+      const [subtitleVisible, setSubtitleVisible] = useState(false);
+      const [cardsKey, setCardsKey] = useState(0);
+      const [pageExiting, setPageExiting] = useState(false);
+      const [contentExiting, setContentExiting] = useState(false); // 控制内容出场动画
+      // 追踪当前页是否已经开始展示内容
+      const hasStartedContentRef = useRef(false);
+      const currentPageData = pageData[currentPage];
+      const maxPage = Object.keys(pageData).length;
+      const currentStepData = currentPageData.steps[currentStep];
+      const maxStep = currentPageData.steps.length;
+      const hasSteps = currentPageData.steps.length > 0;
+      // 重置状态当页面改变
+      useEffect(() => {
+        hasStartedContentRef.current = false;
+        setTitleInCorner(false);
+        setSubtitleVisible(false);
+        setCurrentStep(0);
+        setCardsKey(prev => prev + 1);
+        setPageExiting(false); // 重置页面退出状态
+        setContentExiting(false);
+      }, [currentPage]);
+      // 处理下一步/下一页
+      const handleNext = useCallback(() => {
+        if (isAnimating) return;
+        const hasStarted = hasStartedContentRef.current;
+        // 如果当前页有步骤且还没开始展示内容
+        if (hasSteps && !hasStarted) {
+          setIsAnimating(true);
+          hasStartedContentRef.current = true;
+          setTitleInCorner(true);
+          setTimeout(() => {
+            setSubtitleVisible(true);
+            setIsAnimating(false);
+          }, 300);
+          return;
+        }
+        setIsAnimating(true);
+        if (hasSteps && currentStep < maxStep - 1) {
+          // 还有更多步骤，先播放出场动画
+          setContentExiting(true);
+          setTimeout(() => {
+            setCurrentStep(prev => prev + 1);
+            setSubtitleVisible(true);
+            setContentExiting(false); // 重置状态，触发入场动画
+            setCardsKey(prev => prev + 1); // 强制重新渲染卡片
+            setIsAnimating(false);
+          }, 300);
+        } else if (currentPage < maxPage) {
+          // 切换到下一页，播放页面出场动画
+          setPageExiting(true);
+          setTimeout(() => {
+            setCurrentPage(prev => prev + 1);
+            setPageExiting(false);
+            setIsAnimating(false);
+          }, 300);
+        } else {
+          setIsAnimating(false);
+        }
+      }, [currentStep, maxStep, currentPage, maxPage, isAnimating, hasSteps]);
+      // 处理上一步/上一页
+      const handlePrev = useCallback(() => {
+        if (isAnimating) return;
+        const hasStarted = hasStartedContentRef.current;
+        setIsAnimating(true);
+        if (hasSteps && hasStarted && currentStep > 0) {
+          // 回到上一步，先播放出场动画
+          setContentExiting(true);
+          setTimeout(() => {
+            setCurrentStep(prev => prev - 1);
+            setSubtitleVisible(true);
+            setContentExiting(false);
+            setCardsKey(prev => prev + 1);
+            setIsAnimating(false);
+          }, 300);
+        } else if (currentPage > 1) {
+          // 切换到上一页
+          setPageExiting(true);
+          setTimeout(() => {
+            const prevPage = currentPage - 1;
+            setCurrentPage(prevPage);
+            setPageExiting(false);
+            setIsAnimating(false);
+          }, 300);
+        } else {
+          setIsAnimating(false);
+        }
+      }, [currentStep, currentPage, isAnimating, hasSteps]);
+      // 键盘导航
+      useEffect(() => {
+        const handleKeyDown = (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+            e.preventDefault();
+            handleNext();
+          } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+            e.preventDefault();
+            handlePrev();
+          }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+      }, [handleNext, handlePrev]);
+      const hasStarted = hasStartedContentRef.current;
+      const canGoNext = currentPage < maxPage || currentStep < maxStep - 1 || (hasSteps && !hasStarted);
+      const canGoPrev = currentPage > 1 || (hasSteps && hasStarted && currentStep > 0);
+      return (
+        <div
+          style={{
+            width: '100vw',
+            height: '100vh',
+            background: 'linear-gradient(135deg, #C8E6C9 0%, #dcf1dd 100%)',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+        >
+          {/* 背景装饰 */}
+          <div style={{
+            position: 'absolute',
+            top: '-10%',
+            right: '-5%',
+            width: '150px',
+            height: '150px',
+            background: 'radial-gradient(circle, wheat 0%, transparent 70%)',
+            borderRadius: '50%',
+            pointerEvents: 'none'
+          }} />
+          <div style={{
+            position: 'absolute',
+            bottom: '-10%',
+            left: '-5%',
+            width: '150px',
+            height: '150px',
+            background: 'radial-gradient(circle, wheat 0%, transparent 70%)',
+            borderRadius: '50%',
+            pointerEvents: 'none'
+          }} />
+          {/* 主标题 */}
+          <h1
+            className={`${titleInCorner ? 'title-to-corner' : (pageExiting ? 'animate-slide-up-out-title' : 'animate-slide-up-in-title')}`}
+            style={{
+              position: 'absolute',
+              top: titleInCorner ? '40px' : '50%',
+              left: titleInCorner ? '40px' : '50%',
+              // transform: 不写，因为 animation 优先级更高，覆盖了
+              color: '#2d644b',
+              fontFamily: "'Noto Serif SC', serif",
+              fontWeight: 600,
+              fontSize: '32px',
+              maxWidth: titleInCorner ? '100%' : '80%',
+              lineHeight: 1.4,
+              margin: 0,
+              zIndex: 10
+            }}
+          >
+            {currentPageData.title}
+          </h1>
+          {/* 内容区域 - 调整top值避免重叠 */}
+          {hasSteps && hasStarted && currentStepData && (
+            <div
+              key={cardsKey}
+              style={{
+                position: 'absolute',
+                top: '200px', // 调整此处确保在标题下方
+                left: '40px',
+                right: '120px',
+                maxWidth: '900px' // 增加宽度以容纳两列卡片
+              }}
+            >
+              {/* 副标题 */}
+              <Subtitle
+                visible={subtitleVisible}
+                isExiting={contentExiting}
+              >
+                {currentStepData.subtitle}
+              </Subtitle>
+              {/* 卡片容器 - Flex布局实现两列 */}
+              <div style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '20px',
+                width: '100%'
+              }}>
+                {currentStepData.cards.map((card, index) => (
+                  <Card
+                    key={card.id}
+                    emoji={card.emoji}
+                    title={card.title}
+                    content={card.content}
+                    delay={subtitleVisible ? 100 + index * 100 : 0}
+                    isExiting={contentExiting}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+          {/* 页码指示器 */}
+          <div style={{
+            position: 'absolute',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            gap: '8px'
+          }}>
+            {[1, 2, 3, 4].map(page => (
+              <div
+                key={page}
+                style={{
+                  width: currentPage === page ? '24px' : '8px',
+                  height: '8px',
+                  borderRadius: '4px',
+                  backgroundColor: currentPage === page ? '#2d644b' : '#86efac',
+                  transition: 'all 200ms ease',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  if (!isAnimating && page !== currentPage) {
+                    setPageExiting(true);
+                    setTimeout(() => {
+                      setCurrentPage(page);
+                      setPageExiting(false);
+                      setIsAnimating(false);
+                    }, 300);
+                  }
+                }}
+              />
+            ))}
+          </div>
+          {/* 导航按钮组 */}
+          <div style={{
+            position: 'absolute',
+            right: '30px',
+            bottom: '30px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}>
+            <NavButton
+              direction="up"
+              onClick={handlePrev}
+              disabled={!canGoPrev}
+            />
+            <NavButton
+              direction="down"
+              onClick={handleNext}
+              disabled={!canGoNext}
+            />
+          </div>
+          {/* 步骤指示器 */}
+          {hasSteps && hasStarted && maxStep > 1 && (
+            <div style={{
+              position: 'absolute',
+              right: '100px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '6px'
+            }}>
+              {currentPageData.steps.map((_, index) => (
+                <div
+                  key={index}
+                  style={{
+                    width: currentStep === index ? '16px' : '8px',
+                    height: '8px',
+                    borderRadius: '4px',
+                    backgroundColor: currentStep === index ? '#2d644b' : 'rgba(45, 100, 75, 0.3)',
+                    transition: 'all 200ms ease'
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          {/* 操作提示 */}
+          <div style={{
+            position: 'absolute',
+            bottom: '30px',
+            left: '30px',
+            color: '#4b5563',
+            fontSize: '13px',
+            opacity: 0.7
+          }}>
+            使用方向键或点击按钮导航
+          </div>
+        </div>
+      );
+    }
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<PPTPresentation />);
+  </script>
+</body>
+
+</html>

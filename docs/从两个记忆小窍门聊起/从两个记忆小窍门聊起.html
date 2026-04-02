@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>PPT 风格演示页</title>
+  <style>
+    :root {
+      /* 颜色定义 */
+      --bg-start: #C8E6C9;
+      --bg-end: #dcf1dd;
+      --card-bg: #e6f6eb;
+      --accent-bar: #2d644b;
+      --title-main: #2d644b;
+      --card-title: #1f2937;
+      --card-body: #4b5563;
+      --card-border: #d1d5db;
+
+      /* 滚动条 */
+      --scroll-track: #f1f1f1;
+      --scroll-thumb: #86efac;
+      --scroll-thumb-hover: #4ade80;
+
+      /* 动画时间 */
+      --anim-duration: 300ms;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      height: 100vh;
+      overflow: hidden;
+      /* 防止 body 滚动，内容在容器内滚动 */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--card-body);
+    }
+
+    /* 主容器 */
+    #app {
+      width: 100%;
+      height: 100%;
+      max-width: 1200px;
+      position: relative;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 大标题样式 */
+    #main-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--title-main);
+      text-align: center;
+      transition: all var(--anim-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
+      margin-bottom: 40px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    /* 标题居中状态 (第一页) */
+    .title-state-center {
+      transform: translateY(0);
+      margin-top: 15vh;
+      text-align: center;
+      width: 100%;
+    }
+
+    /* 标题左上角状态 (后续页) */
+    .title-state-top {
+      transform: translateY(-20px) translateX(-20px);
+      text-align: left;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    /* 内容区域 */
+    #content-area {
+      flex: 1;
+      position: relative;
+      overflow-y: auto;
+      padding-right: 10px;
+      /* 为滚动条留空间 */
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* 自定义滚动条 */
+    #content-area::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #content-area::-webkit-scrollbar-track {
+      background: var(--scroll-track);
+      border-radius: 4px;
+    }
+
+    #content-area::-webkit-scrollbar-thumb {
+      background: var(--scroll-thumb);
+      border-radius: 4px;
+    }
+
+    #content-area::-webkit-scrollbar-thumb:hover {
+      background: var(--scroll-thumb-hover);
+    }
+
+    /* 副标题 */
+    .subtitle {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--card-title);
+      margin-bottom: 16px;
+      padding-left: 10px;
+      border-left: 4px solid var(--accent-bar);
+      opacity: 0;
+      /* 初始隐藏用于动画 */
+    }
+
+    /* 卡片网格 */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      width: 100%;
+    }
+
+    /* 卡片组件 */
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      padding: 20px;
+      position: relative;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+      /* 左侧装饰条 */
+      border-left: 6px solid var(--accent-bar);
+
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity var(--anim-duration) ease, transform var(--anim-duration) ease;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--card-title);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-body {
+      font-size: 0.95rem;
+      color: var(--card-body);
+      line-height: 1.6;
+      white-space: pre-line;
+      /* 支持 \n 换行 */
+    }
+
+    /* 导航按钮 */
+    #nav-btn {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background-color: var(--accent-bar);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(45, 100, 75, 0.4);
+      transition: transform 0.2s, background-color 0.2s;
+      z-index: 100;
+    }
+
+    #nav-btn:hover {
+      background-color: #1f4a38;
+      transform: scale(1.05);
+    }
+
+    #nav-btn:active {
+      transform: scale(0.95);
+    }
+
+    #nav-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+      transition: transform 0.3s;
+    }
+
+    /* 按钮旋转动画 */
+    #nav-btn.rotated svg {
+      transform: rotate(180deg);
+    }
+
+    /* 动画类 */
+    .animate-enter {
+      animation: slideUpFade var(--anim-duration) forwards;
+    }
+
+    @keyframes slideUpFade {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 隐藏元素 */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <h1
+      id="main-title"
+      class="title-state-center"
+    ></h1>
+
+    <div id="content-area">
+      <!-- 动态内容将渲染在这里 -->
+    </div>
+  </div>
+
+  <button
+    id="nav-btn"
+    onclick="nextStep()"
+  >
+    <svg viewBox="0 0 24 24">
+      <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+    </svg>
+  </button>
+
+  <script>
+    // 数据定义
+    const slidesData = [
+      {
+        id: 1,
+        title: "《从两个记忆小窍门聊起：代码与生命哲学视角》",
+        steps: [
+          {
+            subtitle: null,
+            cards: []
+          }
+        ]
+      },
+      {
+        id: 2,
+        title: "《窍门 1：动用自己的一切知识，自行为没意义的文本赋予意义，以降低记忆的难度》",
+        steps: [
+          {
+            subtitle: "《举个栗子》",
+            cards: [
+              {
+                title: "🚗 车牌号粤 BNH372",
+                body: "NH3 是氨气，72 是一个很好的合数，B 暂时没联想到其他东西，就单独记。"
+              }
+            ]
+          },
+          {
+            subtitle: "《为什么这个方法有效？》",
+            cards: [
+              {
+                title: "🧩 视角 1：把大问题拆分成多个小问题，逐个击破",
+                body: "1. 它是人做成大事的必经之路，我们却往往不够重视它\n2. 拆分方式多种多样\n3. 对于无法快速解决的小问题，回退为默认策略：死记硬背"
+              },
+              {
+                title: "🧠 视角 2：人脑天生是一个模式识别机器",
+                body: "把无意识的“后台程序”提升到意识层面"
+              }
+            ]
+          },
+          {
+            subtitle: "《为什么故事的文本量更大，却更好记？》",
+            cards: [
+              {
+                title: "📖 故事和人的生命体验有关联",
+                body: "举例：如果你喜欢化学，就会觉得 NH3 特别容易记"
+              },
+              {
+                title: "💡 人类的一个根本冲动",
+                body: "我们无法忍受无意义，于是不断创造出意义"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 3,
+        title: "《窍门 2，背课文时顺便数下句子个数，有利于自己不背漏》",
+        steps: [
+          {
+            subtitle: "《举个栗子》",
+            cards: [
+              {
+                title: "📜 岳阳楼记",
+                body: "岳阳楼记第一段有 9 个意群。背的时候顺便心里默数，就能方便地感知到自己很可能没背错。"
+              }
+            ]
+          },
+          {
+            subtitle: "《为什么这个方法有效？》",
+            cards: [
+              {
+                title: "💻 视角 1：计算机中的“校验和”",
+                body: "在原始数据之外附加一个摘要，用于验证数据的完整性"
+              },
+              {
+                title: "👁️ 元记忆",
+                body: "对自己记忆过程的认知和监控\n通俗来说，就是你对你自己的记忆知道些什么，以及你如何管理自己的记忆"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: "《为做题人的精神自留地添砖加瓦》",
+        steps: [
+          {
+            subtitle: "《喜欢本期视频的话，别忘了点赞、收藏、关注喔》",
+            cards: []
+          }
+        ]
+      }
+    ];
+
+    // 状态管理
+    let currentSlideIndex = 0;
+    let currentStepIndex = 0;
+    let isTitleMoved = false;
+
+    // DOM 元素
+    const titleEl = document.getElementById('main-title');
+    const contentEl = document.getElementById('content-area');
+    const navBtn = document.getElementById('nav-btn');
+
+    // 初始化
+    function init() {
+      renderSlide();
+    }
+
+    // 渲染当前幻灯片
+    function renderSlide() {
+      const slide = slidesData[currentSlideIndex];
+      const step = slide.steps[currentStepIndex];
+
+      // 1. 处理标题
+      titleEl.textContent = slide.title;
+
+      // 如果不是第一页，或者第一页但已经点过按钮（虽然第一页只有一个状态），标题移左上
+      // 逻辑：只要不是初始状态 (0,0)，标题就移左上。
+      // 但根据需求，第一页展示大标题。点击按钮后，进入第二页，标题才动。
+      // 修正逻辑：如果是第 0 页，标题居中。一旦进入第 1 页及以后，标题左上。
+      if (currentSlideIndex === 0) {
+        titleEl.className = 'title-state-center';
+      } else {
+        if (!isTitleMoved) {
+          titleEl.className = 'title-state-top animate-enter';
+          isTitleMoved = true;
+        } else {
+          titleEl.className = 'title-state-top';
+        }
+      }
+
+      // 2. 处理内容区域
+      contentEl.innerHTML = ''; // 清空
+
+      // 渲染副标题
+      if (step.subtitle) {
+        const subEl = document.createElement('div');
+        subEl.className = 'subtitle animate-enter';
+        subEl.textContent = step.subtitle;
+        contentEl.appendChild(subEl);
+      }
+
+      // 渲染卡片
+      if (step.cards && step.cards.length > 0) {
+        const gridEl = document.createElement('div');
+        gridEl.className = 'cards-grid';
+
+        step.cards.forEach((cardData, index) => {
+          const cardEl = document.createElement('div');
+          cardEl.className = 'card';
+          // 给每个卡片添加延迟，形成阶梯效果
+          cardEl.style.animationDelay = `${index * 100}ms`;
+          cardEl.classList.add('animate-enter');
+
+          const titlePart = document.createElement('div');
+          titlePart.className = 'card-title';
+          // 简单处理：如果标题里有《》，去掉它作为装饰，或者保留。需求里标题有《》，这里直接显示。
+          // 需求示例：标题：《车牌号...》。这里我们直接把文本放进去。
+          // 为了美观，如果文本包含《》，我们可以提取 Emoji。
+          // 这里简单处理，直接显示文本，如果有 Emoji 会自动显示。
+          titlePart.textContent = cardData.title;
+
+          const bodyPart = document.createElement('div');
+          bodyPart.className = 'card-body';
+          bodyPart.textContent = cardData.body;
+
+          cardEl.appendChild(titlePart);
+          cardEl.appendChild(bodyPart);
+          gridEl.appendChild(cardEl);
+        });
+
+        contentEl.appendChild(gridEl);
+      }
+    }
+
+    // 下一步逻辑
+    function nextStep() {
+      const currentSlide = slidesData[currentSlideIndex];
+      const maxSteps = currentSlide.steps.length;
+
+      // 按钮旋转反馈
+      navBtn.classList.add('rotated');
+      setTimeout(() => navBtn.classList.remove('rotated'), 300);
+
+      if (currentStepIndex < maxSteps - 1) {
+        // 当前页还有下一步
+        currentStepIndex++;
+        renderSlide();
+      } else {
+        // 当前页结束，去下一页
+        if (currentSlideIndex < slidesData.length - 1) {
+          currentSlideIndex++;
+          currentStepIndex = 0;
+          // 滚动回顶部
+          contentEl.scrollTop = 0;
+          renderSlide();
+        } else {
+          // 已经是最后一页了，可以重置或者提示
+          alert("演示结束！");
+          // 可选：重置
+          // currentSlideIndex = 0;
+          // currentStepIndex = 0;
+          // isTitleMoved = false;
+          // renderSlide();
+        }
+      }
+    }
+
+    // 启动
+    init();
+
+  </script>
+</body>
+
+</html>

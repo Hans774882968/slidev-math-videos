@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>七个维度背后的驱动力图谱</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React & ReactDOM -->
+  <script
+    crossorigin
+    src="https://unpkg.com/react@18/umd/react.development.js"
+  ></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+  ></script>
+
+  <!-- Babel for JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Google Fonts for a nicer Chinese font look -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+      background-image: linear-gradient(to bottom right, #C8E6C9, #dcf1dd);
+    }
+
+    .serif-font {
+      font-family: 'Noto Serif SC', serif;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #86efac;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4ade80;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const dimensionsData = [
+      {
+        id: 1,
+        title: "健康",
+        icon: "♥",
+        description: "受<span class='font-bold'>基因底色</span>、<span class='font-bold'>作息规律</span>、<span class='font-bold'>饮食结构</span>、<span class='font-bold'>运动习惯</span>直接影响，同时与<span class='font-bold'>压力管理能力</span>、<span class='font-bold'>情绪状态</span>、<span class='font-bold'>人际关系质量</span>深度相关。健康是所有维度中最具基础性的，也是最容易被长期透支却不自知的。"
+      },
+      {
+        id: 2,
+        title: "收入与现金流",
+        icon: "💰",
+        description: "取决于<span class='font-bold'>职业选择</span>与<span class='font-bold'>创业能力</span>、<span class='font-bold'>理财水平</span>、<span class='font-bold'>认知层次</span>，也受<span class='font-bold'>社交圈层次</span>、<span class='font-bold'>行业赛道选择</span>的结构性影响。<span class='font-bold'>品德与信誉</span>往往是长期收入的隐形护城河。"
+      },
+      {
+        id: 3,
+        title: "人际关系",
+        icon: "🤝",
+        description: "核心驱动是<span class='font-bold'>沟通能力</span>、<span class='font-bold'>情绪管理</span>与<span class='font-bold'>共情力</span>，同时受<span class='font-bold'>边界感的清晰度</span>、<span class='font-bold'>原生家庭模式</span>、<span class='font-bold'>可自由支配时间</span>的深刻影响。关系质量很大程度上是内在修炼的外化投影。"
+      },
+      {
+        id: 4,
+        title: "自主感",
+        icon: "🌿",
+        description: "与<span class='font-bold'>经济独立程度</span>、<span class='font-bold'>认知水平</span>、<span class='font-bold'>决策能力</span>正相关，同时受<span class='font-bold'>价值观清晰度</span>及外部的<span class='font-bold'>文化与家庭约束程度</span>制约。自主感本质上是\"我能按自己的理解生活\"的实际可能性。"
+      },
+      {
+        id: 5,
+        title: "投入感",
+        icon: "🔥",
+        description: "需要<span class='font-bold'>兴趣的丰富度</span>、<span class='font-bold'>专注力</span>、<span class='font-bold'>工作与天性的匹配度</span>作为土壤，配合<span class='font-bold'>好奇心旺盛</span>、<span class='font-bold'>精力充沛</span>、<span class='font-bold'>干扰因素受控</span>才能持续涌现。投入感是可以设计和培育的，不是等来的。"
+      },
+      {
+        id: 6,
+        title: "意义感",
+        icon: "✨",
+        description: "最难量化，也最深刻。来自<span class='font-bold'>人生阶段的自然赋予</span>、<span class='font-bold'>信仰与哲学框架</span>、<span class='font-bold'>角色认同</span>、<span class='font-bold'>人际连接的深度</span>，以及——最被忽视的——<span class='font-bold'>对生命有限性的清醒认知</span>。意识到\"有一天我会死去\"，往往是意义感真正觉醒的起点。"
+      }
+    ];
+
+    const DimensionCard = ({ data }) => {
+      return (
+        <div className={`
+                    group relative overflow-hidden rounded-2xl p-6 
+                    bg-[#e6f6eb] backdrop-blur-md border-2 border-gray-300 
+                    shadow-md transition-all duration-300 ease-in-out
+                    border-l-[6px] border-l-[#2d644b]
+                `}>
+          <div className="flex-1">
+            <h3 className={`text-xl font-bold mb-3 text-gray-800 serif-font tracking-wide flex items-center gap-2`}>
+              <span className={`text-2xl filter drop-shadow-sm`}>
+                {data.icon}
+              </span>
+              {data.title}
+            </h3>
+            <p className="text-sm text-gray-600 leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: data.description }} />
+          </div>
+        </div>
+      );
+    };
+
+    const Header = () => (
+      <header className="mb-10 text-center px-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-[#2d6346] mb-4 serif-font tracking-tight">
+          七个维度背后的驱动力图谱
+        </h1>
+        <p className="text-gray-600 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+          理解幸福感的七个维度还不够——我们还需要知道每个维度由什么决定。只有追溯到根源，才能在正确的地方发力，而不是永远在表面打转。
+        </p>
+      </header>
+    );
+
+    const App = () => {
+      return (
+        <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-5xl mx-auto">
+            <Header />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+              {dimensionsData.map((item) => (
+                <DimensionCard key={item.id} data={item} />
+              ))}
+            </div>
+
+            <footer className="mt-16 text-center text-gray-400 text-xs">
+              <p>© 2026 Maki's Perfect Arithmetic Classroom. All rights reserved.</p>
+            </footer>
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>
