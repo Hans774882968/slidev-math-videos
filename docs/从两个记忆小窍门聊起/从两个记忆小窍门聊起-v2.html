@@ -37,13 +37,11 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Noto Sans SC', sans-serif;
       background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
       min-height: 100vh;
       overflow: hidden;
     }
 
-    /* 自定义滚动条 */
     ::-webkit-scrollbar {
       width: 8px;
     }
@@ -77,44 +75,43 @@
     @keyframes slideUpFadeInTitle {
       from {
         opacity: 0;
-        transform: translate(-50%, 100vh);
+        transform: translate(0, 100vh);
       }
 
       to {
         opacity: 1;
-        transform: translate(-50%, -50%);
+        transform: translate(0, -50%);
       }
     }
 
     @keyframes slideUpFadeOut {
       from {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateX(0);
       }
 
       to {
         opacity: 0;
-        transform: translateY(-100vh);
+        transform: translateX(-100vw);
       }
     }
 
     @keyframes slideUpFadeOutTitle {
       from {
         opacity: 1;
-        transform: translate(-50%, -50%);
+        transform: translate(0, -50%);
       }
 
       to {
         opacity: 0;
-        transform: translate(-50%, -100vh);
+        transform: translate(0%, -100vh);
       }
     }
 
     @keyframes titleToCorner {
       from {
         top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(0, -50%);
       }
 
       to {
@@ -124,8 +121,20 @@
       }
     }
 
+    @keyframes endContentSlideUp {
+      from {
+        opacity: 0;
+        transform: translate(-50%, 100vh);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+      }
+    }
+
     .animate-slide-up-in {
-      animation: slideUpFadeIn 300ms ease-out forwards;
+      animation: slideUpFadeIn 300ms ease-out both;
     }
 
     .animate-slide-up-in-title {
@@ -142,6 +151,14 @@
 
     .title-to-corner {
       animation: titleToCorner 300ms ease-out forwards;
+    }
+
+    .end-content-slide-up {
+      animation: endContentSlideUp 400ms ease-out forwards;
+    }
+
+    .ppt-card p strong {
+      color: #1f2937;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -171,11 +188,12 @@
 
     .ppt-card {
       transition: transform 200ms ease, box-shadow 200ms ease;
+      box-shadow: 0 8px 24px rgba(45, 100, 75, 0.15);
     }
 
     .ppt-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(45, 100, 75, 0.15);
+      box-shadow: 0 8px 24px rgba(45, 100, 75, 0.25);
     }
   </style>
 </head>
@@ -183,79 +201,112 @@
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState, useEffect, useCallback, useRef } = React;
+    const { useState, useLayoutEffect, useEffect, useCallback, useRef } = React;
     // 页面数据配置
     const pageData = {
       1: {
-        title: "《从两个记忆小窍门聊起：代码与生命哲学视角》",
+        title: "从两个记忆小窍门聊起：代码与生命哲学视角",
         steps: []
       },
       2: {
-        title: "《窍门1：动用自己的一切知识，自行为没意义的文本赋予意义，以降低记忆的难度》",
+        title: "窍门1：自行为没意义的文本赋予意义，以降低记忆的难度",
         steps: [
           {
-            subtitle: "《举个栗子》",
+            subtitle: "适用范围：<strong>任意字符串</strong><br>举个栗子🌰：",
             cards: [
-              { id: '2.1', emoji: "🚗", title: "车牌号粤BNH372", content: "NH3是氨气，72是一个很好的合数，B暂时没联想到其他东西，就单独记。" }
+              { id: '2.1', emoji: "🚗", title: "车牌号粤BNH372", content: "1. NH3是<strong>氨气</strong>\n2. 72是一个很好的<strong>合数</strong>\n3. B暂时没联想到其他东西，就单独记" }
             ]
           },
           {
-            subtitle: "《为什么这个方法有效？》",
+            subtitle: "为什么这个方法有效？",
             cards: [
               { id: '2.2', emoji: "🔍", title: "视角1：把大问题拆分成多个小问题，逐个击破", content: "1. 它是人做成大事的必经之路，我们却往往不够重视它\n2. 拆分方式多种多样\n3. 对于无法快速解决的小问题，回退为默认策略：死记硬背" },
-              { id: '2.3', emoji: "🧠", title: "视角2：人脑天生是一个模式识别机器", content: "把无意识的“后台程序”提升到意识层面" }
+              { id: '2.3', emoji: "💭", title: "视角2：人脑天生是一个模式识别机器", content: "当新信息到来，大脑会自发寻找已知模式\n把无意识的“后台程序”提升到意识层面" },
+              { id: '2.4', emoji: "📖", title: "拆分方式多种多样：回到前面车牌号的🌰", content: "前面说“字母B暂时没联想到其他东西”。但如果你知道粤B是深圳，那就获得了另一种拆分方式：粤B NH3 72" },
             ]
           },
           {
-            subtitle: "《为什么故事的文本量更大，却更好记？》",
+            subtitle: "为什么故事的文本量更大，却更好记？",
             cards: [
-              { id: '2.4', emoji: "📖", title: "故事和人的生命体验有关联", content: "举例：如果你喜欢化学，就会觉得NH3特别容易记" },
-              { id: '2.5', emoji: "💭", title: "人类的一个根本冲动", content: "我们无法忍受无意义，于是不断创造出意义" }
+              { id: '2.5', emoji: "📖", title: "故事和人的生命体验有关联", content: "它能调动我们大脑中除了记忆区之外的更多区域，如情感中枢、视觉皮层\n举例：\n如果你喜欢<strong>化学</strong>，就会觉得NH3特别容易记\n如果你觉得<strong>因数</strong>多的数是优美的，就会觉得72特别容易记" },
+              { id: '2.6', emoji: "💭", title: "人类的一个根本冲动", content: "<strong class='block pt-3 text-5xl text-center !text-[#2d644b]'>我们无法忍受无意义，于是不断创造出意义</strong>" },
+              { id: '2.7', emoji: "💡", title: "模糊的解释远远好过“没有解释”", content: "有解释就可以预测，就可以<strong>采取行动</strong>，就更有机会活\n反过来，无解释就无法预测，就不知所措、坐以待毙" }
             ]
           }
         ]
       },
       3: {
-        title: "《窍门2，背课文时顺便数下句子个数，有利于自己不背漏》",
+        title: "窍门2：背课文时顺便数下句子个数",
         steps: [
           {
-            subtitle: "《举个栗子》",
+            subtitle: "举个栗子🌰：",
             cards: [
-              { id: '3.1', emoji: "🏛️", title: "岳阳楼记", content: "岳阳楼记第一段有9个意群。背的时候顺便心里默数，就能方便地感知到自己很可能没背错。" }
+              { id: '3.1', emoji: "🏛️", title: "岳阳楼记", content: "岳阳楼记第一段有9个意群。背的时候顺便心里默数，就能方便地感知到自己很可能没背错\n庆历四年春，滕子京谪（zhé）守巴陵郡。越明年，政通人和，百废具兴。乃重修岳阳楼，增其旧制，刻唐贤今人诗赋于其上。属（zhǔ）予（yú）作文以记之。" },
+              { id: '3.2', emoji: "📖", title: "意群", content: "在一个句子里，根据逻辑划分的，具有相对独立的含义的一小段词串。这里简单理解为按<strong>逗号</strong>分隔就行" },
             ]
           },
           {
-            subtitle: "《为什么这个方法有效？》",
+            subtitle: "为什么这个方法有效？",
             cards: [
-              { id: '3.2', emoji: "💻", title: "视角1：计算机中的“校验和”", content: "在原始数据之外附加一个摘要，用于验证数据的完整性" },
-              { id: '3.3', emoji: "🎯", title: "元记忆", content: "对自己记忆过程的认知和监控\n通俗来说，就是你对你自己的记忆知道些什么，以及你如何管理自己的记忆" }
+              { id: '3.3', emoji: "💻", title: "视角1：计算机中的“校验和”", content: "<strong>校验和</strong>（Checksum）：在原始数据之外附加一个摘要，用于验证数据的完整性\n如果接收方计算出的校验和与发送方提供的校验和一致，则说明数据在传输过程中未发生错误" },
+              { id: '3.4', emoji: "💡", title: "元记忆", content: "对自己记忆过程的<strong>认知</strong>和<strong>监控</strong>\n通俗来说，就是你对你自己的记忆<strong>知道</strong>些什么，以及你如何<strong>管理</strong>自己的记忆" },
+              { id: '3.5', emoji: "🎯", title: "好处", content: "1，每多背出一句，大脑都能凭空生成<strong>成就感</strong>，让自己更有动力继续做记忆工作（⭐）\n2，指导下一步的行动。比如：集中精力攻克哪一部分？可以告一段落了吗？" }
             ]
           }
         ]
       },
       4: {
-        title: "《为做题人的精神自留地添砖加瓦》",
+        title: "为什么要做这样一期视频呢？",
         steps: [
           {
-            subtitle: "《喜欢本期视频的话，别忘了点赞、收藏、关注喔》",
-            cards: []
-          }
+            subtitle: "LLM洪流冲击下，我们何去何从？",
+            cards: [
+              { id: '4.1', emoji: "❌", title: "信息时代", content: "核心竞争力是记忆力的脑力工作已经大量消失\n我们已无法从博闻强记中获取成就感" },
+              { id: '4.2', emoji: "❓", title: "LLM时代", content: "核心竞争力是单一技能的脑力工作，比如编程、剪辑，也会大量消失\n因为<strong>LLM做得比你更快、更好</strong>" },
+              { id: '4.3', emoji: "💭", title: "以后，如果LLM学会发问…", content: "LLM找问题、产出解决方案都比你快时…\n<strong class='block pt-3 text-4xl text-center !text-[#2d644b]'>我们何去何从？</strong>" },
+            ]
+          },
+          {
+            subtitle: "重新对自己的生命发问：",
+            cards: [
+              { id: '4.4', emoji: "🤔", title: "我渴望什么，又绝对无法忍受什么？", content: "为了达成<strong>渴望</strong>的，避开<strong>无法忍受</strong>的，我需要多长时间，付出什么？\n这些代价我能承受吗？" },
+              { id: '4.5', emoji: "🏃", title: "这些问题并不简单", content: "1. 知行合一\n2. 我的回答的独特性在哪？我想，只能来源于那熊熊燃烧着的<strong>激情</strong>（这种激情是可以后天养成的，但那是另一个话题了…）" },
+              { id: '4.6', emoji: "🌱", title: "所以，我决定做一期视频", content: "从一些微不足道的现象入手，从理性层面一步步追溯到<strong>生命哲学</strong>，拿到一些LLM难以给出的理解" },
+              { id: '4.7', emoji: "💡", title: "希望这期视频能给你带来一些启发", content: "愿你在LLM洪流冲击下，也能找到自己的\n<strong class='block pt-3 text-5xl text-center !text-[#2d644b]'>方向</strong>" },
+            ]
+          },
+          {
+            subtitle: "提示词：",
+            cards: [
+              { id: '4.8', emoji: "💻", title: "提示词（迪普希克老师）", content: "1. 大佬，我背语文课文时有一个小技巧：顺便数一段话里有几句话。这个对记忆的额外负担并不大，而且可以有效避免自己背漏句子。我已经意识到这个记忆小技巧涉及到代码里的checksum校验和思想。请和我一起头脑风暴，挖掘它与人类的大脑结构、记忆机制以及生命哲学的更深层次的联系。\n2. 大佬，你提到了元记忆，这个很有启发意义。请给我详细介绍一下它。我希望你的介绍足够通俗易懂，因为我是高中生。\n3.大佬，谢谢你！我背一段没意义的文本时还有一个小技巧：动用自己的一切知识，强行为没意义的文本赋予意义。适用于任意字符串。比如：车牌号BNH372，NH3是氨气，72是一个很好的合数，B暂时想不到，就单独记。我已经意识到这个记忆小技巧涉及到把大问题拆成多个小问题逐个击破的思想。请和我一起头脑风暴，挖掘它与人类的大脑结构、记忆机制以及生命哲学的更深层次的联系。" },
+            ]
+          },
         ]
+      },
+      5: {
+        title: "为做题人的精神自留地添砖加瓦",
+        isEndPage: true,
+        endPageContent: {
+          line1: "为做题人的精神自留地添砖加瓦",
+          line2: "喜欢本期视频的话，别忘了点赞、收藏、关注喔",
+          line3: "谢谢观看~"
+        },
+        steps: []
       }
     };
-    // 卡片组件
+    const PAGE_ARRAY = Array.from({ length: Object.keys(pageData).length }, (_, i) => i + 1);
+
     function Card({ emoji, title, content, delay = 0, isExiting }) {
-      // 动态生成样式，处理入场延迟
       const style = {
         backgroundColor: '#e6f6eb',
-        borderRadius: '12px',
+        borderRadius: '16px',
         border: '1px solid #d1d5db',
         overflow: 'hidden',
         marginBottom: '16px',
         position: 'relative',
-        width: 'calc(50% - 10px)', // 每行两张卡片
+        width: 'calc(50% - 10px)',
         minWidth: '280px',
-        animationDelay: isExiting ? '0ms' : `${delay}ms`, // 出场动画无延迟
+        animationDelay: isExiting ? '0ms' : `${delay}ms`,
       };
       return (
         <div
@@ -267,31 +318,33 @@
             left: 0,
             top: 0,
             bottom: 0,
-            width: '4px',
+            width: '6px',
             backgroundColor: '#2d644b'
           }} />
-          <div style={{ padding: '20px 20px 20px 24px' }}>
+          <div style={{ padding: '20px 28px' }}>
             <h3 style={{
               color: '#1f2937',
               fontWeight: 600,
-              fontSize: '18px',
+              fontSize: '28px',
+              fontFamily: '"Noto Serif SC", serif',
               marginBottom: '12px',
               display: 'flex',
               alignItems: 'center',
               gap: '8px'
             }}>
-              <span style={{ fontSize: '20px' }}>{emoji}</span>
+              <span>{emoji}</span>
               <span>{title}</span>
             </h3>
-            <p style={{
-              color: '#4b5563',
-              fontWeight: 300,
-              fontSize: '15px',
-              lineHeight: 1.7,
-              margin: 0,
-              whiteSpace: 'pre-line'
-            }}>
-              {content}
+            <p
+              dangerouslySetInnerHTML={{ __html: content }}
+              className="text-gray-600"
+              style={{
+                lineHeight: 1.7,
+                margin: 0,
+                whiteSpace: 'pre-line',
+                fontSize: '18px'
+              }}
+            >
             </p>
           </div>
         </div>
@@ -308,7 +361,8 @@
             width: '52px',
             height: '52px',
             borderRadius: '50%',
-            backgroundColor: disabled ? '#d1d5db' : '#2d644b',
+            backgroundColor: disabled ? '#4b5563' : '#2d644b',
+            transition: 'color 200ms ease',
             border: 'none',
             cursor: disabled ? 'not-allowed' : 'pointer',
             display: 'flex',
@@ -338,18 +392,15 @@
         </button>
       );
     }
-
-    function Subtitle({ children, visible, isExiting }) {
-      if (!visible && !isExiting) return null;
+    function Subtitle({ children, isExiting }) {
       return (
         <h2
           className={isExiting ? 'animate-slide-up-out' : 'animate-slide-up-in'}
           style={{
             color: '#4b5563',
-            fontFamily: "'Noto Serif SC', serif",
             fontWeight: 500,
-            fontSize: '22px',
-            marginBottom: '24px',
+            fontSize: '24px',
+            marginBottom: '16px',
             width: '100%'
           }}
         >
@@ -357,63 +408,223 @@
         </h2>
       );
     }
-    // 主PPT组件
+    function EndPageContent({ content, isVisible }) {
+      if (!isVisible) return null;
+      return (
+        <div
+          className="end-content-slide-up"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            zIndex: 5,
+            fontSize: '26px',
+            fontFamily: '"Noto Sans SC", sans-serif',
+            fontWeight: 'bold',
+          }}
+        >
+          <p style={{ marginBottom: '20px' }}>
+            <span style={{
+              color: '#ea580c',
+            }}>
+              {content.line1}
+            </span>
+          </p>
+          <p style={{ marginBottom: '20px' }}>
+            <span style={{
+              color: '#db2777',
+              border: '2px solid #db2777',
+              padding: '10px 20px',
+              borderRadius: '12px',
+              display: 'inline-block',
+            }}>
+              {content.line2}
+            </span>
+          </p>
+          <p style={{
+            color: '#2d644b',
+          }}>
+            {content.line3}
+          </p>
+        </div>
+      );
+    }
+
+    const MovingWatermark = ({
+      colorCls = 'text-[#2d644b]',
+      opacity = 0.8,
+      text = 'Hans码数理哲'
+    }) => {
+      const containerRef = useRef(null);
+      const textRef = useRef(null);
+      const rafRef = useRef(null);
+      const posRef = useRef({ x: 0, y: 0 });
+      const velRef = useRef({ x: 0, y: 0 });
+      const sizeRef = useRef({ width: 0, height: 0 });
+
+      const updateContainerSize = () => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        sizeRef.current = { width: rect.width, height: rect.height };
+      };
+
+      const initializePositionAndVelocity = () => {
+        if (sizeRef.current.width === 0 || sizeRef.current.height === 0) {
+          updateContainerSize();
+        }
+        const textEl = textRef.current;
+        const textWidth = textEl?.offsetWidth || 60;
+        const textHeight = textEl?.offsetHeight || 20;
+
+        posRef.current = {
+          x: Math.random() * (sizeRef.current.width - textWidth) + textWidth / 2,
+          y: Math.random() * (sizeRef.current.height - textHeight) + textHeight / 2
+        };
+
+        const speed = 1.2 + Math.random() * 0.6;
+        const angle = (1 / 12 + Math.random() / 3) * Math.PI;
+        velRef.current = {
+          x: Math.cos(angle) * speed,
+          y: Math.sin(angle) * speed
+        };
+      };
+
+      const moveAnimate = () => {
+        const textEl = textRef.current;
+        if (!textEl) return;
+
+        const textWidth = textEl.offsetWidth || 60;
+        const textHeight = textEl.offsetHeight || 20;
+        const { width, height } = sizeRef.current;
+
+        posRef.current.x += velRef.current.x;
+        posRef.current.y += velRef.current.y;
+
+        if (posRef.current.x <= 0 || posRef.current.x >= width - textWidth) {
+          velRef.current.x = -velRef.current.x;
+          posRef.current.x = Math.max(0, Math.min(width - textWidth, posRef.current.x));
+        }
+        if (posRef.current.y <= 0 || posRef.current.y >= height - textHeight) {
+          velRef.current.y = -velRef.current.y;
+          posRef.current.y = Math.max(0, Math.min(height - textHeight, posRef.current.y));
+        }
+
+        textEl.style.left = `${posRef.current.x}px`;
+        textEl.style.top = `${posRef.current.y}px`;
+
+        rafRef.current = requestAnimationFrame(moveAnimate);
+      };
+
+      useLayoutEffect(() => {
+        updateContainerSize();
+        initializePositionAndVelocity();
+
+        if (textRef.current) {
+          textRef.current.style.left = `${posRef.current.x}px`;
+          textRef.current.style.top = `${posRef.current.y}px`;
+        }
+
+        rafRef.current = requestAnimationFrame(moveAnimate);
+        window.addEventListener('resize', updateContainerSize);
+
+        return () => {
+          cancelAnimationFrame(rafRef.current);
+          window.removeEventListener('resize', updateContainerSize);
+        };
+      }, []);
+
+      return (
+        <div
+          ref={containerRef}
+          style={{
+            position: 'fixed',
+            width: '100vw',
+            height: '100vh',
+            pointerEvents: 'none',
+            overflow: 'hidden',
+            zIndex: '50',
+          }}
+        >
+          <p
+            ref={textRef}
+            className={`absolute select-none !m-0 truncate ${colorCls}`}
+            style={{
+              fontSize: '28px',
+              opacity,
+              userSelect: 'none',
+              pointerEvents: 'none'
+            }}
+          >
+            {text}
+          </p>
+        </div>
+      );
+    }
     function PPTPresentation() {
       const [currentPage, setCurrentPage] = useState(1);
       const [currentStep, setCurrentStep] = useState(0);
       const [isAnimating, setIsAnimating] = useState(false);
       const [titleInCorner, setTitleInCorner] = useState(false);
-      const [subtitleVisible, setSubtitleVisible] = useState(false);
       const [cardsKey, setCardsKey] = useState(0);
       const [pageExiting, setPageExiting] = useState(false);
-      const [contentExiting, setContentExiting] = useState(false); // 控制内容出场动画
-      // 追踪当前页是否已经开始展示内容
+      const [contentExiting, setContentExiting] = useState(false);
+      const [endPageExpanded, setEndPageExpanded] = useState(false);
       const hasStartedContentRef = useRef(false);
       const currentPageData = pageData[currentPage];
       const maxPage = Object.keys(pageData).length;
       const currentStepData = currentPageData.steps[currentStep];
       const maxStep = currentPageData.steps.length;
       const hasSteps = currentPageData.steps.length > 0;
-      // 重置状态当页面改变
+      const isEndPage = currentPageData.isEndPage;
+      // 仅在页面切换时重置部分状态，不再强制重置 currentStep
       useEffect(() => {
-        hasStartedContentRef.current = false;
-        setTitleInCorner(false);
-        setSubtitleVisible(false);
-        setCurrentStep(0);
-        setCardsKey(prev => prev + 1);
-        setPageExiting(false); // 重置页面退出状态
+        setPageExiting(false);
         setContentExiting(false);
+        setCardsKey(prev => prev + 1);
+        if (currentPage !== maxPage) {
+          setEndPageExpanded(false);
+        }
       }, [currentPage]);
-      // 处理下一步/下一页
       const handleNext = useCallback(() => {
         if (isAnimating) return;
+        // 结束页特殊处理：点击后展开结束内容
+        if (isEndPage && !endPageExpanded) {
+          setIsAnimating(true);
+          setEndPageExpanded(true);
+          setTitleInCorner(true);
+          setTimeout(() => {
+            setIsAnimating(false);
+          }, 400);
+          return;
+        }
         const hasStarted = hasStartedContentRef.current;
-        // 如果当前页有步骤且还没开始展示内容
         if (hasSteps && !hasStarted) {
           setIsAnimating(true);
           hasStartedContentRef.current = true;
           setTitleInCorner(true);
           setTimeout(() => {
-            setSubtitleVisible(true);
             setIsAnimating(false);
           }, 300);
           return;
         }
         setIsAnimating(true);
         if (hasSteps && currentStep < maxStep - 1) {
-          // 还有更多步骤，先播放出场动画
+          // 还有更多步骤，先播放卡片出场动画
           setContentExiting(true);
           setTimeout(() => {
             setCurrentStep(prev => prev + 1);
-            setSubtitleVisible(true);
-            setContentExiting(false); // 重置状态，触发入场动画
-            setCardsKey(prev => prev + 1); // 强制重新渲染卡片
+            setContentExiting(false);
+            setCardsKey(prev => prev + 1);
             setIsAnimating(false);
           }, 300);
         } else if (currentPage < maxPage) {
-          // 切换到下一页，播放页面出场动画
           setPageExiting(true);
           setTimeout(() => {
+            hasStartedContentRef.current = false;
+            setTitleInCorner(false);
+            setCurrentStep(0);
             setCurrentPage(prev => prev + 1);
             setPageExiting(false);
             setIsAnimating(false);
@@ -421,36 +632,51 @@
         } else {
           setIsAnimating(false);
         }
-      }, [currentStep, maxStep, currentPage, maxPage, isAnimating, hasSteps]);
-      // 处理上一步/上一页
+      }, [currentStep, maxStep, currentPage, maxPage, isAnimating, hasSteps, isEndPage, endPageExpanded]);
       const handlePrev = useCallback(() => {
         if (isAnimating) return;
+        // 结束页已展开时，收起结束内容
+        if (isEndPage && endPageExpanded) {
+          setIsAnimating(true);
+          setEndPageExpanded(false);
+          setTitleInCorner(false);
+          setTimeout(() => {
+            setIsAnimating(false);
+          }, 300);
+          return;
+        }
         const hasStarted = hasStartedContentRef.current;
         setIsAnimating(true);
         if (hasSteps && hasStarted && currentStep > 0) {
-          // 回到上一步，先播放出场动画
           setContentExiting(true);
           setTimeout(() => {
             setCurrentStep(prev => prev - 1);
-            setSubtitleVisible(true);
             setContentExiting(false);
             setCardsKey(prev => prev + 1);
             setIsAnimating(false);
           }, 300);
         } else if (currentPage > 1) {
-          // 切换到上一页
           setPageExiting(true);
           setTimeout(() => {
             const prevPage = currentPage - 1;
+            const prevPageSteps = pageData[prevPage].steps.length;
+            const lastStepIndex = Math.max(0, prevPageSteps - 1);
+            if (prevPageSteps > 0) {
+              hasStartedContentRef.current = true;
+              setTitleInCorner(true);
+            } else {
+              hasStartedContentRef.current = false;
+              setTitleInCorner(false);
+            }
             setCurrentPage(prevPage);
+            setCurrentStep(lastStepIndex);
             setPageExiting(false);
             setIsAnimating(false);
           }, 300);
         } else {
           setIsAnimating(false);
         }
-      }, [currentStep, currentPage, isAnimating, hasSteps]);
-      // 键盘导航
+      }, [currentStep, currentPage, isAnimating, hasSteps, isEndPage, endPageExpanded]);
       useEffect(() => {
         const handleKeyDown = (e) => {
           if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
@@ -465,8 +691,13 @@
         return () => window.removeEventListener('keydown', handleKeyDown);
       }, [handleNext, handlePrev]);
       const hasStarted = hasStartedContentRef.current;
-      const canGoNext = currentPage < maxPage || currentStep < maxStep - 1 || (hasSteps && !hasStarted);
-      const canGoPrev = currentPage > 1 || (hasSteps && hasStarted && currentStep > 0);
+      const canGoNext = (currentPage < maxPage) ||
+        (hasSteps && currentStep < maxStep - 1) ||
+        (hasSteps && !hasStarted) ||
+        (isEndPage && !endPageExpanded);
+      const canGoPrev = currentPage > 1 ||
+        (hasSteps && hasStarted && currentStep > 0) ||
+        (isEndPage && endPageExpanded);
       return (
         <div
           style={{
@@ -478,6 +709,16 @@
           }}
         >
           {/* 背景装饰 */}
+          <div style={{
+            position: 'absolute',
+            top: '-10%',
+            left: '-5%',
+            width: '150px',
+            height: '150px',
+            background: 'radial-gradient(circle, wheat 0%, transparent 70%)',
+            borderRadius: '50%',
+            pointerEvents: 'none'
+          }} />
           <div style={{
             position: 'absolute',
             top: '-10%',
@@ -502,15 +743,15 @@
           <h1
             className={`${titleInCorner ? 'title-to-corner' : (pageExiting ? 'animate-slide-up-out-title' : 'animate-slide-up-in-title')}`}
             style={{
+              width: '100%',
               position: 'absolute',
               top: titleInCorner ? '40px' : '50%',
-              left: titleInCorner ? '40px' : '50%',
+              left: titleInCorner ? '40px' : '0',
               // transform: 不写，因为 animation 优先级更高，覆盖了
               color: '#2d644b',
-              fontFamily: "'Noto Serif SC', serif",
               fontWeight: 600,
-              fontSize: '32px',
-              maxWidth: titleInCorner ? '100%' : '80%',
+              fontSize: '48px',
+              textAlign: titleInCorner ? 'left' : 'center',
               lineHeight: 1.4,
               margin: 0,
               zIndex: 10
@@ -518,26 +759,25 @@
           >
             {currentPageData.title}
           </h1>
-          {/* 内容区域 - 调整top值避免重叠 */}
+          {isEndPage && (
+            <EndPageContent
+              content={currentPageData.endPageContent}
+              isVisible={endPageExpanded}
+            />
+          )}
           {hasSteps && hasStarted && currentStepData && (
             <div
               key={cardsKey}
               style={{
                 position: 'absolute',
-                top: '200px', // 调整此处确保在标题下方
+                top: '116px',
                 left: '40px',
                 right: '120px',
-                maxWidth: '900px' // 增加宽度以容纳两列卡片
               }}
             >
-              {/* 副标题 */}
-              <Subtitle
-                visible={subtitleVisible}
-                isExiting={contentExiting}
-              >
-                {currentStepData.subtitle}
+              <Subtitle isExiting={contentExiting}>
+                <div dangerouslySetInnerHTML={{ __html: currentStepData.subtitle }} />
               </Subtitle>
-              {/* 卡片容器 - Flex布局实现两列 */}
               <div style={{
                 display: 'flex',
                 flexWrap: 'wrap',
@@ -550,14 +790,13 @@
                     emoji={card.emoji}
                     title={card.title}
                     content={card.content}
-                    delay={subtitleVisible ? 100 + index * 100 : 0}
+                    delay={100 + index * 100}
                     isExiting={contentExiting}
                   />
                 ))}
               </div>
             </div>
           )}
-          {/* 页码指示器 */}
           <div style={{
             position: 'absolute',
             bottom: '30px',
@@ -566,7 +805,7 @@
             display: 'flex',
             gap: '8px'
           }}>
-            {[1, 2, 3, 4].map(page => (
+            {PAGE_ARRAY.map(page => (
               <div
                 key={page}
                 style={{
@@ -581,6 +820,10 @@
                   if (!isAnimating && page !== currentPage) {
                     setPageExiting(true);
                     setTimeout(() => {
+                      hasStartedContentRef.current = false;
+                      setTitleInCorner(false);
+                      setCurrentStep(0);
+                      setEndPageExpanded(false);
                       setCurrentPage(page);
                       setPageExiting(false);
                       setIsAnimating(false);
@@ -590,7 +833,6 @@
               />
             ))}
           </div>
-          {/* 导航按钮组 */}
           <div style={{
             position: 'absolute',
             right: '30px',
@@ -610,11 +852,10 @@
               disabled={!canGoNext}
             />
           </div>
-          {/* 步骤指示器 */}
           {hasSteps && hasStarted && maxStep > 1 && (
             <div style={{
               position: 'absolute',
-              right: '100px',
+              right: '66px',
               top: '50%',
               transform: 'translateY(-50%)',
               display: 'flex',
@@ -635,17 +876,18 @@
               ))}
             </div>
           )}
-          {/* 操作提示 */}
-          <div style={{
+          <div className="text-[#4b5563]" style={{
             position: 'absolute',
             bottom: '30px',
-            left: '30px',
-            color: '#4b5563',
-            fontSize: '13px',
-            opacity: 0.7
+            left: '50px',
+            fontSize: '16px',
           }}>
             使用方向键或点击按钮导航
           </div>
+          <MovingWatermark
+            colorCls="bg-gradient-to-r from-[#2d644b] to-green-600 bg-clip-text text-transparent"
+            opacity={1}
+          />
         </div>
       );
     }
