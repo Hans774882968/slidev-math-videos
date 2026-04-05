@@ -48,7 +48,7 @@ PPT 传送门： https://github.com/Hans774882968/slidev-math-videos/blob/main/d
 
 评分弹幕：
 
-- 01:10 给这期视频打打分
+- 01:14 给这期视频打打分
 
 封面：
 
