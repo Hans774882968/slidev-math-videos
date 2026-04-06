@@ -74,6 +74,8 @@
     "dev:260319_t_2": "slidev video-blogs/【slidev】封面风格260319_2.md --base /260319_t_2/ --open -p 5225",
     "dev:260320": "slidev video-blogs/【slidev】赣州一模压轴题-概率dp.md --base /260320/ --open -p 5225",
     "dev:260327": "slidev video-blogs/【slidev】26广东一模二维dp压轴.md --base /260327/ --open -p 5225",
+    "dev:260406_t": "slidev video-blogs/【slidev】scholarly主题示例.md --base /260406_t/ --open -p 5225",
+    "theme_eject": "slidev theme eject",
     "export": "slidev export",
     "lint": "eslint .",
     "subtitle": "bun scripts/fix_subtitle.ts"
@@ -86,6 +88,8 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "@vueuse/motion": "^3.0.3",
     "clsx": "^2.1.1",
+    "codemirror-theme-vars": "^0.1.2",
+    "prism-theme-vars": "^0.2.5",
     "slidev-theme-dracula": "^0.2.0",
     "slidev-theme-mint": "^0.1.0",
     "tailwind-merge": "^3.3.1",
@@ -101,6 +105,7 @@
     "eslint": "^9.38.0",
     "eslint-plugin-vue": "^10.5.1",
     "globals": "^16.4.0",
+    "slidev-theme-scholarly": "^1.3.2",
     "typescript": "^5.9.3",
     "vue-eslint-parser": "^10.2.0"
   }

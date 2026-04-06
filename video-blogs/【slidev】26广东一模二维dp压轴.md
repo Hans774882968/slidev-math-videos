@@ -1,5 +1,5 @@
 ---
-theme: dracula
+theme: ./hans-green-theme
 mdc: true
 transition: slide-left
 lineNumbers: true

@@ -1,5 +1,5 @@
 ---
-theme: dracula
+theme: ./hans-green-theme
 mdc: true
 transition: slide-left
 lineNumbers: true
@@ -11,7 +11,24 @@ tags:
 <MovingWatermark />
 <!-- <AutoSlide :timeList="[0, 0]" /> -->
 
-留空
+<MySteps :steps="[
+  { title: '步骤 1', description: '第一步说明' },
+  { title: '步骤 2', description: '第二步说明' },
+]" :activeStep="1" />
+
+<MyBlock type="success" title="关键发现">
+
+We identified **127 new species** of arthropods in previously unsampled canopy microhabitats.
+</MyBlock>
+
+这是一段<MyHighlight type="success">表示强调</MyHighlight>的文字
+
+<MyTheorem type="corollary" title="推论1">
+
+$c^2=a^2+b^2$
+</MyTheorem>
+
+<MyKeywords :keywords="['生态系统', 'Biodiversity', 'Conservation', 'Tropics']" color="green" />
 
 ---
 
