@@ -1,1 +1,0 @@
-import{b as a,f as t}from"./two-cols.vue_vue_type_script_setup_true_lang-DxHctyEZ.js";var d=a((e,o)=>{let n;return o==="sandbox"&&(n=t("#i"+e)),(o==="sandbox"?t(n.nodes()[0].contentDocument.body):t("body")).select(`[id="${e}"]`)},"getDiagramElement");export{d as g};
