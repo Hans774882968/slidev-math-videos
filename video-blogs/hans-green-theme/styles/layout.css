@@ -8,24 +8,26 @@
 
   /* Dracula colors: https: //draculatheme.com/contribute */
   /* --background: hsl(231, 15%, 18%); */
-  --background: #c8e6c9;
+  --bg-start: #c8e6c9;
+  --bg-end: #dcf1dd;
   --current-line: hsl(232, 14%, 31%);
   /* --foreground: hsl(60, 30%, 96%); */
   --foreground: #4b5563;
   --comment: hsl(225, 27%, 51%);
   /* --cyan: hsl(191, 97%, 77%); */
-  --cyan: #3ab9d5;
-  --green: hsl(135, 94%, 65%);
-  /* green 基础上新增用于行内代码的变量 */
-  --inline-code-color: #1f2937;
+  --cyan: #2e8bf7;
+  /* --green: hsl(135, 94%, 65%); */
+  /* green 去掉，改用 inline-code-color */
+  --inline-code-color: #aa4da7;
   /* --orange: hsl(31, 100%, 71%); */
   --orange: #fb923c;
   --pink: hsl(326, 100%, 74%);
   /* --purple: hsl(265, 89%, 78%); */
   --title-color: #2d644b;
   --red: hsl(0, 100%, 67%);
-  --yellow: hsl(65, 92%, 76%);
-  /* yellow 基础上新增用于引用块的变量 */
+  /* --yellow: hsl(65, 92%, 76%); */
+  /* yellow 去掉，改成 em 和 blockquote 的颜色 */
+  --em-color: #e4871d;
   --blockquote-color: #2d644b;
 }
 
@@ -33,7 +35,7 @@
 #app {
   #slide-content {
 
-    --at-apply: text-$foreground bg-$background !important;
+    --at-apply: text-$foreground bg-gradient-to-br from-$bg-start to-$bg-end !important;
 
     h1,
     h2,
@@ -49,7 +51,7 @@
     }
 
     em {
-      --at-apply: text-$yellow;
+      --at-apply: text-$em-color;
     }
 
     a {
@@ -71,7 +73,7 @@
     }
 
     kbd {
-      --at-apply: text-$green;
+      --at-apply: text-$inline-code-color;
     }
 
     /* ℹ️ Update background color of code. We made it darker so we don't get same color for slide bg & code bg. */
