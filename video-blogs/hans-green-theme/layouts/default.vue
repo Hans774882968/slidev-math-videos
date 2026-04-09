@@ -21,9 +21,15 @@
       </div>
     </div>
 
+    <LetterToLlm />
+
     <slot />
   </div>
 </template>
+
+<script setup>
+import LetterToLlm from './letter-to-llm.vue';
+</script>
 
 <style scoped>
 @keyframes float-breathe {

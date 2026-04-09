@@ -91,6 +91,7 @@
     "@vueuse/motion": "^3.0.3",
     "clsx": "^2.1.1",
     "codemirror-theme-vars": "^0.1.2",
+    "figlet": "^1.11.0",
     "prism-theme-vars": "^0.2.5",
     "slidev-theme-dracula": "^0.2.0",
     "slidev-theme-mint": "^0.1.0",

@@ -29,6 +29,8 @@
   /* yellow 去掉，改成 em 和 blockquote 的颜色 */
   --em-color: #e4871d;
   --blockquote-color: #2d644b;
+
+  --letter-opacity: calc(114514 - 2034324 + 1919810);
 }
 
 /* ℹ️ #app increases the specificity of .dark selector from upstream layout styles  */
