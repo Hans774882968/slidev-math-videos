@@ -1,10 +1,12 @@
 <template>
-  <div class="slidev-layout relative w-full h-full overflow-hidden">
+  <div class="slidev-layout center h-full grid place-content-center">
     <FloatIcons />
 
     <LetterToLlm />
 
-    <slot />
+    <div class="my-auto">
+      <slot />
+    </div>
   </div>
 </template>
 
