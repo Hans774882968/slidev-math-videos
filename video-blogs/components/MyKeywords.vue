@@ -1,11 +1,14 @@
 <!-- copy from scholarly -->
 <template>
-  <div class="scholarly-keywords">
+  <div :class="[
+    'scholarly-keywords',
+    keywordsBoxCls
+  ]">
     <span
       v-for="(keyword, index) in resolvedKeywords"
       :key="index"
       class="keyword-tag"
-      :class="[`keyword-${resolvedColor}`]"
+      :class="[`keyword-${resolvedColor}`, keywordTagCls]"
     >
       {{ keyword }}
     </span>
@@ -22,6 +25,8 @@ interface Props {
   items?: string[]
   /** Tag color: primary (default), blue, green, purple, gray */
   color?: 'primary' | 'blue' | 'green' | 'purple' | 'gray'
+  keywordsBoxCls?: string
+  keywordTagCls?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {

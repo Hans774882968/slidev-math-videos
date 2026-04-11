@@ -38,8 +38,9 @@ export const ppts: Array<Ppt> = [
   { id: '260319_t', title: '【slidev】封面风格260319', date: '2026-03-19', intro: '第一次尝试新的视频封面风格' },
   { id: '260319_t_2', title: '【slidev】封面风格260319_2', date: '2026-03-19', intro: '第二次尝试新的视频封面风格，配色方案：1. 小红书“小嘉视觉”《日本传统蓝色系色卡》。2. 色相环工具生成单色。' },
   { id: '260320', title: '【slidev】赣州一模压轴题-概率dp', date: '2026-03-20' },
-  { id: '260327', title: '【slidev】26广东一模二维dp压轴', date: '2026-03-27' },
+  { id: '260327', title: '【slidev】26广东一模二维dp压轴', date: '2026-03-27', intro: '首次使用hans-green-theme' },
   { id: '260406_t', title: '【slidev】scholarly主题示例', date: '2026-04-06', intro: '成功引入了scholarly主题。并且复制了一些scholarly主题的组件源码，于是我们能在不使用scholarly主题的前提下用它的一些组件' },
+  { id: '260410', title: '【slidev】26成都二诊三角换元压轴', date: '2026-04-10' },
 ];
 
 export function hasPpt(id: string) {
