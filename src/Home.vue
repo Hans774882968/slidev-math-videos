@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { getWebsiteBasePath, redirectToDestination } from '@/lib/routeUtils';
 import { ppts } from '@/lib/ppts';
 import { useRouter } from 'vue-router';
+import LetterToLlm from '@/components/letter-to-llm.vue';
 
 const router = useRouter();
 
@@ -18,6 +19,8 @@ const staggerDelay = 100;
   <div
     class="min-h-screen flex flex-col bg-(--background) text-(--comment)"
   >
+    <LetterToLlm />
+
     <header class="py-16 px-6 text-center bg-gradient-to-br from-(--purple)/10 via-transparent to-(--purple)/15">
       <h1
         v-motion
