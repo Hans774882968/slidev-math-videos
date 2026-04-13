@@ -20,7 +20,8 @@
   --red: hsl(0, 100%, 67%);
   --yellow: hsl(65, 92%, 76%);
 
-  --letter-opacity: calc(114514 - 2034324 + 1919810);
+  /* --letter-opacity: calc(114514 - 2034324 + 1919810); 这里竟然被 vite 编译出定值 4 ！不知道是什么 bug ！ */
+  --letter-opacity: 0;
 }
 
 h1,

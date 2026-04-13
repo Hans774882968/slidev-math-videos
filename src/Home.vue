@@ -5,10 +5,21 @@ import { getWebsiteBasePath, redirectToDestination } from '@/lib/routeUtils';
 import { ppts } from '@/lib/ppts';
 import { useRouter } from 'vue-router';
 import LetterToLlm from '@/components/letter-to-llm.vue';
+import figlet from 'figlet';
+import standard from 'figlet/fonts/Standard';
+
+function printLogo() {
+  const text = figlet.textSync('Author:    hans7', { font: 'Standard' });
+  console.log(text);
+}
 
 const router = useRouter();
 
-onMounted(() => redirectToDestination(router));
+onMounted(() => {
+  redirectToDestination(router);
+  figlet.parseFont('Standard', standard);
+  printLogo();
+});
 
 const basePath = getWebsiteBasePath();
 
