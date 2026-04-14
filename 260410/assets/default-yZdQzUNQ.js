@@ -1,0 +1,1 @@
+import{f as s,o as t,e,j as a}from"./modules/vue-D7i0zGR_.js";import{u as l}from"./slidev/context-BJLlHvuE.js";import{F as r,_ as n}from"./letter-to-llm-BqhH8-0L.js";const _={class:"slidev-layout relative w-full h-full overflow-hidden"},u={__name:"default",setup(c){return l(),(o,f)=>(t(),s("div",_,[e(r),e(n),a(o.$slots,"default")]))}};export{u as _};
