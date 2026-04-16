@@ -63,11 +63,15 @@ async function loadLive2dResource() {
     return img;
   };
   window.Image.prototype = OriginalImage.prototype;
-  // 加载 waifu.css waifu-tips.js
-  await Promise.all([
-    loadExternalResource(`${live2dPath}waifu.css`, 'css'),
-    loadExternalResource(`${live2dPath}waifu-tips.js`, 'js')
-  ]);
+  try {
+    // 加载 waifu.css waifu-tips.js
+    await Promise.all([
+      loadExternalResource(`${live2dPath}waifu.css`, 'css'),
+      loadExternalResource(`${live2dPath}waifu-tips.js`, 'js')
+    ]);
+  } catch(e) {
+    console.error('加载 waifu.css 和 waifu-tips.js 失败', e);
+  }
   // 配置选项的具体用法见 README.md
   initWidget({
     // 不用 cdnPath 指向 model_list.json 的做法了，因为衣服加载不出。用 waifu-tips.json 指向本地路径的做法，完美解决
@@ -75,7 +79,7 @@ async function loadLive2dResource() {
     // cdnPath: live2dPath,
     waifuPath: `${live2dPath}waifu-tips.json`,
     cubism2Path: `${live2dPath}live2d.min.js`,
-    cubism5Path: `${live2dPath}/cubism5/live2dcubismcore.js`,
+    cubism5Path: `${live2dPath}cubism5/live2dcubismcore.js`,
     tools: ['hitokoto', 'asteroids', 'switch-model', 'switch-texture', 'photo', 'info', 'quit'],
     logLevel: 'warn',
     drag: true

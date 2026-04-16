@@ -13,3 +13,6 @@ media/**/*.mp4
 media/**/*.png
 media/**/*.jpg
 media/**/*.jpeg
+
+# 1.4 MB 太大了，不传 GitHub 了
+public/live2d/txt-bundle-for-dev.json

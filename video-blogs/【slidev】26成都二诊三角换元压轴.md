@@ -82,11 +82,11 @@ $$
 在数列 $\{ a_{n} \}$ 中， $a_{1}=1,\ a_{n+1}=\sqrt{ a_{n}+2 }$ ，设 $\{ a_{n} \}$ 的前n项和为 $S_{n}$ ，记 $[x]$ 为不超过x的最大整数（高斯函数）
 
 1. 求 $[S_{1}],\ [S_{2}],\ [S_{3}]$
-2. 是否存在常数 $A,\ \omega\ (A>0,\ 0< \omega < 2\pi)$ 使得 $a_{n}=A\cos \frac{\omega}{2^n}$ ？若存在，请算出来；若不存在，请说明理由
+2. 是否存在常数 $A,\ \omega\ (A \gt 0,\ 0 \lt \omega \lt 2\pi)$ 使得 $a_{n}=A\cos \frac{\omega}{2^n}$ ？若存在，请算出来；若不存在，请说明理由
 3. 求 $[2S_{1}+1]+[2S_{2}+1]\dots+[2S_{n}+1]$
 
 <div class="h-24 flex justify-center items-center gap-1 text-6xl text-orange">
-这么综合？
+这么综合滴~
 
 <MyKeywords
   :keywords="['三角换元求通项', '麦克劳林展开', '放缩', '欧拉公式']"
@@ -101,9 +101,9 @@ $$
 
 $a_{1}=1,\ a_{2}=\sqrt{ a_{1}+2 }=\sqrt{ 3 },\ a_{3}=\sqrt{ a_{2}+2 }=\sqrt{ \sqrt{ 3 }+2 }$
 
-$1.5 < a_{2}=\sqrt{ 3 } < 2$ ，所以 $[S_{1}]=1,\ 1+1.5=2.5 < S_{2}=1+\sqrt{ 3 } < 1+2=3 \implies [S_{2}]=2$
+$1.5 \lt a_{2}=\sqrt{ 3 } \lt 2$ ，所以 $[S_{1}]=1,\ 1+1.5=2.5 \lt S_{2}=1+\sqrt{ 3 } \lt 1+2=3 \implies [S_{2}]=2$
 
-为了求出a3的范围，考虑它的平方： $3.5 < a_{3}^2=\sqrt{ 3 }+2 < 4$ 。所以 $1.5 < a_{3} < 2$ 。所以 $1+1.5+1.5=4 < S_{3} < 1+2+2=5 \implies [S_{3}]=4$
+为了求出a3的范围，考虑它的平方： $3.5 \lt a_{3}^2=\sqrt{ 3 }+2 \lt 4$ 。所以 $1.5 \lt a_{3} \lt 2$ 。所以 $1+1.5+1.5=4 \lt S_{3} \lt 1+2+2=5 \implies [S_{3}]=4$
 
 ---
 
@@ -170,7 +170,7 @@ $$
 
 <MyTheorem type="corollary" title="拓展思考1">
 
-写代码求出 $a_{n+1}=\sqrt{ a_{n}+2 }$ ，但 $a_{1} = a > 0$ 的通项
+写代码求出 $a_{n+1}=\sqrt{ a_{n}+2 }$ ，但 $a_{1} = a \gt 0$ 的通项
 </MyTheorem>
 
 <MyTheorem type="corollary" title="拓展思考2">
@@ -188,7 +188,7 @@ $$
 
 ## （2）的解题过程
 
-题干复述：求出常数 $A,\ \omega\ (A>0,\ 0< \omega < 2\pi)$ 使得 $a_{n}=A\cos \frac{\omega}{2^n}$
+题干复述：求出常数 $A,\ \omega\ (A \gt 0,\ 0 \lt \omega \lt 2\pi)$ 使得 $a_{n}=A\cos \frac{\omega}{2^n}$
 
 两个未知数只需要两个方程，所以用 $a_{1},a_{2}$ 的值列方程就行：
 
@@ -199,7 +199,7 @@ a_{2}=\sqrt{ 3 }=A\cos \frac{\omega}{4}
 \end{cases} \implies \cos \frac{\omega}{4}=\sqrt{ 3 } \cos \frac{\omega}{2}
 $$
 
-对右边用**二倍角公式**，拿到一元二次方程： $\cos \frac{\omega}{4}=\sqrt{ 3 }\left( 2\cos^2 \frac{\omega}{4}-1 \right) \implies \cos \frac{\omega}{4}=\frac{1 \pm \sqrt{ 1+4\sqrt{ 3 }*2\sqrt{ 3 } }}{4\sqrt{ 3 }}=\frac{\sqrt{ 3 }}{2} \text{ or } -\frac{\sqrt{ 3 }}{3}$ 。因为 $a_{1}>0$ ，所以要舍去负解，得 $\cos \frac{\omega}{4}=\frac{\sqrt{ 3 }}{2} \implies \omega=\frac{2\pi}{3},\ A=2 \implies a_{n}=2 \cos \frac{\pi}{3*2^{n-1}}$
+对右边用**二倍角公式**，拿到一元二次方程： $\cos \frac{\omega}{4}=\sqrt{ 3 }\left( 2\cos^2 \frac{\omega}{4}-1 \right) \implies \cos \frac{\omega}{4}=\frac{1 \pm \sqrt{ 1+4\sqrt{ 3 }*2\sqrt{ 3 } }}{4\sqrt{ 3 }}=\frac{\sqrt{ 3 }}{2} \text{ or } -\frac{\sqrt{ 3 }}{3}$ 。因为 $a_{1} \gt 0$ ，所以要舍去负解，得 $\cos \frac{\omega}{4}=\frac{\sqrt{ 3 }}{2} \implies \omega=\frac{2\pi}{3},\ A=2 \implies a_{n}=2 \cos \frac{\pi}{3*2^{n-1}}$
 
 ---
 
@@ -221,9 +221,9 @@ $$
 高斯函数就像一堵墙，把**相邻项联合起来处理**的可能性隔绝了。所以我们只能考虑把 $[2S_{n}+1]$ **放缩**到两个相邻的整数之间
 </MyBlock>
 
-为了处理 $2S_{n}+1$ ，我们先看看 $a_{n}$ 有什么性质。首先，不难发现： $\lim_{ n \to +\infty } \frac{\pi}{3*2^{n-1}}=0$ ，所以 $\lim_{ n \to +\infty } a_{n}=2$ 。猜测从足够大的n开始使用放缩 $a_{n} < 2$ ，应该是个不错的选择~
+为了处理 $2S_{n}+1$ ，我们先看看 $a_{n}$ 有什么性质。首先，不难发现： $\lim_{ n \to +\infty } \frac{\pi}{3*2^{n-1}}=0$ ，所以 $\lim_{ n \to +\infty } a_{n}=2$ 。猜测从足够大的n开始使用放缩 $a_{n} \lt 2$ ，应该是个不错的选择~
 
-如果从 $a_{2}$ 开始放缩，可得： $2S_{n}+1 < 2(1+2(n-1))+1=4n-1$ 。如果从 $a_{3}$ 开始放缩，可得： $2S_{n}+1 < 2(1+\sqrt{ 3 }+2(n-2))+1=4n+(2\sqrt{ 3 }-5)$ ，而 $-2 < 2\sqrt{ 3 }-5 < -1$ 。所以在此我们不妨大胆猜测： $[2S_{n}+1]$ 就是 $4n-2$ （ $n \geq 2$ 才成立， $n=1$ 的情况放到最后特殊处理）！
+如果从 $a_{2}$ 开始放缩，可得： $2S_{n}+1 \lt 2(1+2(n-1))+1=4n-1$ 。如果从 $a_{3}$ 开始放缩，可得： $2S_{n}+1 \lt 2(1+\sqrt{ 3 }+2(n-2))+1=4n+(2\sqrt{ 3 }-5)$ ，而 $-2 \lt 2\sqrt{ 3 }-5 \lt -1$ 。所以在此我们不妨大胆猜测： $[2S_{n}+1]$ 就是 $4n-2$ （ $n \geq 2$ 才成立， $n=1$ 的情况放到最后特殊处理）！
 
 ---
 
@@ -240,11 +240,11 @@ $$
 
 <MyTheorem type="note">
 
-考场上记得写求导证明 $\cos x > 1 - \frac{x^2}{2}$ 的过程！
+考场上记得写求导证明 $\cos x \gt 1 - \frac{x^2}{2}$ 的过程！
 </MyTheorem>
 
 $$
-a_{n}=2 \cos \frac{\pi}{3*2^{n-1}} > 2\left( 1-\frac{1}{2}\left( \frac{\pi}{3*2^{n-1}} \right)^2 \right)=2-4\left( \frac{\pi}{3*2^{n}} \right)^2 \tag{1}
+a_{n}=2 \cos \frac{\pi}{3*2^{n-1}} \gt 2\left( 1-\frac{1}{2}\left( \frac{\pi}{3*2^{n-1}} \right)^2 \right)=2-4\left( \frac{\pi}{3*2^{n}} \right)^2 \tag{1}
 $$
 
 ---
@@ -255,12 +255,12 @@ $$
 
 $$
 \begin{align}
-S_{n} &> 1+\left( 2(n-1)-\frac{4\pi^2}{9}\left( \frac{1}{4^2}+\frac{1}{4^3}+\dots+\frac{1}{4^n} \right) \right) \\
-&=(2n-1)-\frac{\pi^2}{27}\left( 1-\frac{1}{4^{n-1}} \right) > 2n-1-\frac{\pi^2}{27}
+S_{n} &\gt 1+\left( 2(n-1)-\frac{4\pi^2}{9}\left( \frac{1}{4^2}+\frac{1}{4^3}+\dots+\frac{1}{4^n} \right) \right) \\
+&=(2n-1)-\frac{\pi^2}{27}\left( 1-\frac{1}{4^{n-1}} \right) \gt 2n-1-\frac{\pi^2}{27}
 \end{align}
 $$
 
-于是 $2S_{n}+1 > 4n-1-\frac{2\pi^2}{27}$ 。 $\pi^2$ 约等于10，所以 $\frac{2\pi^2}{27} < 1 \implies 2S_{n}+1 > 4n-2$ 。综上， $[2S_{n}+1]=4n-2,\ (n \geq 2)$ ，所求：
+于是 $2S_{n}+1 \gt 4n-1-\frac{2\pi^2}{27}$ 。 $\pi^2$ 约等于10，所以 $\frac{2\pi^2}{27} \lt 1 \implies 2S_{n}+1 \gt 4n-2$ 。综上， $[2S_{n}+1]=4n-2,\ (n \geq 2)$ ，所求：
 
 $$
 \begin{align}
@@ -269,7 +269,7 @@ $$
 \end{align}
 $$
 
-别高兴得太早！别忘了验证 $n=1$ 的情况！ $[2S_{1}+1]=3=2*1^2+1$ ，刚好也成立。综上，所求确实是 $2n^2+1$
+做完了吗？没有！别忘了验证 $n=1$ 的情况！ $[2S_{1}+1]=3=2*1^2+1$ ，刚好也成立。综上，所求确实是 $2n^2+1$
 
 ---
 layout: center

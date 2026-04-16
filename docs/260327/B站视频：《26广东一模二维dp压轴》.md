@@ -51,3 +51,7 @@ slidev PPT 传送门： https://hans774882968.github.io/slidev-math-videos/26032
 ```powershell
 magick 260327-封面-3x4.png -resize 1161x1548! 260327-封面-4x3.png
 ```
+
+## 配套博客发布的小插曲
+
+掘金平台AI审核不通过。扔给通义千问，猜测是因为我的那些其他平台链接，于是把那些链接去掉了，然后把标题的“最”字删掉了，就通过了。
