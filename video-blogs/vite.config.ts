@@ -36,7 +36,8 @@ const getLive2dResourcePlugin = (): Plugin => ({
       const live2dMatch = url.match(/^(?:\/[^/]+)?\/live2d\/(.+)$/);
 
       if (live2dMatch) {
-        const relativePath = live2dMatch[1]; // 获取 live2d/ 后面的部分
+        // 获取 live2d/ 后面的部分，并记得把 %20 还原为空格
+        const relativePath = decodeURIComponent(live2dMatch[1]);
         // 这里 __dirname 是 'video-blogs' 目录，所以需要 '..' 回到根目录
         const filePath = path.resolve(__dirname, '..', 'public', 'live2d', relativePath);
 

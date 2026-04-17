@@ -568,6 +568,13 @@
       "message": "来自《原神》的纳西妲酱 ~"
     },
     {
+      "name": "Sherry",
+      "paths": [
+        "/slidev-math-videos/live2d/Sherry/Sherry - Model.model3.json"
+      ],
+      "message": "嗨嗨~！我是来自《魔法少女的魔女审判》的橘雪莉 ~ 哪里有案件哪里就有我！一切就交给我这位名侦探吧！"
+    },
+    {
       "name": "Hiyori",
       "paths": [
         "/slidev-math-videos/live2d/Hiyori/Hiyori.model3.json"
