@@ -85,7 +85,7 @@ $$
 2. 是否存在常数 $A,\ \omega\ (A \gt 0,\ 0 \lt \omega \lt 2\pi)$ 使得 $a_{n}=A\cos \frac{\omega}{2^n}$ ？若存在，请算出来；若不存在，请说明理由
 3. 求 $[2S_{1}+1]+[2S_{2}+1]\dots+[2S_{n}+1]$
 
-<div class="h-24 flex justify-center items-center gap-1 text-6xl text-orange">
+<div class="h-22 flex justify-center items-center gap-1 text-6xl text-orange">
 这么综合滴~
 
 <MyKeywords
@@ -107,7 +107,7 @@ $1.5 \lt a_{2}=\sqrt{ 3 } \lt 2$ ，所以 $[S_{1}]=1,\ 1+1.5=2.5 \lt S_{2}=1+\s
 
 ---
 
-## （2）即使没有引导，通项也不难求
+## （2） $a_{1}=1,\ a_{n+1}=\sqrt{ a_{n}+2 }$ ：即使无引导，通项也不难求
 
 对原问题进行**一般化**： $a_{n+1}=\sqrt{ Aa_{n}+B }$ 。1. A和B要满足什么关系才能求通项？2. 如何进行**三角换元**？
 
@@ -150,6 +150,10 @@ $$
 \end{cases}
 $$
 
+<div class="flex justify-center">
+<img src="./assets/260410/1-双曲换元视频.png" class="w-50" />
+</div>
+
 ---
 
 ## （2）的扩展：给定比较大的 $a_{1}$ （续）
@@ -186,7 +190,7 @@ $$
 
 ---
 
-## （2）的解题过程
+## （2）的解题过程——来感受下被引导有多舒服！
 
 题干复述：求出常数 $A,\ \omega\ (A \gt 0,\ 0 \lt \omega \lt 2\pi)$ 使得 $a_{n}=A\cos \frac{\omega}{2^n}$
 
@@ -199,15 +203,24 @@ a_{2}=\sqrt{ 3 }=A\cos \frac{\omega}{4}
 \end{cases} \implies \cos \frac{\omega}{4}=\sqrt{ 3 } \cos \frac{\omega}{2}
 $$
 
-对右边用**二倍角公式**，拿到一元二次方程： $\cos \frac{\omega}{4}=\sqrt{ 3 }\left( 2\cos^2 \frac{\omega}{4}-1 \right) \implies \cos \frac{\omega}{4}=\frac{1 \pm \sqrt{ 1+4\sqrt{ 3 }*2\sqrt{ 3 } }}{4\sqrt{ 3 }}=\frac{\sqrt{ 3 }}{2} \text{ or } -\frac{\sqrt{ 3 }}{3}$ 。因为 $a_{1} \gt 0$ ，所以要舍去负解，得 $\cos \frac{\omega}{4}=\frac{\sqrt{ 3 }}{2} \implies \omega=\frac{2\pi}{3},\ A=2 \implies a_{n}=2 \cos \frac{\pi}{3*2^{n-1}}$
+对右边用**二倍角公式**，拿到一元二次方程： $\cos \frac{\omega}{4}=\sqrt{ 3 }\left( 2\cos^2 \frac{\omega}{4}-1 \right) \implies \cos \frac{\omega}{4}=\frac{1 \pm \sqrt{ 1+4\sqrt{ 3 }*2\sqrt{ 3 } }}{4\sqrt{ 3 }}=\frac{\sqrt{ 3 }}{2} \text{ or } -\frac{\sqrt{ 3 }}{3}$
+
+因为 $a_{1} \gt 0$ ，所以要舍去负解，得 $\cos \frac{\omega}{4}=\frac{\sqrt{ 3 }}{2} \implies \omega=\frac{2\pi}{3},\ A=2 \implies a_{n}=2 \cos \frac{\pi}{3*2^{n-1}}$
+
+<MyBlock type="warning" title="做完了吗？">
+
+还没做完！别高兴得太早！
+</MyBlock>
 
 ---
 
 ## （2）的解题过程（续）
 
-别高兴得太早！刚刚只用到了 $a_{1},a_{2}$ 的值，别忘了验证它是否满足递推式！ $rhs=\sqrt{ a_{n}+2 }=\sqrt{ 2(\cos \frac{\pi}{3*2^{n-1}} +1) }$ 。考虑二倍角公式 $1+\cos 2x=2\cos^2 x$ 有： $rhs=\sqrt{ 4\cos^2 \frac{\pi}{3*2^n} }=2\cos \frac{\pi}{3*2^n}=a_{n+1}$
+刚刚只用到了 $a_{1},a_{2}$ 的值，别忘了验证它**是否满足递推式**！
 
-<MyBlock type="info" title="评论">
+$rhs=\sqrt{ a_{n}+2 }=\sqrt{ 2(\cos \frac{\pi}{3*2^{n-1}} +1) }$ 。考虑二倍角公式 $1+\cos 2x=2\cos^2 x$ 有： $rhs=\sqrt{ 4\cos^2 \frac{\pi}{3*2^n} }=2\cos \frac{\pi}{3*2^n}=a_{n+1}$
+
+<MyBlock type="info" title="做题感想">
 
 这题虽然不难，但它的铺垫真的给得很好~
 </MyBlock>
@@ -240,7 +253,7 @@ $$
 
 <MyTheorem type="note">
 
-考场上记得写求导证明 $\cos x \gt 1 - \frac{x^2}{2}$ 的过程！
+麦克劳林公式在高中是超纲芝士。考场上记得写求导证明 $\cos x \gt 1 - \frac{x^2}{2}$ 的过程！
 </MyTheorem>
 
 $$
