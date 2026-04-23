@@ -15,40 +15,40 @@ tags:
 <MovingWatermark />
 <!-- <AutoSlide :timeList="[0, 0]" /> -->
 
-<div class="bg-gradient-to-br from-[#719cd4] to-[#5984bf] absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4">
-  <h1 class="title-stroke !text-[#3468ab] !mb-1 font-black tracking-tighter text-center">
+<div class="bg-gradient-to-br from-[#c8e6c9] to-[#dcf1dd] absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4">
+  <h1 class="title-stroke !text-[#059669] !mb-1 font-black tracking-tighter text-center">
     2026成都二诊压轴
   </h1>
 
   <div class="flex flex-col justify-center items-center gap-3 mb-2">
-    <h2 class="flex justify-center items-center font-black text-center !text-[#4a81c8] !text-2xl md:!text-3xl">
-      <div class="mx-2 bg-white px-4 py-1.5 rounded-xl">
-        <span class="!text-2xl md:!text-3xl text-[#4a81c8]">三角换元求通项</span>
+    <h2 class="flex justify-center items-center font-black text-center !text-[#059669] !text-2xl md:!text-3xl">
+      <div class="mx-2 bg-[#10b98126] px-4 py-1.5 rounded-xl">
+        <span class="!text-2xl md:!text-3xl text-[#059669]">三角换元求通项</span>
       </div>
       <span class="subtitle-stroke">+</span>
-      <div class="mx-2 bg-white px-4 py-1.5 rounded-xl">
-        <span class="!text-2xl md:!text-3xl text-[#4a81c8]">麦克劳林展开</span>
+      <div class="mx-2 bg-[#10b98126] px-4 py-1.5 rounded-xl">
+        <span class="!text-2xl md:!text-3xl text-[#059669]">麦克劳林展开</span>
       </div>
       <span class="subtitle-stroke">+</span>
-      <div class="mx-2 bg-white px-4 py-1.5 rounded-xl">
-        <span class="!text-2xl md:!text-3xl text-[#4a81c8]">放缩</span>
+      <div class="mx-2 bg-[#10b98126] px-4 py-1.5 rounded-xl">
+        <span class="!text-2xl md:!text-3xl text-[#059669]">放缩</span>
       </div>
     </h2>
   </div>
 
-  <div class="border-4 border-white bg-gradient-to-br from-[#719cd4] to-[#5984bf] px-4 rounded-2xl shadow-lg flex items-center justify-center text-lg md:text-xl text-white font-serif">
+  <div class="border-4 border-[#059669] bg-gradient-to-br from-[#c8e6c9] to-[#dcf1dd] px-4 rounded-2xl shadow-lg flex items-center justify-center text-lg md:text-xl text-[#059669] font-serif">
 
 $$
 \boldsymbol{
 \begin{cases}
-A_n(m) = A_{n-1}(m) + (2n-m)A_{n-1}(m-1) \\
-dp[i,j]=dp[i-1,j]+(n-j+1)dp[i-1,j-1]
+a_{1}=1,\ a_{n+1}=\sqrt{ a_{n}+2 }, \text{ 求通项} \\
+a_{n}=\left(e^{ix_1}\right)^{1/2^{n-1}} + \left(e^{ix_1}\right)^{-1/2^{n-1}}
 \end{cases}
 }
 $$
   </div>
 
-  <p class="text-white text-2xl md:text-3xl mt-6 text-center">
+  <p class="text-[#059669] text-2xl md:text-3xl mt-6 text-center">
     简单扩展后，还涉及欧拉公式~
   </p>
 </div>
@@ -59,18 +59,18 @@ $$
   src: url('/fonts/jing-nan-bo-bo-hei-bold.ttf') format('truetype');
 }
 .title-stroke {
-  -webkit-text-stroke: 10px white;
+  -webkit-text-stroke: 10px #10b98126;
   paint-order: stroke fill;
 }
 
 .subtitle-stroke {
-  -webkit-text-stroke: 8px white;
+  -webkit-text-stroke: 8px #10b98126;
   paint-order: stroke fill;
 }
 
 @media (max-width: 768px) {
   .subtitle-stroke {
-    -webkit-text-stroke: 6px white;
+    -webkit-text-stroke: 6px #10b98126;
   }
 }
 </style>
