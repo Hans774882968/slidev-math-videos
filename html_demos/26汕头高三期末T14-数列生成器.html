@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>26汕头高三期末T14-数列生成器</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/react@18/umd/react.development.js"
+  ></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+  ></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useRef } = React;
+
+    const isPrime = (num) => {
+      if (num <= 1) return false;
+      if (num <= 3) return true;
+      if (num % 2 === 0 || num % 3 === 0) return false;
+      for (let i = 5; i * i <= num; i += 6) {
+        if (num % i === 0 || num % (i + 2) === 0) return false;
+      }
+      return true;
+    };
+
+    const getDivisors = (n) => {
+      const divs = [];
+      for (let i = 1; i * i <= n; i++) {
+        if (n % i === 0) {
+          divs.push(i);
+          if (i !== n / i) divs.push(n / i);
+        }
+      }
+      return divs;
+    };
+
+    function* solveSequence(p) {
+      const used = new Array(p + 1).fill(false);
+      const path = new Array(p);
+
+      path[0] = p;
+      used[p] = true;
+
+      function* backtrack(pos, sum) {
+        if (pos === p) {
+          yield [...path];
+          return;
+        }
+
+        // 剪枝：下一项必须是当前和 sum 的因数
+        const divisors = getDivisors(sum);
+
+        for (const next of divisors) {
+          if (next <= p && !used[next]) {
+            used[next] = true;
+            path[pos] = next;
+            yield* backtrack(pos + 1, sum + next);
+            used[next] = false;
+          }
+        }
+      }
+
+      yield* backtrack(1, p);
+    }
+
+    const App = () => {
+      const [inputP, setInputP] = useState('37');
+      const [validationMsg, setValidationMsg] = useState('');
+      const [isValid, setIsValid] = useState(false);
+      const [solutions, setSolutions] = useState([]);
+      const [isFinished, setIsFinished] = useState(false);
+
+      const generatorRef = useRef(null);
+
+      const [showVerifyModal, setShowVerifyModal] = useState(false);
+      const [verifySolution, setVerifySolution] = useState(null);
+
+      const handleValidate = () => {
+        const p = parseInt(inputP);
+        if (!isPrime(p)) {
+          setValidationMsg(`❌ ${p} 不是素数`);
+          setIsValid(false);
+          return;
+        }
+        const half = (p + 1) / 2;
+        if (!Number.isInteger(half) || !isPrime(half)) {
+          setValidationMsg(`❌ (p+1)/2 = ${half} 不是素数`);
+          setIsValid(false);
+          return;
+        }
+        setValidationMsg(`✅ 验证通过：p=${p}, (p+1)/2=${half} 均为素数`);
+        setIsValid(true);
+        setSolutions([]);
+        generatorRef.current = null;
+        setIsFinished(false);
+
+        generateBatch(10);
+      };
+
+      const generateBatch = (count) => {
+        let gen = generatorRef.current;
+
+        if (!gen) {
+          const p = parseInt(inputP);
+          gen = solveSequence(p);
+          generatorRef.current = gen;
+        }
+
+        const newSolutions = [];
+        let done = false;
+
+        for (let i = 0; i < count; i++) {
+          const result = gen.next();
+          if (result.done) {
+            done = true;
+            break;
+          }
+          newSolutions.push(result.value);
+        }
+
+        if (newSolutions.length > 0) {
+          setSolutions(prev => [...prev, ...newSolutions]);
+        }
+
+        if (done) {
+          setIsFinished(true);
+        }
+      };
+
+      const handleVerify = (sol) => {
+        setVerifySolution(sol);
+        setShowVerifyModal(true);
+      };
+
+      const closeModal = () => {
+        setShowVerifyModal(false);
+        setVerifySolution(null);
+      };
+
+      const getVerificationData = (sol) => {
+        const results = [];
+        let sum = 0;
+        for (let i = 0; i < sol.length - 1; i++) {
+          sum += sol[i];
+          const next = sol[i + 1];
+          results.push({
+            n: i + 1,
+            Sn: sum,
+            an1: next,
+            valid: sum % next === 0
+          });
+        }
+        return results;
+      };
+
+      return (
+        <div className="min-h-screen p-4 md:p-8 font-sans text-slate-800 bg-gradient-to-b from-slate-50 to-slate-100">
+          <div className="max-w-5xl mx-auto">
+            <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center text-slate-900">
+              🔢 26汕头高三期末T14-数列生成器
+            </h1>
+
+            <div className="bg-white p-5 md:p-6 rounded-xl shadow-lg mb-6 border border-slate-200">
+              <div className="flex flex-col md:flex-row gap-4 items-end">
+                <div className="flex-1 w-full">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    输入素数 p（要求：p 与 (p+1)/2 均为素数）
+                  </label>
+                  <input
+                    type="number"
+                    value={inputP}
+                    onChange={(e) => setInputP(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleValidate()}
+                    className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                    placeholder="例如：37"
+                  />
+                </div>
+                <button
+                  onClick={handleValidate}
+                  className="w-full md:w-auto px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:scale-95 transition font-medium shadow-sm"
+                >
+                  验证条件并搜索
+                </button>
+              </div>
+              {validationMsg && (
+                <div className={`mt-3 text-sm font-medium ${isValid ? 'text-green-600' : 'text-red-500'}`}>
+                  {validationMsg}
+                </div>
+              )}
+            </div>
+
+            {isValid && (
+              <div className="mb-4 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <h2 className="text-lg font-semibold text-slate-700">
+                  📊 已找到 <span className="text-blue-600">{solutions.length}</span> 组解
+                  <span className="text-slate-400 font-normal">（a₁={inputP}）</span>
+                </h2>
+                {!isFinished && (
+                  <button
+                    onClick={() => generateBatch(10)}
+                    className="px-5 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 active:scale-95 transition shadow-sm flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                    继续生成 10 组
+                  </button>
+                )}
+                {isFinished && (
+                  <span className="text-slate-500 text-sm bg-slate-100 px-3 py-1 rounded-full">
+                    ✨ 所有解已展示完毕
+                  </span>
+                )}
+              </div>
+            )}
+
+            <div className="space-y-3">
+              {solutions.map((sol, idx) => (
+                <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition">
+                  <div className="flex justify-between items-center mb-2 pb-2 border-b border-slate-100">
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                      #{idx + 1}
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-slate-500">
+                        末项 aₚ = <span className="font-mono font-bold text-emerald-600">{sol[sol.length - 1]}</span>
+                      </span>
+                      <button
+                        onClick={() => handleVerify(sol)}
+                        className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                        title="验证数列"
+                      >
+                        ✓ 验证
+                      </button>
+                      <button
+                        onClick={() => navigator.clipboard.writeText(sol.join(', '))}
+                        className="text-xs px-2 py-1 bg-slate-100 text-slate-700 rounded hover:bg-slate-200 transition"
+                        title="复制数列"
+                      >
+                        📋 复制
+                      </button>
+                    </div>
+                  </div>
+                  <div className="font-mono text-xs md:text-sm text-slate-700 break-all leading-relaxed bg-slate-50 p-3 rounded">
+                    {sol.map((num, i) => (
+                      <span key={i} className="inline-block">
+                        <span className={i === 0 ? 'text-blue-600 font-bold' : ''}>
+                          {num}
+                        </span>
+                        {i < sol.length - 1 && <span className="text-slate-300 mx-0.5">,</span>}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {isValid && solutions.length === 0 && !isFinished && (
+                <div className="text-center text-slate-400 py-12 bg-white rounded-lg border border-dashed border-slate-300">
+                  <p className="mb-2">🔍 正在搜索满足条件的数列...</p>
+                  <p className="text-xs text-slate-300">提示：p=37 时搜索空间较大，请耐心等待</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {showVerifyModal && verifySolution && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={closeModal}>
+              <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden" onClick={e => e.stopPropagation()}>
+                <div className="p-4 border-b border-slate-200 flex justify-between items-center">
+                  <h3 className="font-bold text-slate-800">🔍 数列验证结果</h3>
+                  <button onClick={closeModal} className="text-slate-400 hover:text-slate-600 text-xl">&times;</button>
+                </div>
+                <div className="p-4 overflow-y-auto max-h-96">
+                  <p className="text-sm text-slate-600 mb-3">
+                    验证规则：前 n 项和 Sₙ 必须能被 aₙ₊₁ 整除
+                  </p>
+                  <div className="space-y-2">
+                    {getVerificationData(verifySolution).map(({ n, Sn, an1, valid }) => (
+                      <div key={n} className={`flex items-center justify-between p-2 rounded text-sm ${valid ? 'bg-green-50' : 'bg-red-50'}`}>
+                        <span className="font-mono">
+                          n={n}: Sₙ={<span className="font-bold">{Sn}</span>}, aₙ₊₁={<span className="font-bold">{an1}</span>}
+                        </span>
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded ${valid ? 'text-green-700 bg-green-200' : 'text-red-700 bg-red-200'}`}>
+                          {valid ? '✓ 整除' : '✗ 不整除'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-4 border-t border-slate-200 flex justify-end">
+                  <button onClick={closeModal} className="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition">
+                    关闭
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>

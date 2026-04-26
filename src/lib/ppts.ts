@@ -41,6 +41,7 @@ export const ppts: Array<Ppt> = [
   { id: '260327', title: '【slidev】26广东一模二维dp压轴', date: '2026-03-27', intro: '首次使用hans-green-theme' },
   { id: '260406_t', title: '【slidev】scholarly主题示例', date: '2026-04-06', intro: '成功引入了scholarly主题。并且复制了一些scholarly主题的组件源码，于是我们能在不使用scholarly主题的前提下用它的一些组件' },
   { id: '260410', title: '【slidev】26成都二诊三角换元压轴', date: '2026-04-10' },
+  { id: '260426', title: '【slidev】26汕头高三期末T14', date: '2026-04-26' },
 ];
 
 export function hasPpt(id: string) {

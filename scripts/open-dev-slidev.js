@@ -36,6 +36,7 @@ const PPT_MAP = {
   '260327': 'video-blogs/【slidev】26广东一模二维dp压轴.md',
   '260406_t': 'video-blogs/【slidev】scholarly主题示例.md',
   '260410': 'video-blogs/【slidev】26成都二诊三角换元压轴.md',
+  '260426': 'video-blogs/【slidev】26汕头高三期末T14.md',
 };
 
 const id = process.argv[2];
