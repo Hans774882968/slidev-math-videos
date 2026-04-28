@@ -26,6 +26,10 @@ tags:
       <div class="mx-2 bg-[#10b98126] px-4 py-1.5 rounded-xl">
         <span class="!text-2xl md:!text-3xl text-[#059669]">正难则反</span>
       </div>
+      <span class="subtitle-stroke">+</span>
+      <div class="mx-2 bg-[#10b98126] px-4 py-1.5 rounded-xl">
+        <span class="!text-2xl md:!text-3xl text-[#059669]">dfs</span>
+      </div>
     </h2>
   </div>
 
@@ -39,7 +43,7 @@ $a_1 = 37$ ，且前 $n$ 项和 $S_n$
   </div>
 
   <p class="text-[#059669] text-2xl md:text-3xl mt-6 text-center">
-    不妨做一个网页，搜索符合条件的所有数列~
+    做一个网页，搜索符合条件的所有数列~
   </p>
 </div>
 
@@ -73,10 +77,19 @@ $a_1 = 37$ ，且前 $n$ 项和 $S_n$
 
 ## 题干
 
-将 $1$ 到 $37$ 排成数列 $\{a_n\}$ ，已知 $a_1 = 37$ ，且前 $n$ 项和 $S_n$ 总能被下一项 $a_{n+1}$ 整除（即 $S_n \pmod{a_{n+1}} = 0$ ）。求 $a_{37}$
+<MyBlock type="info" title="题干">
 
-<div class="h-30 flex justify-center items-center text-5xl text-orange">
-质因数分解+正难则反，很有创意~
+将 $1$ 到 $37$ 排成数列 $\{a_n\}$ ，已知 $a_1 = 37$ ，且前 $n$ 项和 $S_n$ 总能被下一项 $a_{n+1}$ 整除（即 $S_n \pmod{a_{n+1}} = 0$ ）。求 $a_{37}$
+</MyBlock>
+
+<div class="h-26 flex justify-center items-center gap-1 text-5xl text-orange">
+小清新的脑筋急转弯~
+
+<MyKeywords
+  :keywords="['质因数分解', '正难则反', 'dfs']"
+  color="green"
+  keywordTagCls="!text-xl !px-3 !py-1 !rounded-xl"
+/>
 </div>
 
 ---
@@ -92,7 +105,11 @@ $a_{1} = 37$ ， $S_{1} \pmod{a_{2}} = 0$ 。37是素数，所以 $a_{2} = 1\tex
 
 $S_{2} \pmod{a_{3}} = 38 \pmod{a_{3}} = 0$ 。38的质因数分解为 $2 \times 19$ ，并且1已经被占用，所以 $a_{3}=2\text{ or }19$
 
-我们在这卡住了！因为我们接下来需要分别假设 $a_{3}=2$ 和 $a_{3}=19$ ，后续求出的 $a_{4},\  a_{5},\ \dots$ 的分支只会越来越多。指望靠这种方式找到数列的规律似乎很困难！
+我们在这卡住了！因为我们接下来需要分别假设 $a_{3}=2$ 和 $a_{3}=19$ ，后续求出的 $a_{4},\  a_{5},\ \dots$ 的分支只会越来越多。
+
+<div class="h-30 flex justify-center items-center text-6xl text-orange">
+指望这样找到规律似乎很难！
+</div>
 
 ---
 
@@ -103,27 +120,345 @@ $S_{2} \pmod{a_{3}} = 38 \pmod{a_{3}} = 0$ 。38的质因数分解为 $2 \times 
 直接看最后一项！**正难则反**
 </MyBlock>
 
-1.  数列总和 $S_{37} = \frac{(1+37) \times 37}{2} = 19 \times 37 = 703$
-2.  根据题意，$S_{36}$ 必须能被 $a_{37}$ 整除
-3.  $S_{36} = S_{37} - a_{37} = 703 - a_{37}$
-4.  若 $a_{37} \mid (703 - a_{37})$，则必然有 $a_{37} \mid 703$
-5.  $703 = 19 \times 37$。其因数为 $1, 19, 37$
-6.  因为 $a_1 = 37$ 且数列各项互不相同，故 $a_{37} \neq 37$
+根据题意， $S_{36}$ 必须能被 $a_{37}$ 整除（令 $n+1=37$ ）。 $S_{36}$ 不是固定的，但 $S_{37} = \frac{(1+37) \times 37}{2} = 19 \times 37 = 703$ 是定值，所以
+
+$$
+S_{36} = S_{37} - a_{37} = 703 - a_{37} \implies a_{37} \mid (703 - a_{37}) \implies a_{37} \mid (19 \times 37)
+$$
+
+19、37都是素数，所以 $a_{37}=1\text{ or }19\text{ or }37$ 。但之前已经推出 $a_{1}=37,\ a_{2}=1$ ，所以 $a_{37}=19$
+
+---
+
+## 总结
+
+<MyBlock type="success" title="题干中值得被反复观察、把玩的信息">
+
+1. 数列 $\{a_n\}$ 是 $1$ 到 $37$ 的**排列**
+2. $S_n$ 总能被下一项 $a_{n+1}$ 整除
+	1. 观察开头：令 $n=1$
+	2. 观察结尾：令 $n=36$
+</MyBlock>
 
 ---
 
 ## 扩展
 
-下面我们考虑怎么对这题进行扩展。回顾之前的解题过程：我们推出了 $a_{2} = 1$ ，以及 $a_{p}$
+<MyBlock type="info" title="回顾题干">
 
-需要限制 $\frac{p + 1}{2}$ 是素数吗？不清楚，但只限制 $\frac{p + 1}{2}$ 是正整数是不够的。比如 $p=11$ 时能找到两个排列：
+将 $1$ 到 $37$ 排成数列 $\{a_n\}$ ，已知 $a_1 = 37$ ，且前 $n$ 项和 $S_n$ 总能被下一项 $a_{n+1}$ 整除。求 $a_{37}$
+</MyBlock>
+
+下面我们考虑怎么对这题进行扩展。首先，37是素数，不难想到：数列的项数n应为素数，设为p。
+
+接下来回顾之前的解题过程，我们能够确定的是 $a_{2} = 1$ ， $S_{p}=p*\frac{p+1}{2}$ ，以及 $a_{p} \mid \left( p \times \frac{p+1}{2} \right)$ 。于是我们不难想到：限制 $\frac{p+1}{2}$ 为素数，必然能让 $a_{p}$ 固定为 $\frac{p+1}{2}$
+
+这表明“ $\frac{p+1}{2}$ 也为素数”是 $a_{p}=\frac{p+1}{2}$ 的充分条件。但它是必要条件吗？
+
+---
+
+## 我们不妨写代码来寻找符合条件的数列
+
+<MyBlock type="success" title="回到最开始说的朴素的想法">
+
+假设数列的前 $idx$ 项（`a[1~idx]`）均已求出。枚举所有还没用过的数`u`，只要符合题意，就令 $a[idx+1]$ 为`u`。于是，假设被增强为：数列的前 $idx+1$ 项均已求出——这是一个递归的过程
+
+`a[1~n]`都求出后，就得到了一个符合条件的数列。这样的数列可能很多
+</MyBlock>
+
+这个非常朴素的想法，就是所谓的**dfs**（深度优先搜索）。
+
+```cpp {*}{maxHeight:'226px'}
+int P;
+__int64 current_sum;         // 记录当前前缀和 S[idx]
+vector<int> perm;            // 当前构造的序列
+vector<bool> used;           // 标记数字是否已使用
+__int64 solution_count = 0;  // 合法排列计数
+
+void dfs(int idx) {
+  if (idx == P) {
+    solution_count++;
+    // 输出答案
+    return;
+  }
+
+  for (int cand = 1; cand <= P; ++cand) {
+    if (used[cand]) continue;
+    if (current_sum % cand != 0) continue;
+    used[cand] = true;
+    perm[idx] = cand;
+    current_sum += cand;
+    dfs(idx + 1);
+    current_sum -= cand;
+    used[cand] = false;
+  }
+}
+```
+
+---
+
+```cpp {*}{maxHeight:'420px'}
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <chrono>
+// Copyright (c) 2026 hans7
+
+using namespace std;
+
+bool isPrime(int n) {
+  if (n < 2) return false;
+  for (int i = 2; i <= static_cast<int>(sqrt(n)); ++i) {
+    if (n % i == 0) return false;
+  }
+  return true;
+}
+
+int P;
+__int64 current_sum;         // 记录当前前缀和 S[idx]
+vector<int> perm;            // 当前构造的序列
+vector<bool> used;           // 标记数字是否已使用
+__int64 solution_count = 0;  // 合法排列计数
+
+void dfs(int idx) {
+  if (idx == P) {
+    solution_count++;
+    cout << "【解 " << solution_count << "】: ";
+    for (int i = 0; i < P; ++i) {
+      cout << perm[i] << (i == P - 1 ? "" : ", ");
+    }
+    cout << "\n";
+    return;
+  }
+
+  for (int cand = 1; cand <= P; ++cand) {
+    if (used[cand]) continue;
+    if (current_sum % cand != 0) continue;
+    used[cand] = true;
+    perm[idx] = cand;
+    current_sum += cand;
+
+    dfs(idx + 1);
+
+    current_sum -= cand;
+    used[cand] = false;
+  }
+}
+
+int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+
+  cout << "请输入素数 p: " << flush;
+  if (!(cin >> P)) return 0;
+
+  if (!isPrime(P)) {
+    cerr << "❌ 错误: " << P << " 不是素数。\n";
+    return 114514;
+  }
+  if ((P + 1) % 2 != 0) {
+    cerr << "❌ 错误: (p+1)/2 不是整数（p 必须为奇素数）。\n";
+    return 114514;
+  }
+
+  if (P > 23) {
+    cout << "⚠️  警告: P > 23 时搜索树极深。DFS "
+            "剪枝可大幅加速，但仍可能耗时较长。\n";
+  }
+
+  perm.assign(P, 0);
+  used.assign(P + 1, false);
+
+  perm[0] = P;
+  used[P] = true;
+  current_sum = P;
+
+  auto start = chrono::high_resolution_clock::now();
+  cout << "🔍 开始搜索合法排列...\n";
+
+  dfs(1);
+
+  auto end = chrono::high_resolution_clock::now();
+  chrono::duration<double> elapsed = end - start;
+
+  cout << "\n✅ 搜索完成。\n";
+  cout << "📊 共找到 " << solution_count << " 个合法排列。\n";
+  cout << "⏱️  耗时: " << elapsed.count() << " 秒\n";
+
+  return 0;
+}
+```
+
+---
+
+## dfs可能的优化方向
+
+考虑dfs中可行的`cand`需要满足的条件：
+
+1. `1 <= cand <= P && used[cand] = false`
+2. `cand`是`current_sum`的因数
+
+考虑从“2”入手进行优化。我们预处理出1到 $P*\frac{P+1}{2}$ 的每个数的所有因数，并把大于P的去掉，形成一张因数表`vector<vector<int>> factors`，然后dfs枚举的时候可以直接遍历这张表，不再需要遍历1到P
+
+|        | 原版代码       | 剪枝版代码      |
+| ------ | ---------- | ---------- |
+| `p=19` | 0.023874 秒 | 0.010446 秒 |
+| `p=23` | 0.873968 秒 | 0.342937 秒 |
+| `p=29` | 138.214 秒  | 45.8159 秒  |
+
+---
+
+优化后的完整代码：
+
+```cpp {*}{maxHeight:'402px'}
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <chrono>
+#include <algorithm>
+// Copyright (c) 2026 hans7
+
+using namespace std;
+
+bool isPrime(int n) {
+  if (n < 2) return false;
+  for (int i = 2; i <= static_cast<int>(sqrt(n)); ++i) {
+    if (n % i == 0) return false;
+  }
+  return true;
+}
+
+vector<vector<int>> factors;
+
+void precompute_factors(int max_sum, int P) {
+  factors.resize(max_sum + 1);
+  for (int s = 1; s <= max_sum; ++s) {
+    for (int d = 1; d * d <= s; ++d) {
+      if (s % d == 0) {
+        if (d <= P) factors[s].push_back(d);
+        int other = s / d;
+        if (other != d && other <= P) factors[s].push_back(other);
+      }
+    }
+    // 升序排序在此没必要，但排序后调试更方便
+    sort(factors[s].begin(), factors[s].end());
+  }
+}
+
+int P;
+__int64 current_sum;         // 记录当前前缀和 S[idx]
+vector<int> perm;            // 当前构造的序列
+vector<bool> used;           // 标记数字是否已使用
+__int64 solution_count = 0;  // 合法排列计数
+
+void dfs(int idx) {
+  if (idx == P) {
+    solution_count++;
+    cout << "【解 " << solution_count << "】: ";
+    for (int i = 0; i < P; ++i) {
+      cout << perm[i] << (i == P - 1 ? "" : ", ");
+    }
+    cout << "\n";
+    return;
+  }
+
+  for (int cand : factors[current_sum]) {
+    if (used[cand]) continue;
+    used[cand] = true;
+    perm[idx] = cand;
+    current_sum += cand;
+
+    dfs(idx + 1);
+
+    current_sum -= cand;
+    used[cand] = false;
+  }
+}
+
+int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
+
+  cout << "请输入素数 p: " << flush;
+  if (!(cin >> P)) return 0;
+
+  if (!isPrime(P)) {
+    cerr << "❌ 错误: " << P << " 不是素数。\n";
+    return 114514;
+  }
+  if ((P + 1) % 2 != 0) {
+    cerr << "❌ 错误: (p+1)/2 不是整数（p 必须为奇素数）。\n";
+    return 114514;
+  }
+
+  if (P > 23) {
+    cout << "⚠️  警告: P > 23 时搜索树极深。DFS "
+            "剪枝可大幅加速，但仍可能耗时较长。\n";
+  }
+
+  const int max_sum = P * (P + 1) / 2;
+  cout << "📦 预处理因数表 [1, " << max_sum << "] ...\n";
+  auto pre_start = chrono::high_resolution_clock::now();
+
+  precompute_factors(max_sum, P);
+
+  auto pre_end = chrono::high_resolution_clock::now();
+  chrono::duration<double> pre_elapsed = pre_end - pre_start;
+  cout << "✅ 预处理完成，耗时: " << pre_elapsed.count() << " 秒\n\n";
+
+  perm.assign(P, 0);
+  used.assign(P + 1, false);
+
+  perm[0] = P;
+  used[P] = true;
+  current_sum = P;
+
+  auto start = chrono::high_resolution_clock::now();
+  cout << "🔍 开始搜索合法排列...\n";
+
+  dfs(1);
+
+  auto end = chrono::high_resolution_clock::now();
+  chrono::duration<double> elapsed = end - start;
+
+  cout << "\n✅ 搜索完成。\n";
+  cout << "📊 共找到 " << solution_count << " 个合法排列。\n";
+  cout << "⏱️  搜索耗时: " << elapsed.count() << " 秒\n";
+  cout << "📈 总耗时(含预处理): " << (pre_elapsed + elapsed).count() << " 秒\n";
+
+  return 0;
+}
+```
+
+---
+
+p为素数+ $\frac{p+1}{2}$ 为正整数等价于p为奇素数。
+
+结论：“ $\frac{p+1}{2}$ 也为素数”是 $a_{p}=\frac{p+1}{2}$ 的充分不必要条件。但“p为奇素数”是 $a_{p}=\frac{p+1}{2}$ 的必要不充分条件
+
+比如 $p=11$ 的两个排列中，出现了末项不是 $\frac{p + 1}{2} = 6$ 的情况
 
 ```
 11, 1, 2, 7, 3, 8, 4, 9, 5, 10, 6
 11, 1, 4, 8, 6, 10, 5, 9, 2, 7, 3
 ```
 
-这里出现了末项不是 $\frac{p + 1}{2}$ 的情况。
+$p=19$ 的6个排列的末项都是 $\frac{p + 1}{2} = 10$
+
+```
+19, 1, 2, 11, 3, 12, 4, 13, 5, 14, 6, 15, 7, 16, 8, 17, 9, 18, 10
+19, 1, 2, 11, 3, 4, 5, 15, 12, 6, 13, 7, 14, 16, 8, 17, 9, 18, 10
+19, 1, 4, 12, 3, 13, 2, 18, 8, 16, 6, 17, 7, 9, 5, 14, 11, 15, 10
+19, 1, 4, 12, 6, 2, 11, 5, 15, 3, 13, 7, 14, 16, 8, 17, 9, 18, 10
+19, 1, 4, 12, 6, 14, 8, 16, 5, 17, 2, 13, 9, 18, 3, 7, 11, 15, 10
+19, 1, 4, 6, 15, 9, 18, 8, 5, 17, 3, 7, 16, 2, 13, 11, 14, 12, 10
+```
+
+---
+
+## 26汕头高三期末T14-可视化网页
+
+为了更方便地查看不同的奇素数p对应的符合条件的排列，以及它们的末项可能会出现哪些数、各出现几次（这里称为“**末项分布**”），我开发了一个网页。
 
 ---
 layout: center

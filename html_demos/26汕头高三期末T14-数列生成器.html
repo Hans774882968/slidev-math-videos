@@ -524,6 +524,7 @@
       const [isValid, setIsValid] = useState(false);
       const [solutions, setSolutions] = useState([]);
       const [isFinished, setIsFinished] = useState(false);
+      const [isSearchingAll, setIsSearchingAll] = useState(false);
 
       const generatorRef = useRef(null);
 
@@ -562,6 +563,7 @@
         setSolutions([]);
         generatorRef.current = null;
         setIsFinished(false);
+        setIsSearchingAll(false);
 
         generateBatch(10);
       };
@@ -594,6 +596,48 @@
         if (done) {
           setIsFinished(true);
         }
+      };
+
+      const searchAll = async () => {
+        if (isSearchingAll) return;
+
+        setIsSearchingAll(true);
+        let gen = generatorRef.current;
+
+        if (!gen) {
+          const p = parseInt(inputP);
+          gen = solveSequence(p);
+          generatorRef.current = gen;
+        }
+
+        const BATCH_SIZE = 50;
+
+        while (true) {
+          const batch = [];
+          let done = false;
+
+          for (let i = 0; i < BATCH_SIZE; i++) {
+            const result = gen.next();
+            if (result.done) {
+              done = true;
+              break;
+            }
+            batch.push(result.value);
+          }
+
+          if (batch.length > 0) {
+            setSolutions(prev => [...prev, ...batch]);
+          }
+
+          if (done) {
+            setIsFinished(true);
+            break;
+          }
+
+          await new Promise(resolve => setTimeout(resolve, 0));
+        }
+
+        setIsSearchingAll(false);
       };
 
       const handleVerify = (sol) => {
@@ -680,7 +724,7 @@
                 </div>
                 <button
                   onClick={handleValidate}
-                  className="w-full md:w-auto px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 active:scale-95 transition font-medium shadow-sm"
+                  className="w-full md:w-auto px-6 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/85 active:scale-95 transition font-medium shadow-sm"
                 >
                   验证条件并搜索
                 </button>
@@ -717,7 +761,7 @@
                     />
                     <button
                       onClick={handleCustomVerify}
-                      className="px-5 py-2.5 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 active:scale-95 transition font-medium shadow-sm whitespace-nowrap"
+                      className="px-5 py-2.5 bg-accent text-accent-foreground rounded-lg hover:bg-accent/85 active:scale-95 transition font-medium shadow-sm whitespace-nowrap"
                     >
                       验证数列
                     </button>
@@ -747,7 +791,7 @@
                         {customResult.arrayToVerify.map((n, i) => (
                           <span key={i}>
                             <span className={i === 0 ? 'text-primary font-bold' : ''}>{n}</span>
-                            {i < customResult.arrayToVerify.length - 1 && <span className="text-border mx-0.5">,</span>}
+                            {i < customResult.arrayToVerify.length - 1 && <span className="mx-0.5">,</span>}
                           </span>
                         ))}
                       </div>
@@ -765,18 +809,43 @@
                     <span className="text-muted-foreground font-normal">（a₁={intInputP}, Sₙ = {intInputP} * {(intInputP + 1) / 2} = {intInputP * (intInputP + 1) / 2}）</span>
                   </h2>
                   {!isFinished && (
-                    <button
-                      onClick={() => generateBatch(10)}
-                      className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 active:scale-95 transition shadow-sm flex items-center gap-2"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                      </svg>
-                      继续生成 10 组
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={searchAll}
+                        disabled={isSearchingAll}
+                        className="px-5 py-2.5 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/85 active:scale-95 transition shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        title="遍历所有满足条件的数列（可能耗时较长）"
+                      >
+                        {isSearchingAll ? (
+                          <>
+                            <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            搜索中...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            搜索所有数列
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => generateBatch(10)}
+                        disabled={isSearchingAll}
+                        className="px-5 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/85 active:scale-95 transition shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                        继续生成 10 组
+                      </button>
+                    </div>
                   )}
                   {isFinished && (
-                    <span className="text-muted-foreground text-lg bg-muted rounded-full">
+                    <span className="text-muted-foreground text-lg rounded-full">
                       ✨ 所有解已展示完毕
                     </span>
                   )}
@@ -788,7 +857,7 @@
 
             <div className="space-y-3">
               {solutions.map((sol, idx) => (
-                <div key={idx} className="bg-card p-4 rounded-lg border border-border shadow-sm hover:shadow-md transition">
+                <div key={idx} className="bg-card p-4 rounded-lg border border-border shadow-sm hover:shadow-xl transition">
                   <div className="flex justify-between items-center mb-2 pb-2 border-b border-border">
                     <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                       #{idx + 1}
@@ -799,7 +868,7 @@
                       </span>
                       <button
                         onClick={() => handleVerify(sol)}
-                        className="text-xs px-2 py-1 bg-secondary text-secondary-foreground rounded hover:bg-secondary/90 transition"
+                        className="text-xs px-2 py-1 bg-secondary text-secondary-foreground rounded hover:bg-secondary/85 transition"
                         title="验证数列"
                       >
                         ✓ 验证
@@ -819,7 +888,7 @@
                         <span className={i === 0 ? 'text-primary font-bold' : ''}>
                           {num}
                         </span>
-                        {i < sol.length - 1 && <span className="text-border mx-0.5">,</span>}
+                        {i < sol.length - 1 && <span className="mx-0.5">,</span>}
                       </span>
                     ))}
                   </div>
@@ -849,7 +918,7 @@
                   <VerificationTable data={getVerificationData(verifySolution)} />
                 </div>
                 <div className="p-4 border-t border-border flex justify-end">
-                  <button onClick={closeModal} className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition">
+                  <button onClick={closeModal} className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/85 transition">
                     关闭
                   </button>
                 </div>
