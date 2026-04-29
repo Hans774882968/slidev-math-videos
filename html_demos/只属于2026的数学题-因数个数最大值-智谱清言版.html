@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>因数函数积性分析 - Hans7 Dashboard</title>
+
+  <!-- 引入 React 和 ReactDOM -->
+  <script
+    crossorigin
+    src="https://unpkg.com/react@18/umd/react.production.min.js"
+  ></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+  ></script>
+
+  <!-- 引入 Babel 用于解析 JSX -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 配置 Tailwind 主题 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'tech-bg': '#050b14',
+            'tech-card': '#0f172a',
+            'tech-cyan': '#06b6d4',
+            'tech-purple': '#8b5cf6',
+          },
+          fontFamily: {
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* 自定义滚动条 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    /* 科技感网格背景 */
+    .bg-grid {
+      background-image: linear-gradient(to right, #1e293b 1px, transparent 1px),
+        linear-gradient(to bottom, #1e293b 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+    }
+
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.1);
+    }
+
+    /* 卡片入场动画 */
+    @keyframes fade-in-up {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card-anim {
+      opacity: 0;
+      /* 初始不可见，由动画控制显示 */
+      animation: fade-in-up 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    }
+  </style>
+</head>
+
+<body class="bg-tech-bg text-slate-300 font-sans antialiased overflow-x-hidden min-h-screen selection:bg-tech-cyan selection:text-white">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useMemo, useLayoutEffect } = React;
+
+    // --- 常量定义 ---
+    const TARGET_N = 1919810;
+
+    /**
+     * 计算因数个数的前缀最大值数组
+     * 使用线性筛法 变种，时间复杂度 O(N)
+     * 原理：利用积性函数性质 d(n) = (e+1) * d(m) (其中 n = p^e * m, p为最小质因子)
+     */
+    const computeDivisorCounts = (n) => {
+      const divisorCounts = new Array(n + 1).fill(1);
+      const primes = [];
+      const isPrime = new Array(n + 1).fill(true);
+      isPrime[0] = isPrime[1] = false;
+
+      // 线性筛法
+      for (let i = 2; i <= n; i++) {
+        if (isPrime[i]) {
+          primes.push(i);
+          divisorCounts[i] = 2; // 质数有两个因数：1和自身
+        }
+
+        for (let j = 0; j < primes.length && i * primes[j] <= n; j++) {
+          isPrime[i * primes[j]] = false;
+
+          if (i % primes[j] === 0) {
+            // i 包含 primes[j] 这个因子
+            let p = primes[j];
+            let exp = 0;
+            let temp = i;
+            while (temp % p === 0) {
+              exp++;
+              temp /= p;
+            }
+            // divisorCounts[i * p] = divisorCounts[temp] * (exp + 2)
+            divisorCounts[i * primes[j]] = divisorCounts[temp] * (exp + 2);
+            break;
+          } else {
+            // i 和 primes[j] 互质，利用积性性质
+            divisorCounts[i * primes[j]] = divisorCounts[i] * divisorCounts[primes[j]];
+          }
+        }
+      }
+
+      return divisorCounts;
+    };
+
+    const computePrefixMax = (arr) => {
+      const prefixMax = new Array(arr.length);
+      let currentMax = 0;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] > currentMax) {
+          currentMax = arr[i];
+        }
+        prefixMax[i] = currentMax;
+      }
+      return prefixMax;
+    };
+
+    // --- 组件：科技感曲线图 ---
+    const TechChart = ({ data, title }) => {
+      const canvasRef = useRef(null);
+      const containerRef = useRef(null);
+
+      // 自适应 Canvas 绘制
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        const container = containerRef.current;
+        if (!canvas || !container || !data) return;
+
+        const ctx = canvas.getContext('2d');
+        const { width, height } = container.getBoundingClientRect();
+
+        // 处理高清屏模糊问题
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+
+        // 清空画布
+        ctx.clearRect(0, 0, width, height);
+
+        // 绘制网格背景
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for (let x = 0; x < width; x += 50) { ctx.moveTo(x, 0); ctx.lineTo(x, height); }
+        for (let y = 0; y < height; y += 50) { ctx.moveTo(0, y); ctx.lineTo(width, y); }
+        ctx.stroke();
+
+        // 准备绘图数据
+        const totalPoints = data.length - 1; // 数据从索引1开始
+        const maxY = data[totalPoints];
+        const padding = 20;
+        const drawWidth = width - padding * 2;
+        const drawHeight = height - padding * 2;
+
+        // 绘制曲线
+        ctx.beginPath();
+        ctx.strokeStyle = '#06b6d4'; // tech-cyan
+        ctx.lineWidth = 2;
+
+        // 优化：降采样，不必画出每个点，只需画出足够的点以适应屏幕宽度
+        // 步长：屏幕宽度的每个像素对应多少数据点
+        const step = Math.max(1, Math.floor(totalPoints / drawWidth));
+
+        let moveToFlag = false;
+
+        for (let i = 1; i <= totalPoints; i += step) {
+          const val = data[i];
+          // 坐标映射
+          const x = padding + (i / totalPoints) * drawWidth;
+          const y = height - padding - (val / maxY) * drawHeight;
+
+          if (!moveToFlag) {
+            ctx.moveTo(x, y);
+            moveToFlag = true;
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        // 确保画到最后一个点
+        const lastVal = data[totalPoints];
+        ctx.lineTo(width - padding, height - padding - (lastVal / maxY) * drawHeight);
+
+        // 添加发光效果
+        ctx.shadowColor = '#06b6d4';
+        ctx.shadowBlur = 10;
+        ctx.stroke();
+        ctx.shadowBlur = 0; // 重置
+
+        // 绘制终点标记
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(width - padding, height - padding - (lastVal / maxY) * drawHeight, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+      }, [data]);
+
+      return (
+        <div ref={containerRef} className="relative w-full h-[400px] bg-slate-900 rounded-lg overflow-hidden border border-slate-700">
+          <div className="absolute top-2 left-4 text-xs text-tech-cyan font-mono tracking-wider z-10">
+            {title} // VISUALIZATION_MODE
+          </div>
+          <canvas ref={canvasRef} className="block w-full h-full" />
+          {/* 装饰性扫描线 */}
+          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(transparent_50%,rgba(0,0,0,0.3)_50%)] bg-[length:100%_4px]"></div>
+        </div>
+      );
+    };
+
+    // --- 组件：数学性质介绍 ---
+    const MathInfo = () => (
+      <div className="glass-panel p-6 rounded-lg mb-8 relative overflow-hidden group card-anim">
+        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <svg className="w-24 h-24 text-tech-cyan" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" /></svg>
+        </div>
+        <h2 className="text-2xl font-bold text-tech-cyan mb-4 font-mono border-l-4 border-tech-cyan pl-3">
+          积性函数性质分析
+        </h2>
+        <div className="space-y-3 text-sm md:text-base text-slate-300 leading-relaxed">
+          <p>
+            <strong className="text-white">定义：</strong>若数论函数 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">f(x)</code> 满足对于任意互质的正整数 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">x</code> 和 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">y</code> (即 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">gcd(x, y) = 1</code>)，都有 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">f(xy) = f(x)f(y)</code>，则称 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">f(x)</code> 为积性函数。
+          </p>
+          <p>
+            <strong className="text-white">因数个数函数 d(n)：</strong>用于计算正整数 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">n</code> 的因数个数。若 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">n</code> 的标准分解式为 <code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">p₁^a₁ · p₂^a₂ · ... · p_k^a_k</code>，则根据积性性质，其因数个数为：
+          </p>
+          <div className="p-4 bg-slate-800/50 rounded border border-slate-700 font-mono text-center text-lg text-white my-2">
+            d(n) = (a₁ + 1) · (a₂ + 1) · ... · (a_k + 1)
+          </div>
+          <p>
+            下方图表展示了 1 到 <span className="text-tech-cyan">{TARGET_N.toLocaleString()}</span> 范围内，<code className="bg-slate-800 px-1 py-0.5 rounded text-tech-cyan">d(n)</code> 的前缀最大值变化趋势。
+          </p>
+        </div>
+      </div>
+    );
+
+    // --- 主应用组件 ---
+    const App = () => {
+      const [mxData, setMxData] = useState(null);
+      const [isCalculating, setIsCalculating] = useState(true);
+      const [maxDivisors, setMaxDivisors] = useState(0);
+      const [maxDivisorPos, setMaxDivisorPos] = useState(0); // 新增状态：记录最大因数首次出现位置
+
+      // 执行核心计算
+      useEffect(() => {
+        // 使用 setTimeout 让出主线程，先渲染 Loading 界面
+        const timer = setTimeout(() => {
+          const startTime = performance.now();
+          console.log(`[Hans7 System] 开始计算 N=${TARGET_N}...`);
+
+          const divisorCounts = computeDivisorCounts(TARGET_N);
+
+          // 计算最大因数及其首次出现位置
+          let currentMax = 0;
+          let currentPos = 0;
+          for (let i = 1; i <= TARGET_N; i++) {
+            if (divisorCounts[i] > currentMax) {
+              currentMax = divisorCounts[i];
+              currentPos = i;
+            }
+          }
+
+          const mx = computePrefixMax(divisorCounts);
+
+          const endTime = performance.now();
+          const duration = (endTime - startTime).toFixed(2);
+
+          console.log(`[Hans7 System] 计算完成。耗时: ${duration}ms, 最大因数个数: ${currentMax}, 首次出现位置: ${currentPos}`);
+
+          setMxData(mx);
+          setMaxDivisors(currentMax);
+          setMaxDivisorPos(currentPos);
+          setIsCalculating(false);
+        }, 100);
+
+        return () => clearTimeout(timer);
+      }, []);
+
+      return (
+        <div className="min-h-screen relative">
+          {/* 背景装饰 */}
+          <div className="fixed inset-0 z-0 pointer-events-none">
+            <div className="absolute inset-0 bg-grid opacity-20"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-tech-bg/50 to-tech-bg"></div>
+          </div>
+
+          <div className="relative z-10 container mx-auto px-4 py-8 max-w-5xl">
+            {/* 头部 */}
+            <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end border-b border-slate-700 pb-6">
+              <div>
+                <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-2">
+                  DASHBOARD <span className="text-tech-cyan">PRO</span>
+                </h1>
+                <p className="text-slate-400 font-mono text-sm">
+                  WELCOME, USER: <span className="text-tech-cyan font-bold">HANS7</span>
+                </p>
+              </div>
+              <div className="mt-4 md:mt-0 text-right">
+                <div className="text-xs text-slate-500 font-mono">SYSTEM_STATUS</div>
+                <div className={`flex items-center gap-2 font-bold ${isCalculating ? 'text-yellow-400' : 'text-green-400'}`}>
+                  <span className={`w-2 h-2 rounded-full ${isCalculating ? 'animate-pulse bg-yellow-400' : 'bg-green-400'}`}></span>
+                  {isCalculating ? 'COMPUTING_DATA_STREAM...' : 'ONLINE'}
+                </div>
+              </div>
+            </header>
+
+            {/* 内容区 */}
+            <main>
+              <MathInfo />
+
+              {/* 数据概览卡片：调整为 lg:grid-cols-4 并添加动画类 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <StatCard label="数据范围 (N)" value={TARGET_N.toLocaleString()} idx={0} />
+                <StatCard label="最大因数个数" value={maxDivisors || "..."} color="text-tech-purple" idx={1} />
+                <StatCard label="最大因数首次位置" value={maxDivisorPos ? maxDivisorPos.toLocaleString() : "..."} color="text-tech-cyan" idx={2} />
+                <StatCard label="算法复杂度" value="O(N) Linear" color="text-green-400" idx={3} />
+              </div>
+
+              {/* 图表区 */}
+              <div className="glass-panel p-1 rounded-lg card-anim">
+                {isCalculating ? (
+                  <div className="h-[400px] flex items-center justify-center flex-col gap-4">
+                    <div className="w-12 h-12 border-4 border-tech-cyan border-t-transparent rounded-full animate-spin"></div>
+                    <p className="text-tech-cyan font-mono animate-pulse">INITIALIZING NUMBER THEORY KERNEL...</p>
+                  </div>
+                ) : (
+                  <TechChart data={mxData} title={`PREFIX_MAX [d(1)...d(${TARGET_N})]`} />
+                )}
+              </div>
+
+              {/* 底部控制台输出模拟 */}
+              <div className="mt-6 font-mono text-xs text-slate-500">
+                                > Process initialized with React Context.<br />
+                                > Array buffer allocated successfully.<br />
+                                > Tailwind CSS modules loaded.
+              </div>
+            </main>
+          </div>
+        </div>
+      );
+    };
+
+    // 子组件：统计卡片
+    const StatCard = ({ label, value, color = "text-white", idx = 0 }) => (
+      <div
+        className="glass-panel p-4 rounded flex flex-col justify-center card-anim"
+        style={{ animationDelay: `${idx * 150}ms` }}
+      >
+        <span className="text-xs text-slate-400 font-mono uppercase tracking-wider mb-1">{label}</span>
+        <span className={`text-2xl font-bold font-mono ${color}`}>{value}</span>
+      </div>
+    );
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+  <title>九宫格翻转游戏</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script
+    src="https://unpkg.com/react@18/umd/react.development.js"
+    crossorigin
+  ></script>
+  <script
+    src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    crossorigin
+  ></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: #f0fdf4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes pulse-success {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .success-animation {
+      animation: pulse-success 1s ease-in-out;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // 九宫格单元格组件
+    const Cell = ({ value, position, onClick, isSuccess }) => {
+      const { row, col } = position;
+
+      // 确定单元格的边框样式
+      const getBorderClass = () => {
+        let borderClass = "";
+
+        // 上边框
+        if (row === 0) borderClass += " border-t-4 ";
+        else borderClass += " border-t-2 ";
+
+        // 下边框
+        if (row === 2) borderClass += " border-b-4 ";
+        else borderClass += " border-b-2 ";
+
+        // 左边框
+        if (col === 0) borderClass += " border-l-4 ";
+        else borderClass += " border-l-2 ";
+
+        // 右边框
+        if (col === 2) borderClass += " border-r-4 ";
+        else borderClass += " border-r-2 ";
+
+        return borderClass;
+      };
+
+      return (
+        <button
+          className={`
+            w-24 h-24 flex items-center justify-center text-4xl font-bold
+            transition-all duration-200 ease-in-out
+            ${getBorderClass()}
+            ${value === 1
+              ? 'bg-emerald-500 text-white border-emerald-700'
+              : 'bg-emerald-100 text-emerald-800 border-emerald-300'
+            }
+            ${isSuccess ? 'success-animation bg-emerald-600' : ''}
+            hover:opacity-90 active:scale-95
+          `}
+          onClick={() => onClick(row, col)}
+          aria-label={`格子(${row},${col})，当前值：${value}`}
+        >
+          {value}
+        </button>
+      );
+    };
+
+    // 九宫格游戏主组件
+    const GridGame = () => {
+      // 初始化3x3网格，全部为0
+      const initialGrid = [
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]
+      ];
+
+      const [grid, setGrid] = useState(initialGrid);
+      const [moveCount, setMoveCount] = useState(0);
+      const [isSuccess, setIsSuccess] = useState(false);
+
+      // 检查是否达到目标状态：只有(0,0)为1，其他都是0
+      const checkSuccess = (gridState) => {
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            // (0,0)应该是1
+            if (i === 0 && j === 0) {
+              if (gridState[i][j] !== 1) return false;
+            }
+            // 其他位置应该是0
+            else {
+              if (gridState[i][j] !== 0) return false;
+            }
+          }
+        }
+        return true;
+      };
+
+      // 处理格子点击
+      const handleCellClick = (row, col) => {
+        if (isSuccess) return;
+
+        // 创建网格的深拷贝
+        const newGrid = grid.map(rowArr => [...rowArr]);
+
+        // 切换被点击的格子
+        newGrid[row][col] = newGrid[row][col] === 0 ? 1 : 0;
+
+        // 切换相邻格子（上、下、左、右）
+        // 上
+        if (row > 0) newGrid[row - 1][col] = newGrid[row - 1][col] === 0 ? 1 : 0;
+        // 下
+        if (row < 2) newGrid[row + 1][col] = newGrid[row + 1][col] === 0 ? 1 : 0;
+        // 左
+        if (col > 0) newGrid[row][col - 1] = newGrid[row][col - 1] === 0 ? 1 : 0;
+        // 右
+        if (col < 2) newGrid[row][col + 1] = newGrid[row][col + 1] === 0 ? 1 : 0;
+
+        setGrid(newGrid);
+        setMoveCount(prev => prev + 1);
+
+        // 检查是否成功
+        if (checkSuccess(newGrid)) {
+          setIsSuccess(true);
+          setTimeout(() => {
+            alert(`恭喜！你成功完成了游戏！\n移动次数：${moveCount + 1}`);
+          }, 100);
+        }
+      };
+
+      // 重置游戏
+      const resetGame = () => {
+        setGrid(initialGrid);
+        setMoveCount(0);
+        setIsSuccess(false);
+      };
+
+      // 渲染一行格子
+      const renderRow = (rowIndex) => {
+        return (
+          <div key={rowIndex} className="flex">
+            {[0, 1, 2].map(colIndex => (
+              <Cell
+                key={`${rowIndex}-${colIndex}`}
+                value={grid[rowIndex][colIndex]}
+                position={{ row: rowIndex, col: colIndex }}
+                onClick={handleCellClick}
+                isSuccess={isSuccess && rowIndex === 0 && colIndex === 0}
+              />
+            ))}
+          </div>
+        );
+      };
+
+      return (
+        <div className="flex flex-col items-center gap-8 p-8">
+          {/* 游戏标题（隐藏，仅用于无障碍访问） */}
+          <h1 className="sr-only">九宫格翻转游戏</h1>
+
+          {/* 九宫格 */}
+          <div className="bg-emerald-200 rounded-xl p-6 shadow-2xl border-4 border-emerald-800">
+            <div className="flex flex-col gap-0 rounded-lg overflow-hidden">
+              {[0, 1, 2].map(rowIndex => renderRow(rowIndex))}
+            </div>
+          </div>
+
+          {/* 游戏信息和控制 */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="text-xl font-semibold text-emerald-800">
+              移动次数: <span className="font-bold">{moveCount}</span>
+            </div>
+
+            <button
+              onClick={resetGame}
+              className="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl
+                       hover:bg-emerald-700 active:scale-95 transition-all
+                       shadow-lg hover:shadow-xl"
+            >
+              重置游戏
+            </button>
+
+            {/* 成功状态指示器 */}
+            {isSuccess && (
+              <div className="mt-4 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-500 
+                            text-white font-bold rounded-full shadow-lg">
+                游戏成功完成！
+              </div>
+            )}
+          </div>
+
+          {/* 游戏说明（隐藏，仅用于无障碍访问） */}
+          <div className="sr-only">
+            <p>这是一个九宫格翻转游戏。初始状态所有格子都是0。</p>
+            <p>点击一个格子会翻转自身和上下左右相邻格子的状态（0变1，1变0）。</p>
+            <p>游戏目标：使左上角(0,0)格子变成1，其他所有格子都是0。</p>
+          </div>
+        </div>
+      );
+    };
+
+    // 渲染React应用
+    ReactDOM.createRoot(document.getElementById('root')).render(<GridGame />);
+  </script>
+</body>
+
+</html>
