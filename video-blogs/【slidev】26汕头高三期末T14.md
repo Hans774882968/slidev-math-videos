@@ -291,7 +291,7 @@ int main() {
 
 ---
 
-## dfs可能的优化方向
+## dfs剪枝优化
 
 考虑dfs中可行的`cand`需要满足的条件：
 
@@ -458,7 +458,158 @@ $p=19$ 的6个排列的末项都是 $\frac{p + 1}{2} = 10$
 
 ## 26汕头高三期末T14-可视化网页
 
-为了更方便地查看不同的奇素数p对应的符合条件的排列，以及它们的末项可能会出现哪些数、各出现几次（这里称为“**末项分布**”），我开发了一个网页。
+为了更方便地查看不同的奇素数p对应的符合条件的排列，以及它们的末项可能会出现哪些数、各出现几次（这里称为“**末项分布**”），我开发了一个网页。提示词（约4页）：
+
+大佬，请完整复述这题的题干。然后我们不难容易知道这题a37=19。可以写dfs代码求出所有可能的解。请写一个html文件。网页有一个输入框，输入框支持输入一个素数p（表示a1=p，以及数列共有p项）然后要判定(p+1)/2也是素数。两个都满足，就能确定头和尾。就跑dfs算法，在网页展示10组满足条件的数列。这时出现一个“继续生成”按钮，每点击一次就再生成10组数据。这里“继续生成”的能力可以靠js的yield实现。
+
+技术栈：Tailwind CSS、React。
+
+```
+大佬，下面这个函数报错：Uncaught SyntaxError: /Inline Babel script: Unexpected reserved word 'yield'. (40:10)
+  38 |         // 终止条件：找到了长度为 p 的序列
+  39 |         if (depth === p) {
+> 40 |           yield[...path];
+     |           ^
+  41 |           return;
+  42 |         }
+
+// solveSequence 所有代码
+```
+
+---
+
+谢谢大佬！网页能够运行，接下来请你帮我做以下修改：
+
+1. “验证条件”按钮改成“验证条件并搜索”，点击后会验证条件。如果不通过，行为和目前一致。如果通过，就预先生成前10个数列。
+2. 对于p=37，第一次点击“继续生成10组”按钮后，我看到有10组数据出来，但是按钮一直都是“搜索中”，无法继续点击。请帮我查找原因并修复这个bug
+3. 复制按钮改为总是显示
+4. 复制按钮的左边新增一个“验证”按钮，点击后弹出一个对话框，对话框显示每一个 $S_n$ 和 $a_{n+1}$ ，以表明它确实符合题意
+
+请在我给你的代码的基础上修改：
+
+```
+谢谢大佬！接下来请帮我在“已找到XX组解”的上方新增一个组件。这个组件有一个输入框，可以输入一个逗号分隔的数组。首先做输入校验，
+比如验证数列是否是1到p的排列。然后验证数列是否符合题意。这里可以考虑复用前面开发过的“验证”的对话框的组件，
+但是这个组件不需要弹出对话框。
+
+请在我给你的代码的基础上修改：
+```
+
+---
+
+谢谢大佬！接下来请帮我在`validationMsg`的上方新增一行文本，展示1到200的正整数中，满足p和`(p+1)/2`都是素数的所有p。这次你只需要输出需要改动的代码
+
+```
+谢谢大佬，接下来请帮我在“已找到X组解”的下方新增一行文本，展示目前搜索到的每种末项，及它们各出现了几次。
+
+1. 请在我给你的代码的基础上修改，给出修改后的完整代码
+2. 代码要符合React最佳实践
+```
+
+谢谢大佬，接下来请帮我在“继续生成10组”按钮的左边加一个“搜索所有数列”按钮，点击后继续跑dfs，直到dfs运行完毕，并把所有数列都展示在页面上。
+
+请在我给你的代码的基础上修改：
+
+// 完整代码
+
+---
+
+## UI 升级：变成 quantum-rose 主题
+
+大佬，你是一名专家前端工程师，精通前端工程化。我有一个html文件，技术栈是Tailwind CSS、React，目前它的UI比较朴素。希望你帮我把这个网页的颜色主题变为 quantum-rose （来自 tweakcn 网站）
+
+要求：符合最小改动原则，只改变颜色主题，其他都不改变。
+
+quantum-rose 主题的 CSS 代码：
+
+完整HTML代码：
+
+---
+
+## 吸收点JS知识
+
+为了理解前面给出的提示词，除了要知道这题可以用dfs求出所有解，还要知道在JS中如何**优雅**地拿到dfs给出的前若干个解：Generator函数和`yield`语句（ES6推出）
+
+<div class="flex gap-4">
+
+```js {*}{maxHeight:'333px'}
+const generateBatch = (count) => {
+  let gen = generatorRef.current;
+
+  if (!gen) {
+    const p = parseInt(inputP);
+    gen = solveSequence(p);
+    generatorRef.current = gen;
+  }
+
+  const newSolutions = [];
+  let done = false;
+
+  for (let i = 0; i < count; i++) {
+    const result = gen.next();
+    if (result.done) {
+      done = true;
+      break;
+    }
+    newSolutions.push(result.value);
+  }
+
+  if (newSolutions.length > 0) {
+    setSolutions(prev => [...prev, ...newSolutions]);
+  }
+
+  if (done) {
+    setIsFinished(true);
+  }
+};
+```
+
+```js {*}{maxHeight:'333px'}
+const searchAll = async () => {
+  if (isSearchingAll) return;
+
+  setIsSearchingAll(true);
+  let gen = generatorRef.current;
+
+  if (!gen) {
+    const p = parseInt(inputP);
+    gen = solveSequence(p);
+    generatorRef.current = gen;
+  }
+
+  const BATCH_SIZE = 50;
+
+  while (true) {
+    const batch = [];
+    let done = false;
+
+    for (let i = 0; i < BATCH_SIZE; i++) {
+      const result = gen.next();
+      if (result.done) {
+        done = true;
+        break;
+      }
+      batch.push(result.value);
+    }
+
+    if (batch.length > 0) {
+      setSolutions(prev => [...prev, ...batch]);
+    }
+
+    if (done) {
+      setIsFinished(true);
+      break;
+    }
+
+    // 让出主线程， UI 才能更新，用户才能看到每次增加 50 个解的效果
+    await new Promise(resolve => setTimeout(resolve, 0));
+  }
+
+  setIsSearchingAll(false);
+};
+```
+
+</div>
 
 ---
 layout: center
