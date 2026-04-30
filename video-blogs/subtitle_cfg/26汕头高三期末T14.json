@@ -1,0 +1,65 @@
+{
+  "srt_file": "media\\260426\\文字稿2.srt",
+  "replacements": [
+    [
+      "汉斯",
+      "Hans"
+    ],
+    [
+      "a1",
+      "a_(1)"
+    ],
+    [
+      "a2",
+      "a_(2)"
+    ],
+    [
+      "a37",
+      "a_(37)"
+    ],
+    [
+      "a3",
+      "a_(3)"
+    ],
+    [
+      "S36",
+      "S_(36)"
+    ],
+    [
+      "S37",
+      "S_(37)"
+    ],
+    [
+      "S1",
+      "S_(1)"
+    ],
+    [
+      "S2",
+      "S_(2)"
+    ],
+    [
+      "2分之p+1",
+      "(p+1)/2"
+    ],
+    [
+      "permutation",
+      "perm"
+    ],
+    [
+      "current sum",
+      "current_sum"
+    ],
+    [
+      "solution count",
+      "solution_count"
+    ],
+    [
+      "precompute factors",
+      "precompute_factors"
+    ],
+    [
+      "谢谢观看",
+      "谢谢观看~"
+    ]
+  ]
+}
