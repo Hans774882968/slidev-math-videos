@@ -10,7 +10,7 @@ tags:
 
 <SlidevPageRedirector />
 <MovingWatermark />
-<!-- <AutoSlide :timeList="[0, 0]" /> -->
+<AutoSlide :timeList="[0, 29 + 5, 42, 49.5, 33, 41.5, 87, 13, 52.5, 14, 31, 16, 5.5, 6.5, 6.5, 16, 75]" />
 
 <div class="bg-gradient-to-br from-[#c8e6c9] to-[#dcf1dd] absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4">
   <h1 class="title-stroke !text-[#059669] !mb-1 font-black tracking-tighter text-center">
