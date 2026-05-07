@@ -35,4 +35,6 @@ export default {
   '260406_t': 'video-blogs/【slidev】scholarly主题示例.md',
   '260410': 'video-blogs/【slidev】26成都二诊三角换元压轴.md',
   '260426': 'video-blogs/【slidev】26汕头高三期末T14.md',
+  '260507': 'video-blogs/【slidev】分式线性递推数列的高中和大学解法.md',
+  '260514': 'video-blogs/【slidev】26汕头零模T14对一道算法题的启发.md',
 };
