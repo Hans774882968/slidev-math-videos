@@ -14,7 +14,8 @@
     "theme_eject": "slidev theme eject",
     "export": "slidev export",
     "lint": "eslint .",
-    "subtitle": "bun scripts/fix_subtitle.ts"
+    "subtitle": "bun scripts/fix_subtitle.ts",
+    "autoslide": "bun scripts/ppt-autoslide-time-by-subtitle.js"
   },
   "dependencies": {
     "@iconify-json/mdi": "^1.2.3",

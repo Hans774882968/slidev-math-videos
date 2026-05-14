@@ -42,7 +42,7 @@ export const ppts: Array<Ppt> = [
   { id: '260406_t', title: '【slidev】scholarly主题示例', date: '2026-04-06', intro: '成功引入了scholarly主题。并且复制了一些scholarly主题的组件源码，于是我们能在不使用scholarly主题的前提下用它的一些组件' },
   { id: '260410', title: '【slidev】26成都二诊三角换元压轴', date: '2026-04-10' },
   { id: '260426', title: '【slidev】26汕头零模T14', date: '2026-04-26' },
-  { id: '260507', title: '【slidev】分式线性递推数列的高中和大学解法', date: '2026-05-07', intro: 'WIP' },
+  { id: '260507', title: '【slidev】分式线性递推数列的高中和大学解法', date: '2026-05-07' },
   { id: '260508', title: '【slidev】轻松一刻-排列组合网红题', date: '2026-05-08' },
   { id: '260514', title: '【slidev】26汕头零模T14对一道算法题的启发', date: '2026-05-14', intro: 'WIP' },
 ];
