@@ -91,16 +91,17 @@ export default {
   line-height: 1.4;
 }
 
+/* font-size 改为和 slidev 默认字体大小一致 */
 .card-body {
   margin: 0;
-  font-size: 14px;
+  font-size: 1.1rem;
   color: #4b5563;
   line-height: 1.8;
 }
 
 .content-wrapper :deep(p) {
   margin: 0;
-  font-size: 14px;
+  font-size: 1.1rem;
   color: #4b5563;
   line-height: 1.8;
 }

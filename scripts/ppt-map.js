@@ -38,4 +38,5 @@ export default {
   '260507': 'video-blogs/【slidev】分式线性递推数列的高中和大学解法.md',
   '260508': 'video-blogs/【slidev】轻松一刻-排列组合网红题.md',
   '260514': 'video-blogs/【slidev】26汕头零模T14对一道算法题的启发.md',
+  '260519': 'video-blogs/【slidev】26武汉五钓第7题-概率生成函数.md',
 };
