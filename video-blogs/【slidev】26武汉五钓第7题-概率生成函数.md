@@ -12,7 +12,7 @@ tags:
 
 <SlidevPageRedirector />
 <MovingWatermark />
-<!-- <AutoSlide :timeList="[0, 0]" /> -->
+<AutoSlide :timeList="[0, 41 + 7, 55, 69.5, 53, 57.5, 32, 39, 53, 45.5, 23.5]" />
 
 <div class="bg-gradient-to-br from-[#c8e6c9] to-[#dcf1dd] absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4">
   <h1 class="title-stroke !text-[#059669] !mb-1 font-black tracking-tighter text-center">
@@ -35,6 +35,10 @@ tags:
   </div>
 
   <p class="text-[#059669] text-2xl md:text-3xl !mt-2 text-center">
+    其常规做法也由PGF启发得到~
+  </p>
+
+  <p class="text-[#059669] text-2xl md:text-3xl !mt-0 text-center">
     PS：高三同学别做钓鱼卷！
   </p>
 </div>
@@ -89,18 +93,21 @@ tags:
 </GreenCard>
 </div>
 
-<div class="h-36 flex justify-center items-center text-7xl text-orange">
+<div class="h-36 flex justify-center items-center gap-1 text-7xl text-orange">
+
 概率生成函数
+
+<MyKeywords :keywords="['二项式定理', '第二类斯特林数', '下降幂']" color="green" keywordTagCls="!text-xl !px-3 !py-1 !rounded-xl" />
 </div>
 
 ---
 
 ## 概率生成函数
 
-设X是离散型随机变量且 $X \in N$ ，则X的**概率生成函数**（PGF）定义为：
+设X是离散型随机变量且 $X \in N$ ，则X的**概率生成函数**（Probability Generating Function, **PGF**）定义为：
 
 $$
-G(z) = \sum_{k=0}^{\infty} P(X=k) \, z^k
+G(z) = \sum_{k=0}^{\infty} P(X=k) \, z^k \tag{1}
 $$
 
 首先，不难发现 $G(1)=1$ ，因为是所有概率之和。接下来我们尝试求导，看看能发现什么性质！
@@ -116,9 +123,9 @@ $G^{(m)}(1)=\sum_{k=0}^{\infty} k(k-1)\dots(k-m+1) P(X=k)=E(X\dots(X-m+1))=E(A_{
 
 ---
 
-## 概率生成函数
+## 用 $E(A_{X}^1),\ E(A_{X}^2),\ \dots,\ E(A_{X}^m)$ 的线性组合表示 $E(X^m)$
 
-$A_{X}^{m}$ 是关于X的m次多项式，于是 $X^m$ 可以用 $A_{X}^m$ 的线性组合表示。根据**期望的可加性**，我们只需要求出 $E(X),\ E(A_{X}^{2}),\ E(A_{X}^{3})$ ，就能求出这题想要的 $E(X^3)$ ！
+$A_{X}^{m}$ 是关于X的m次多项式，于是 $X^m$ 可以用 $A_{X}^1,\ A_{X}^2,\ \dots,\ A_{X}^m$ 的线性组合表示。根据**期望的可加性**，我们只需要求出 $E(X),\ E(A_{X}^{2}),\ E(A_{X}^{3})$ ，就能求出这题想要的 $E(X^3)$ ！
 
 $$
 E(X^3)=k_{3}E(A_{X}^{3})+k_{2}E(A_{X}^{2})+k_{1}E(X)
@@ -129,7 +136,7 @@ $$
 怎么确定 $k_{1},k_{2},k_{3}$ ？
 </MyBlock>
 
-待定系数法自然能求出这些系数，但如果你打过OI，就会知道有一个公式可以方便地求出这些系数——**普通幂转下降幂**：
+待定系数法自然能做，但如果你打过OI，就会知道有一个公式可以更方便地求出这些系数——**下降幂转普通幂**：
 
 $$
 X^n=\sum_{k=0}^{n} S_{2}(n,k) A_{X}^{k}
@@ -149,7 +156,7 @@ $$
 G(z)=\sum_{k=0}^{\infty} C_{n}^{k}q^{n-k}p^k \, z^k=\sum_{k=0}^{\infty} C_{n}^{k}q^{n-k}(pz)^k=(q+pz)^n
 $$
 
-注意力涣散怎么办？
+但注意力涣散怎么办？我们不妨用下面的性质，给出二项分布的PGF的另一种推导方法。
 
 <MyBlock type="success" title="概率生成函数的乘积性质">
 
@@ -214,22 +221,56 @@ $E(X^3)=E(A_{X}^{3})+3E(A_{X}^{2})+E(X),\ E(A_{X}^{m})=G^{(m)}(1)$
 
 概率生成函数的优美性质：
 
-1. $G(1)=1$
-2. $E(A_{X}^{m})=G^{(m)}(1)$ ，于是可以用 $E(A_{X}^{m})$ 表示一切 $E(f(X))$ ，其中 $f(X)$ 为X的任意多项式
-3. PGF的乘积性质：设随机变量X和Y独立，则 $X+Y$ 的PGF为 $G_{X+Y}(z)=G_{X}(z)G_{Y}(z)$
+<div class="grid grid-cols-3 gap-4">
+<MyBlock type="success" title="1" blockContentCls="h-full" scholarlyBlockCls="!m-0">
+
+$G(1)=1$
+</MyBlock>
+
+<MyBlock type="success" title="2" scholarlyBlockCls="!m-0">
+
+$E(A_{X}^{m})=G^{(m)}(1)$ ，于是可以用 $E(A_{X}^{m})$ 的线性组合表示一切 $E(f(X))$ ，其中 $f(X)$ 为X的任意多项式
+</MyBlock>
+
+<MyBlock type="success" title="3-PGF的乘积性质" blockContentCls="h-full" scholarlyBlockCls="!m-0">
+
+设随机变量X和Y独立，则 $X+Y$ 的PGF为 $G_{X+Y}(z)=G_{X}(z)G_{Y}(z)$
+</MyBlock>
+</div>
 
 常见离散分布的PGF：
 
-1. 0-1分布： $G_{X}(z)=q+pz$
-2. 二项分布： $G_{X}(z)=(q+pz)^n$
+<div class="grid grid-cols-3 gap-4">
+<MyBlock type="success" title="0-1分布" scholarlyBlockCls="!m-0">
 
-为了用 $E(A_{X}^{m})$ 表示一切 $E(f(X))$ ，我们需要**普通幂转下降幂**公式： $X^n=\sum_{k=0}^{n} S_{2}(n,k) A_{X}^{k}$
+$G_{X}(z)=q+pz$
+</MyBlock>
+
+<MyBlock type="success" title="二项分布" scholarlyBlockCls="!m-0">
+
+$G_{X}(z)=(q+pz)^n$
+</MyBlock>
+</div>
+
+---
+
+## 总结&扩展（续）
+
+为了用 $E(A_{X}^{m})$ 的线性组合表示出一切 $E(f(X))$ ，我们还需要用到**下降幂转普通幂**公式：
+
+$$
+X^n=\sum_{k=0}^{n} S_{2}(n,k) A_{X}^{k}
+$$
 
 有了这些知识，我们可以尝试做一些更难的题：
 
 1. 已知 $X \sim B(1919810,0.5)$ ，求 $E(X^{114514})$ ，模998244353（需要写代码）
 2. 洛谷P6620
 3. 洛谷P6667
+
+### 再挖个坑~
+
+我网上冲浪时偶然发现，**矩生成函数**（MGF）可以视为PGF的推广，所以这题还可以用MGF做，而且整个解题过程毫无思维含量，就是纯计算。但~~这里空白太小写不下~~，后续有时间再做视频讲解了~
 
 ---
 
@@ -238,10 +279,17 @@ $E(X^3)=E(A_{X}^{3})+3E(A_{X}^{2})+E(X),\ E(A_{X}^{m})=G^{(m)}(1)$
 从期望定义出发：
 
 $$
-E(X^3) = \sum_{k=0}^{20} k^3 \binom{20}{k} p^k q^{20-k}, \quad p=q=0.5
+E(X^3) = \sum_{k=0}^{20} k^3 \binom{20}{k} p^k q^{20-k}, \quad p=q=0.5 \tag{1}
 $$
 
- $\sum k^3 \binom{n}{k}$ 不好算，但受下降幂和概率生成函数的启发，我们把普通幂 $k^3$ 拆解为**下降幂**的线性组合： $k^3 = A_{k}^3 + 3A_{k}^2 + k$ ，于是
+p=q， $p^k q^{20-k}=2^{20}$ 为定值，于是问题简化为 $\sum k^3 \binom{n}{k}$ 。但它依旧不好算，怎么办呢？
+
+<MyBlock type="success" title="对PGF求m阶导，下降幂自然就会出现">
+
+$G^{(m)}(z)=\sum_{k=0}^{\infty} k(k-1)\dots(k-m+1) z^{k-m} P(X=k)$
+</MyBlock>
+
+受这一观察启发，我们把普通幂 $k^3$ 拆分为**下降幂**的线性组合： $k^3 = A_{k}^3 + 3A_{k}^2 + k$ ，于是
 
 $$
 2^{20} E(X^3)=\sum_{k=0}^{20} A_{k}^3 \binom{20}{k}+3\sum_{k=0}^{20} A_{k}^2 \binom{20}{k}+\sum_{k=0}^{20} k \binom{20}{k}
@@ -253,7 +301,7 @@ $$
 
 ## 不超纲做法（续）
 
-如何构造出 $g(m)$ 中的系数 $A_{k}^m$ 呢？**二项式定理**+**求导**！我们考虑对 $f(x)=(1+x)^{n}$ 求多阶导：
+如何构造出 $g(m)$ 中的系数 $A_{k}^m$ 呢？**二项式定理**+**求导**！我们对 $f(x)=(1+x)^{n}$ 求高阶导：
 
 1. $n(1+x)^{n-1}=\sum_{k=0}^{n} A_{k}^{1} \binom{n}{k} x^{k-1}$
 2. $n(n-1)(1+x)^{n-2}=\sum_{k=0}^{n} A_{k}^{2} \binom{n}{k} x^{k-2}$
@@ -265,6 +313,7 @@ $$
 \begin{align}
 E(X^3)&=\frac{f'(1)+3f''(1)+f'''(1)}{2^{20}} \\
 &=\frac{20*2^{19}+3*20*19*2^{18}+20*19*18*2^{17}}{2^{20}} \\
+&=10+3*95+855 \\
 &=1150
 \end{align}
 $$

@@ -1,10 +1,10 @@
 <!-- copy from scholarly -->
 <template>
-  <div :class="['scholarly-block', `block-${type}`, { 'block-compact': compact }]">
+  <div :class="['scholarly-block', `block-${type}`, { 'block-compact': compact }, scholarlyBlockCls]">
     <div v-if="title" class="block-header">
       <span class="block-title">{{ title }}</span>
     </div>
-    <div class="block-content">
+    <div :class="['block-content', blockContentCls]">
       <slot />
     </div>
   </div>
@@ -15,6 +15,8 @@ interface Props {
   type?: 'default' | 'info' | 'success' | 'warning' | 'danger' | 'example' | 'alert'
   title?: string
   compact?: boolean
+  scholarlyBlockCls?: string
+  blockContentCls?: string
 }
 
 withDefaults(defineProps<Props>(), {
