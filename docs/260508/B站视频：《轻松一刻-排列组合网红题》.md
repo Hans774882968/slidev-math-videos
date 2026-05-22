@@ -4,6 +4,12 @@
 edge-tts --voice zh-CN-XiaoxiaoNeural --rate=+30% --file 'docs\260508\文字稿1.md' --write-media media\260508\文字稿1.mp3 --write-subtitles media\260508\文字稿1.srt
 ```
 
+## 新增评论
+
+评论+新增动态：
+
+刚刚想到，这题的法3对法2的压缩作用，也可以理解为思维的复杂度转移到了工具的复杂度
+
 ## B站发布：标题、标签、简介…
 
 标题：《排列组合网红题一题两解：枚举+隔板法和生成函数》
