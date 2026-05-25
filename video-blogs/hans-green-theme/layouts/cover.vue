@@ -14,6 +14,7 @@ function printLogo() {
 const props = defineProps({
   background: {
     default: '',
+    type: String,
   },
 });
 
@@ -25,7 +26,7 @@ const basePath = getWebsiteBasePath();
 const live2dPath = `${basePath}live2d/`;
 
 // 封装异步加载资源的方法
-function loadExternalResource(url, type) {
+function loadExternalResource(url: string, type: string) {
   return new Promise((resolve, reject) => {
     let tag;
 
