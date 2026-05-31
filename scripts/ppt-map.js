@@ -39,4 +39,5 @@ export default {
   '260508': 'video-blogs/【slidev】轻松一刻-排列组合网红题.md',
   '260514': 'video-blogs/【slidev】26汕头零模T14对一道算法题的启发.md',
   '260520': 'video-blogs/【slidev】26武汉五钓第7题-概率生成函数.md',
+  '260530': 'video-blogs/【slidev】26成都一诊压轴的OGF和EGF做法.md',
 };

@@ -46,6 +46,7 @@ export const ppts: Array<Ppt> = [
   { id: '260508', title: '【slidev】轻松一刻-排列组合网红题', date: '2026-05-08' },
   { id: '260514', title: '【slidev】26汕头零模T14对一道算法题的启发', date: '2026-05-14', intro: 'WIP' },
   { id: '260520', title: '【slidev】26武汉五钓第7题-概率生成函数', date: '2026-05-20' },
+  { id: '260530', title: '【slidev】26成都一诊压轴的OGF和EGF做法', date: '2026-05-30' },
 ];
 
 export function hasPpt(id: string) {
