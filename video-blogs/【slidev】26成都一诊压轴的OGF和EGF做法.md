@@ -11,7 +11,7 @@ tags:
 
 <SlidevPageRedirector />
 <MovingWatermark />
-<AutoSlide :timeList="[0, 28 + 7, 38, 24.5, 52.5, 35.5, 32, 58, 32.5, 22, 76.5, 40, 33, 61.5]" />
+<AutoSlide :timeList="[0, 28 + 7, 38, 24.5, 52.5, 35.5, 32, 58, 32.5, 22, 76.5, 44, 33, 61.5]" />
 
 <div class="bg-gradient-to-br from-[#c8e6c9] to-[#dcf1dd] absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4">
   <h1 class="title-stroke !text-[#059669] !mb-1 font-black tracking-tighter text-center">
@@ -130,7 +130,7 @@ $$
 2. $\frac{1}{1-x}=1+x+x^2+x^3+o(x^3)$ ，对应的数列是 $\left\{  1, 1, 1, \dots  \right\}$
 3. $\frac{1}{1-x^c}=\sum_{n=0}^\infty x^{cn}$ ，幂是c的倍数时系数为1，否则为0
 4. $\frac{1}{(1-x)^c}=\sum_{n=0}^\infty \binom{n+c-1}{n} x^{n}$ ，对应的数列是 $\left\{  \binom{c-1}{0}=1,\ \binom{c}{1}=c,\ \binom{c+1}{2}=\frac{(c+1)c}{2!},\ \dots  \right\}$
-5. $e^x=\sum_{n=0}^{\infty} \frac{x^n}{n!}$ ，对应的数列是 $\left\{  1,\ \frac{1}{2!},\ \frac{1}{3!},\ \dots \right\}$
+5. $e^x=\sum_{n=0}^{\infty} \frac{x^n}{n!}$ ，对应的数列是 $\left\{  1,\ 1,\ \frac{1}{2!},\ \frac{1}{3!},\ \dots \right\}$
 
 注：本期视频称这5条泰勒展开式为展开式1到5。展开式3、4都是“2”的推广，c为正整数
 
@@ -284,10 +284,10 @@ $$
 把右边也化简为 $e^x\int_0^x \frac{1-e^{-t}}{t} \, dt$ 就做完了。为此，我们需要想办法让右边也出现积分号。
 </MyBlock>
 
-不妨用定积分表示 $H=\sum_{n=1}^{\infty} \frac{1}{n}$ 。依旧考虑幂级数的积分 $\int_{0}^1 x^{n-1} dx=\left[ \frac{x^n}{n} \right]_{0}^1=\frac{1}{n}$ ，于是
+不妨用定积分表示 $H(n)=\sum_{k=1}^{n} \frac{1}{k}$ 。依旧考虑幂级数的积分 $\int_{0}^1 x^{k-1} dx=\left[ \frac{x^k}{k} \right]_{0}^1=\frac{1}{k}$ ，于是
 
 $$
-H=\sum_{n=1}^{\infty} \frac{1}{n} = \sum_{n=1}^{\infty} \int_{0}^1 x^{n-1} dx=\int_{0}^1 \sum_{n=1}^{\infty} x^{n-1} dx=\int_{0}^1 \frac{1-x^n}{1-x} dx \tag{1}
+H(n)=\sum_{k=1}^{n} \frac{1}{k} = \sum_{k=1}^{n} \int_{0}^1 x^{k-1} dx=\int_{0}^1 \sum_{k=1}^{n} x^{k-1} dx=\int_{0}^1 \frac{1-x^n}{1-x} dx \tag{1}
 $$
 
 代入EGF的定义式，并**交换求和号与积分号的顺序**，于是可以套用EGF例1和例2：
@@ -344,7 +344,7 @@ $$
   title="2-等式右边的推导"
 >
 
-化简等式右边的OGF比较简单，模仿等式左边的化简过程就行；化简等式右边的EGF对注意力涣散的Hans来说比较困难，很难注意到 $\sum_{n=1}^{\infty} \frac{1}{n}$ 竟能变成 $\int_0^1 \frac{1-t^n}{1-t} dt$
+化简等式右边的OGF比较简单，模仿等式左边的化简过程就行；化简等式右边的EGF对注意力涣散的Hans来说比较困难，很难注意到 $\sum_{k=1}^{n} \frac{1}{k}$ 竟能变成 $\int_0^1 \frac{1-t^n}{1-t} dt$
 </GreenCard>
 </div>
 
