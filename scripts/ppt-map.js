@@ -40,4 +40,5 @@ export default {
   '260514': 'video-blogs/【slidev】26汕头零模T14对一道算法题的启发.md',
   '260520': 'video-blogs/【slidev】26武汉五钓第7题-概率生成函数.md',
   '260530': 'video-blogs/【slidev】26成都一诊压轴的OGF和EGF做法.md',
+  '260610': 'video-blogs/【slidev】高考结束，来几道找规律题放松一下.md',
 };
