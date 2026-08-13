@@ -15,6 +15,8 @@ media/**/*.jpg
 media/**/*.jpeg
 media/**/*.mov
 media/**/*.heic
+media/**/*.webp
+media/**/*.xcf
 
 # 1.4 MB 太大了，不传 GitHub 了
 public/live2d/txt-bundle-for-dev.json
