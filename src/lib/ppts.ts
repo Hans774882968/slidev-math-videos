@@ -48,6 +48,7 @@ export const ppts: Array<Ppt> = [
   { id: '260520', title: '【slidev】26武汉五钓第7题-概率生成函数', date: '2026-05-20' },
   { id: '260530', title: '【slidev】26成都一诊压轴的OGF和EGF做法', date: '2026-05-30' },
   { id: '260610', title: '【slidev】高考结束，来几道找规律题放松一下', date: '2026-06-10' },
+  { id: '260930', title: '【slidev】各数学视频的封面', date: '2026-09-30', intro: '不用slidev制作的数学视频的封面在这里制作~' },
 ];
 
 export function hasPpt(id: string) {
