@@ -67,3 +67,61 @@ tags:
   }
 }
 </style>
+
+---
+
+<div class="bg-gradient-to-br from-[#c8e6c9] to-[#dcf1dd] absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center p-4">
+  <h1 class="title-stroke !text-[#059669] !mb-1 font-black tracking-tighter text-center">
+    仅根据BMI反推身高体重？
+  </h1>
+
+  <div class="flex flex-col justify-center items-center gap-3 mb-2">
+    <h2 class="flex justify-center items-center font-black text-center !text-[#059669] !text-2xl md:!text-3xl">
+      <span class="subtitle-stroke">竟能用简单的数论知识</span>
+      <div class="mx-2 bg-[#10b98126] px-4 py-1.5 rounded-xl">
+        <span class="!text-2xl md:!text-3xl text-[#059669]">质因数分解</span>
+      </div>
+      <span class="subtitle-stroke">做到~</span>
+    </h2>
+  </div>
+
+  <div class="mb-2 bordered-box p-4 border-4 border-[#059669] bg-gradient-to-br from-[#c8e6c9] to-[#dcf1dd] px-4 rounded-2xl shadow-lg flex flex-col items-center justify-center text-lg md:text-xl text-[#059669] font-serif">
+
+设 $B=\frac{P}{Q}=\frac{w}{h^2}$ ，w、h分别精确到1位和3位小数，求w、h
+  </div>
+
+  <p class="text-[#059669] text-2xl md:text-3xl !my-2 text-center">
+    一起感受数论和算法竞赛的魅力~
+  </p>
+</div>
+
+<style>
+@font-face {
+  font-family: 'jing-nan-bo-bo-hei-bold';
+  src: url('/fonts/jing-nan-bo-bo-hei-bold.ttf') format('truetype');
+}
+.title-stroke {
+  -webkit-text-stroke: 10px #10b98126;
+  paint-order: stroke fill;
+}
+
+.subtitle-stroke {
+  -webkit-text-stroke: 8px #10b98126;
+  paint-order: stroke fill;
+}
+
+.bordered-box p {
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .subtitle-stroke {
+    -webkit-text-stroke: 6px #10b98126;
+  }
+}
+
+h1 {
+  font-size: 3.75rem;
+  line-height: 5rem;
+}
+</style>
